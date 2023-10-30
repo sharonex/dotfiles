@@ -1,0 +1,222 @@
+set visualbell
+set noerrorbells
+let mapleader = "\<SPACE>"
+
+set timeoutlen=1000
+
+nnoremap L $
+nnoremap H ^
+vnoremap L $
+vnoremap H ^
+
+"set sneak
+"unmap s
+"nmap z <Plug>(sneak-s)
+"nmap Z <Plug>(sneak-S)
+
+Plug 'preservim/nerdtree'
+Plug 'tpope/vim-surround'
+Plug 'easymotion/vim-easymotion'
+Plug 'tommcdo/vim-exchange'
+Plug 'vim-scripts/argtextobj.vim'
+Plug 'machakann/vim-highlightedyank'
+
+"" From Jonathan
+" To get a list of Actions run `:actionlist `
+" let mapleader = ','
+" let mapleader = " "
+set ignorecase smartcase
+set NERDTree
+set showmode
+set scrolloff=5
+set history=1000
+set surround
+set incsearch
+set relativenumber
+set number
+set smartcase
+set hlsearch
+set visualbell
+set noerrorbells
+set easymotion
+set notimeout
+set commentary
+set ideajoin
+set exchange
+"set multiple-cursors
+set quickscope
+
+" clear the search buffer when hitting return
+ nnoremap <Leader>/ :nohlsearch<cr>
+" To copy text to the end-of-line, press Y.
+" This mapping sets up Y to be consistent with
+" the C and D operators, which act from the cursor
+" to the end of the line. The default behavior of Y
+" is to yank the whole line.
+nnoremap Y y$
+" Shortcut for escape
+imap jk <Esc>
+" When in normal mode and I hit Enter,
+" then save file please
+nmap <CR> :action ReformatCode<CR> :write<CR>
+nnoremap <Leader>F  :action ReformatCode<CR> :write<CR>
+" Quick window navigation
+map <C-J> <C-W>j
+map <C-K> <C-W>k
+map <C-L> <C-W>l
+map <C-H> <C-W>h
+map <Leader>d <C-W>c
+" Shortcut for copying to/from System Clipboard
+vmap <Leader>y "+y
+vmap <Leader>d "+d
+nmap <leader>p "+p
+" Greatest remap EVER!!
+" Let me explain, this remap while in visiual mode
+" will delete what is currently highlighted and replace it
+" with what is in the register BUT it will YANK (delete) it
+" to a VOID register. Meaning I still have what I originally had
+" when I pasted. I don't loose the previous thing I YANKED!
+vnoremap <leader>p "_dP
+" Splitting Windows
+nmap <Leader>\ :vsplit<CR>
+nmap <Leader>v :vsplit<CR>
+nmap <Leader>- :split<CR>
+nmap <Leader>h :split<CR>
+" nmap <leader>fs :action FileStructurePopup<CR>
+" Some search and replace shortcuts
+" nnoremap <Leader><Leader>r :%s///g<Left><Left>
+" nnoremap <Leader><Leader>rc :%s///g<Left><Left><Left>
+nnoremap <Leader><Leader>r :%s//g<Left><Left>
+"" Visual Mode
+" xnoremap <Leader><Leader>r :s///g<Left><Left>
+" xnoremap <Leader><Leader>rc :s///g<Left><Left><Left>
+xnoremap <Leader><Leader>r :s//g<Left><Left>
+" Project Shortcuts
+" =================
+" Close Project
+" Some Action commands to memic my native vim
+" For a list of :action try :actionlist
+" ===========================================
+" Hide open panels
+nmap <Leader>w :action HideAllWindows<CR>
+set clipboard=unnamed
+" Open Terminal
+nmap <Leader>t :action ActivateTerminalToolWindow<CR>
+" Open recent project dialog box
+nmap <Leader><Leader>m :action ManageRecentProjects<CR>
+" Mapping to mimic BufferExplorer
+" nmap <Leader>be :action Switcher<CR>
+map <Leader>pf :action GotoFile<CR>
+map <Leader>pp :action ManageRecentProjects<CR>
+
+nmap <Leader>bb :action RecentFiles<CR>
+
+vmap <Leader>g :action SearchEverywhere<CR>
+vmap <Leader>t :action FindInFiles<CR>
+nmap <Leader>o :action OpenInOppositeGroup<CR>
+" Toggle code minimap
+nmap <Leader>m :action CodeGlance.toggle<CR>
+" Nerdtree want to be
+" nmap <Leader>nt :action ActivateProjectToolWindow<CR>
+nmap <Leader>e :NERDTreeFind<CR>
+" Toggle ToggleDistractionFreeMode
+nmap <Leader>df :action ToggleDistractionFreeMode<CR>
+" Quick Quite
+nnoremap <leader>q :q <CR>
+"Coding Formating
+" ===============
+nnoremap <leader>cf :action ReformatCode<CR>
+nnoremap <leader>pcf :action Tool_External Tools_PHP CS Fixer<CR>
+" XDebug Shortcuts
+nmap <Leader>bp :action ToggleLineBreakpoint<CR>
+" Jump to Source
+nmap <C>] :action XDebugger.JumpToSource
+" Some Git Shortcuts for view status, pull, and branches
+" Mapping mimic Fugitive in my native vim
+nmap <Leader>gs :action CheckinProject<CR>
+nmap <Leader>gc <Action>(GitCheckoutFromInputAction)
+nmap <Leader>gl <Action>(Vcs.Show.Log)
+nmap <Leader>ga :action Git.Add<CR>
+nmap <Leader>gp :action Git.Pull<CR>
+nmap <Leader>gb :action Annotate<CR>
+nmap <Leader>gl :action Git.Log<CR>
+nmap <Leader>go :action Github.Open.In.Browser<CR>
+nmap <Leader>br :action Git.Branches<CR>
+nmap <Leader>g[ :action Tool_External Tools_Git-Mediate <CR>
+
+" View my customize Quicklist
+nmap <Leader><leader>l :action QuickList.MyList<CR>
+" AceJump Plugin - Jump to Character
+nmap <Leader><Leader>w :action AceAction<CR>
+" Commenting
+nmap <Leader>cc :action CommentByLineComment<CR>
+nmap <Leader>cb :action CommentByBlockComment<CR>
+nmap <Leader>c<Space> :action CommentByLineComment<CR>
+map <Leader>cb<Space> :action CommentByBlockComment<CR>
+" Refactoring
+nmap <Leader>rt :action Refactorings.QuickListPopupAction<CR>
+" Put search results in the middle of the screen
+nnoremap n nzz
+nnoremap N Nzz
+
+" Center Up/Down
+nnoremap <C-d> <C-d>zz
+nnoremap <C-u> <C-u>zz
+
+" Shortcut for copying to/from System Clipboard
+"" Copy (Yank)
+vmap <Leader>y "+y
+"" Cute
+vmap <Leader>d "+d
+"" Paste
+nmap <Leader>P "+p
+
+" Easymotion
+nmap <Leader>j <Plug>(easymotion-f)
+nmap <Leader>k  <Plug>(easymotion-F)
+vmap <Leader>j <Plug>(easymotion-f)
+vmap <Leader>k  <Plug>(easymotion-F)
+
+
+" Refactoring
+map <leader>rn <Action>(RenameElement)
+map <leader>rm <Action>(ExtractMethod)
+map <leader>rv <Action>(IntroduceVariable)
+map <leader>rf <Action>(IntroduceField)
+map <leader>rs <Action>(ChangeSignature)
+map <leader>rr <Action>(Refactorings.QuickListPopupAction)
+
+nnoremap <S-Up> :m-2<CR>
+nnoremap <S-Down> :m+<CR>
+inoremap <S-Up> <Esc>:m-2<CR>
+inoremap <S-Down> <Esc>:m+<CR>
+
+" Open ideavimrc config
+nmap <C-c>c :e ~/.ideavimrc<cr>
+nmap <C-c>r :source ~/.ideavimrc<cr>
+
+" execute hover on gh
+map gh <Action>(ShowErrorDescription)
+nmap gu <Action>(ShowUsages)
+
+" execute find in path on sp
+map <Leader>sp <Action>(FindInPath)
+vmap <Leader>sP <Action>(FindInPath)
+nmap <Leader>sP viw<Action>(FindInPath)
+
+" Exit modes on C-g
+imap <C-g> <Esc>
+vmap <C-g> <Esc>
+
+" source ideavimrc
+nmap <C-c>r :source ~/.ideavimrc<cr>
+
+" Jump between methods
+nnoremap [[ :action MethodUp<CR>
+nnoremap ]] :action MethodDown<CR>
+
+" Jump to previous file
+nmap <C-BS> <C-^>
+
+" run wldc
+nmap <Leader>cc :action Tool_External Tools_wldc <CR>
