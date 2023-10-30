@@ -1,0 +1,11 @@
+- clean: ['~']
+
+- link:
+    ~/.profile: profile
+    ~/.ssh/config:
+        path: ssh/config
+        create: true
+    ~/.zprofile: zprofile
+    ~/.zshenv: zshenv
+
+

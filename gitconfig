@@ -1,0 +1,54 @@
+[user]
+	name = Sharon Avni
+	email = sharon.a@weka.io
+[core]
+	excludesfile = /Users/sharonavni/.gitignore_global
+[commit]
+	template = /Users/sharonavni/.stCommitMsg
+#[sequence]
+#   editor = rebase-editor
+[alias]
+    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%aN%Creset' --abbrev-commit --date=relative
+    rg = log         --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%aN%Creset' --abbrev-commit --date=relative --oneline -n25
+    rl = reflog      --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%aN%Creset'
+    cp = cherry-pick
+    co = checkout
+    b = branch
+    s = status
+    st = status
+    wdiff = diff --word-diff
+    amend = commit -a --amend --no-edit
+    inject = "!f() { set -e; HASH=`git show $1 --pretty=format:\"%H\" -q`; shift; git commit -m \"fixup! $HASH\" $*; [ -n \"$(git diff-files)\" ] && git stash && DIRTY=1; git rebase $HASH^^ -i --autosquash; [ -n \"$DIRTY\" ] && git stash pop;}; f"
+    latest = for-each-ref --sort=-committerdate refs/heads --format='%(committerdate:relative) %(refname:short)'
+    sh = show --word-diff-regex='[A-Za-z_0-9@]+|[^[:space:]]'
+    d = diff --word-diff-regex='[A-Za-z_0-9@]+|[^[:space:]]'
+    cob = switch --recurse-submodules
+    cod = switch --recurse-submodules --detach
+    recent = "!f() { git branch --sort=committerdate \"$@\" | grep -v throwaway/;  }; f"
+[core]
+    #pager = delta
+
+[interactive]
+    #diffFilter = delta --color-only
+
+[diff]
+      tool = meld
+[difftool]
+      prompt = false
+[difftool "meld"]
+      trustExitCode = true
+        cmd = open -W -a Meld --args \"$LOCAL\" \"$REMOTE\"
+[merge]
+      tool = meld
+	conflictstyle = diff3
+[mergetool]
+      prompt = false
+[mergetool "meld"]
+      trustExitCode = true
+        cmd = open -W -a Meld --args --auto-merge \"$LOCAL\" \"$BASE\" \"$REMOTE\" --output=\"$MERGED\"
+
+[github]
+	user = Sharonex
+[rerere]
+	enabled = false
+	autoupdate = true
