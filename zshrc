@@ -15,7 +15,7 @@ export VISUAL=nvim
 export EDITOR=nvim
 export GOPATH="$HOME/go"
 
-export DOTFILES_PATH="$HOME/utils"
+export DOTFILES="$HOME/.dotfiles"
 export PATH="$PATH:$HOME/bin:$HOME/.local/bin:$GOPATH/bin:$GOROOT/bin:/Users/sharonavni/Library/Python/2.7/bin:$HOME/go/bin:$HOME/.cargo/bin"
 export MAIN_WEKAPP_PATH="$HOME/projects/wekapp"
 export WEKA_TEKA_COMMAND="$MAIN_WEKAPP_PATH/teka"
@@ -44,7 +44,7 @@ alias qqqqq='cd ../../../../../'               # Go back 5 directory levels
 alias vim="nvim"
 alias s="source ~/.zshrc"
 
-alias h="cat $DOTFILES_PATH/helpers.txt| fzf | pbcopy"
+alias h="cat $DOTFILES/helpers.txt| fzf | pbcopy"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND='rg --files'
@@ -152,7 +152,7 @@ fzf-branch-widget() {
 
 
 __fhelper() {
-  local cmd="cat ~/utils/helpers.txt | grep -v -e ^\# -v -e ^$"
+  local cmd="cat $DOTFILES/helpers.txt | grep -v -e ^\# -v -e ^$"
   setopt localoptions pipefail no_aliases 2> /dev/null
   eval "$cmd" | FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} --reverse $FZF_DEFAULT_OPTS $FZF_CTRL_T_OPTS" $(__fzfcmd) -m "$@" | pbcopy
   local ret=$?
@@ -178,10 +178,9 @@ bindkey "\e[1;3C" forward-word # ⌥→
 bindkey \^U backward-kill-line 
 
 zi ice wait'3' lucid
-zi snippet ~/utils/pyenv.zsh
+#zi snippet ~/utils/pyenv.zsh
 
 WEKA_BUILD_FORBIDDEN='t'
-source ~/utils/emacs-vterm-zsh.sh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

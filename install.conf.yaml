@@ -1,8 +1,8 @@
 - clean: ['~']
 
 - shell:
-    [git clone git@github.com:gpakosz/.tmux.git ~/.tmux, "Installing tmux config"]
-    [git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1, "Installing NvChad"]
+    - [ls ~/.tmux || git clone git@github.com:gpakosz/.tmux.git ~/.tmux, "Installing tmux config"]
+    - [ls ~/.config/nvim || git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1, "Installing NvChad"]
 
 - link:
     ~/.profile: profile
@@ -11,8 +11,13 @@
         create: true
     ~/.zprofile: zprofile
     ~/.zshenv: zshenv
-    ~/.tmux/.tmux.conf.local: tmux.conf.local
+    ~/.tmux/.tmux.conf.local:
+        path: tmux.conf.local
+        force: true
     ~/.zshrc: zshrc
     ~/.config/nvim/lua/custom: nvchad-conf
     ~/.gitconfig: gitconfig
+    ~/.config/karabiner: karabiner
+    ~/.config/kitty: kitty
+    ~/.config/raycast: raycast
 

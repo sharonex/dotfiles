@@ -329,7 +329,7 @@ bind -n M-L next-window
 
 
 # forget the find window.  That is for chumps
-bind-key p run-shell "tmux neww ~/utils/tmux-sessionizer"
+bind-key p run-shell "tmux neww ~/.dotfiles/tmux-sessionizer"
 
 bind-key -r & kill-window
 bind-key -r x kill-pane
