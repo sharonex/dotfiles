@@ -5,6 +5,8 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+bindkey -e
+
 #zmodload zsh/zprof
 
 #GITSTATUS_LOG_LEVEL=DEBUG
@@ -16,6 +18,7 @@ export EDITOR=nvim
 export GOPATH="$HOME/go"
 
 export DOTFILES="$HOME/.dotfiles"
+export TMUX_CONF_LOCAL="$DOTFILES/tmux.conf.local"
 export PATH="$PATH:$HOME/bin:$HOME/.local/bin:$GOPATH/bin:$GOROOT/bin:/Users/sharonavni/Library/Python/2.7/bin:$HOME/go/bin:$HOME/.cargo/bin"
 export MAIN_WEKAPP_PATH="$HOME/projects/wekapp"
 export WEKA_TEKA_COMMAND="$MAIN_WEKAPP_PATH/teka"
@@ -31,24 +34,24 @@ export bamboo_push_autosquash=yes
 export bamboo_use_weld=yes
 
 # Alias
-alias l='ls -l'
-alias ll='ls -la'
-alias psg='ps -ef | grep'
-
-alias q='cd ../'                           # Go back 1 directory level
-alias qq='cd ../../'                       # Go back 2 directory levels
-alias qqq='cd ../../../'                     # Go back 3 directory levels
-alias qqqq='cd ../../../../'                  # Go back 4 directory levels
-alias qqqqq='cd ../../../../../'               # Go back 5 directory levels
-
 alias vim="nvim"
+alias l="ls -l"
+alias ll="ls -la"
+alias psg="ps -ef | grep"
+
+alias q="cd ../"                           # Go back 1 directory level
+alias qq="cd ../../"                       # Go back 2 directory levels
+alias qqq="cd ../../../"                     # Go back 3 directory levels
+alias qqqq="cd ../../../../"                  # Go back 4 directory levels
+alias qqqqq="cd ../../../../../"               # Go back 5 directory levels
+
 alias s="source ~/.zshrc"
 
 alias h="cat $DOTFILES/helpers.txt| fzf | pbcopy"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export FZF_DEFAULT_COMMAND='rg --files'
-export FZF_DEFAULT_OPTS='-m --height 50% --border'
+export FZF_DEFAULT_COMMAND="rg --files"
+export FZF_DEFAULT_OPTS="-m --height 50% --border"
 
 export HISTFILESIZE=1000000000
 export HISTSIZE=1000000000

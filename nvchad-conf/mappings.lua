@@ -52,8 +52,8 @@ M.general = {
             "Toggle horizontal term",
         },
         ["<leader>xx"] = {"<cmd>source % <CR>", "execute current file"},
-        ["<leader>ll"] = {"<cmd>EditList<CR>", "execute current file"},
-
+        ["<leader>ll"] = {"<cmd>EditList<CR>", "Open recently edited positions list"},
+        ["<C-x>a"] = {"<cmd>:w<CR>", "Save file"},
 	},
 	v = {
 		["L"] = { "$", "End of line" },
@@ -73,16 +73,6 @@ M.general = {
 			"Find highlighted text in files",
 		},
 	},
-    -- c = {
-    --     ["<C-a>"] = {"<Home>"},
-    --     ["<C-e>"] = {"<End>"},
-    --     ["<C-p>"] = {"<Up>"},
-    --     ["<C-n>"] = {"<Down>"},
-    --     ["<C-b>"] = {"<Left>"},
-    --     ["<C-f>"] = {"<Right>"},
-    --     ["<M-b>"] = {"<S-Left>"},
-    --     ["<M-f>"] = {"<S-Right>"},
-    -- }
 }
 
 M.extraGit = {
@@ -174,7 +164,6 @@ M.trouble = {
         ["<leader>ld"] = { "<cmd>TroubleToggle document_diagnostics<cr>", "Document diagnostics" },
         ["<leader>lw"] = { "<cmd>TroubleToggle workspace_diagnostics<cr>", "Workspace diagnostics" },
         ["<leader>qf"] = { "<cmd>TroubleToggle quickfix<cr>", "Quickfix" },
-        ["<leader>lo"] = { "<cmd>TroubleToggle loclist<cr>", "Location list" },
     }
 }
 

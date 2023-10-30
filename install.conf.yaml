@@ -1,15 +1,13 @@
 - clean: ['~']
 
 - shell:
-    - [ls ~/.tmux || git clone git@github.com:gpakosz/.tmux.git ~/.tmux, "Installing tmux config"]
+    - [ls ~/.tmux/plugins/tpm || git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm, "Installing tmux plugin manager"]
     - [ls ~/.config/nvim || git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1, "Installing NvChad"]
 
 - link:
-    ~/.profile: profile
     ~/.ssh/config:
         path: ssh/config
         create: true
-    ~/.zprofile: zprofile
     ~/.zshenv: zshenv
     ~/.tmux/.tmux.conf.local:
         path: tmux.conf.local
@@ -19,5 +17,5 @@
     ~/.gitconfig: gitconfig
     ~/.config/karabiner: karabiner
     ~/.config/kitty: kitty
-    ~/.config/raycast: raycast
+    ~/.tmux.conf: tmux.conf
 

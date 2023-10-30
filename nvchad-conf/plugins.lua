@@ -149,7 +149,7 @@ local plugins = {
                 { name = "nvim_lsp", group_index = 2 },
                 { name = "luasnip",  group_index = 2 },
                 { name = "buffer",   group_index = 2 },
-                { name = "nvim_lua", group_index = 2 },
+                { name = "nvim_lua", group_index = 1 },
                 { name = "path",     group_index = 2 },
             },
         },
@@ -175,10 +175,6 @@ local plugins = {
             require("edit-list").setup()
         end,
         lazy=false
-    },
-    {
-        'mrjones2014/smart-splits.nvim',
-        build = './kitty/install-kittens.bash'
     },
     {
         "github/copilot.vim",
@@ -215,7 +211,9 @@ local plugins = {
         'Wansmer/treesj',
         dependencies = { 'nvim-treesitter/nvim-treesitter' },
         config = function()
-            require('treesj').setup({--[[ your config ]]})
+            require('treesj').setup({
+                  use_default_keymaps = true,
+            })
         end,
         lazy = false,
     },
