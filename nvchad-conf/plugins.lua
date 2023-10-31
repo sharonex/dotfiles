@@ -170,7 +170,7 @@ local plugins = {
         lazy=false
     },
     {
-        dir="/Users/sharonavni/projects/nvim/edit-list.nvim",
+        "Sharonex/edit-list.nvim",
         config = function()
             require("edit-list").setup()
         end,
