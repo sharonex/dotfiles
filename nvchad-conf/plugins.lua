@@ -163,18 +163,12 @@ local plugins = {
         lazy = false,
     },
     {
-        dir="/Users/sharonavni/projects/nvim/git-mediate.nvim",
+        "Sharonex/git-mediate.nvim",
+        dependencies={"mkotha/conflict3", "skywind3000/asyncrun.vim"},
         config = function()
             require("git-mediate").setup()
         end,
-        lazy=false
-    },
-    {
-        "Sharonex/edit-list.nvim",
-        config = function()
-            require("edit-list").setup()
-        end,
-        lazy=false
+        lazy = false,
     },
     -- {
     --     "github/copilot.vim",

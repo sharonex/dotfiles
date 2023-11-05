@@ -19,19 +19,7 @@ export GOPATH="$HOME/go"
 
 export DOTFILES="$HOME/.dotfiles"
 export TMUX_CONF_LOCAL="$DOTFILES/tmux.conf.local"
-export PATH="$PATH:$HOME/bin:$HOME/.local/bin:$GOPATH/bin:$GOROOT/bin:/Users/sharonavni/Library/Python/2.7/bin:$HOME/go/bin:$HOME/.cargo/bin"
-export MAIN_WEKAPP_PATH="$HOME/projects/wekapp"
-export WEKA_TEKA_COMMAND="$MAIN_WEKAPP_PATH/teka"
-export WEKA_TEKA_COMMAND="./$MAIN_WEKAPP_PATH/teka"
-export WEKA_SRC_VIEWER="~/projects/wekapp-viewer/emacs_viewer.sh"
-export WEKA_COLLECT_WEKA_DIAGS=False
-
-WEKA_USED_SYSTEM_PATH="$HOME/.weka_system"
-export WEKA_USER="sharon.a"
-export TEKA_PYENV_ON_REINSTALL=install
-
-export bamboo_push_autosquash=yes
-export bamboo_use_weld=yes
+export PATH="$PATH:/opt/homebrew/bin:$HOME/bin:$HOME/.local/bin:$GOPATH/bin:$GOROOT/bin:$HOME/go/bin:$HOME/.cargo/bin"
 
 # Alias
 alias vim="nvim"
@@ -62,6 +50,18 @@ setopt inc_append_history
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
+### Added by Zinit's installer
+if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
+    print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
+    command mkdir -p "$HOME/.local/share/zinit" && command chmod g-rwX "$HOME/.local/share/zinit"
+    command git clone https://github.com/zdharma-continuum/zinit "$HOME/.local/share/zinit/zinit.git" && \
+        print -P "%F{33} %F{34}Installation successful.%f%b" || \
+        print -P "%F{160} The clone has failed.%f%b"
+fi
+
+source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
 
 # Enable owerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -69,28 +69,6 @@ export LANG=en_US.UTF-8
 #if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
 #  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 #fi
-
-### Added by Zinit's installer
-if [[ ! -f $HOME/.zinit/bin/zinit.zsh ]]; then
-    print -P "%F{33}▓▒░ %F{220}Installing %F{33}DHARMA%F{220} Initiative Plugin Manager (%F{33}zdharma/zinit%F{220})…%f"
-    command mkdir -p "$HOME/.zinit" && command chmod g-rwX "$HOME/.zinit"
-    command git clone https://github.com/zdharma/zinit "$HOME/.zinit/bin" && \
-        print -P "%F{33}▓▒░ %F{34}Installation successful.%f%b" || \
-        print -P "%F{160}▓▒░ The clone has failed.%f%b"
-fi
-
-source "$HOME/.zinit/bin/zinit.zsh"
-autoload -Uz _zinit
-(( ${+_comps} )) && _comps[zinit]=_zinit
-
-# Load a few important annexes, without Turbo
-# (this is currently required for annexes)
-zinit light-mode for \
-    zinit-zsh/z-a-rust \
-    zinit-zsh/z-a-as-monitor \
-    zinit-zsh/z-a-patch-dl \
-    zinit-zsh/z-a-bin-gem-node
-### End of Zinit's installer chunk
 
 # https://github.com/zdharma/fast-syntax-highlighting#zinit
 zinit wait lucid for \
@@ -100,6 +78,8 @@ zinit wait lucid for \
     zsh-users/zsh-completions \
  atload"!_zsh_autosuggest_start" \
     zsh-users/zsh-autosuggestions
+
+zinit light zdharma-continuum/zinit-annex-patch-dl
 
 # others
 zinit wait lucid for \
@@ -183,7 +163,16 @@ bindkey \^U backward-kill-line
 zi ice wait'3' lucid
 #zi snippet ~/utils/pyenv.zsh
 
-WEKA_BUILD_FORBIDDEN='t'
-
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Load a few important annexes, without Turbo
+# (this is currently required for annexes)
+zinit light-mode for \
+    zdharma-continuum/zinit-annex-as-monitor \
+    zdharma-continuum/zinit-annex-bin-gem-node \
+    zdharma-continuum/zinit-annex-patch-dl \
+    zdharma-continuum/zinit-annex-rust
+
+### End of Zinit's installer chunk
+
