@@ -53,9 +53,18 @@ M.general = {
         },
         ["<leader>xx"] = {"<cmd>source % <CR>", "execute current file"},
         ["<leader>ll"] = {"<cmd>EditList<CR>", "Open recently edited positions list"},
-        ["<C-x>a"] = {"<cmd>:w<CR>", "Save file"},
+        ["<C-m>"] = {"<cmd>:w<CR>", "Save file"},
+        -- Substitute, exchange
+        ["gp"] ={"<cmd>lua require('substitute').operator()<cr>"},
+        ["gpp"] ={"<cmd>lua require('substitute').line()<cr>"},
+        ["gP"] ={"<cmd>lua require('substitute').eol()<cr>"},
+        ["gx"] ={"<cmd>lua require('substitute.exchange').operator()<cr>"},
+        ["gsxx"] ={"<cmd>lua require('substitute.exchange').line()<cr>"},
+        ["gxc"] = { "<cmd>lua require('substitute.exchange').cancel()<cr>"},
 	},
 	v = {
+        ["gs"] ={"<cmd>lua require('substitute').visual()<cr>"},
+        ["gx"] ={"<cmd>lua require('substitute.exchange').visual()<cr>"},
 		["L"] = { "$", "End of line" },
 		["H"] = { "0", "Start of line" },
 		[">"] = { ">gv", "indent" },
@@ -86,6 +95,7 @@ M.extraGit = {
 		["<leader>gr"] = { ":Gitsigns reset_hunk<CR>", "Reset git hunk" },
 		["<leader>gp"] = { ":Gitsigns preview_hunk<CR>", "Pop up of git hunk diff" },
 		["<leader>g["] = { ":GitMediate<CR>", "Run git mediate conflict resolver" },
+		["<leader>gf"] = { ":Git<CR>", "Run git fugitive" },
 	},
 	v = {
 		["<leader>gal"] = {
@@ -97,7 +107,10 @@ M.extraGit = {
 M.telescope = {
 	plugin = true,
 	n = {
-		["<leader>sp"] = { "<cmd> Telescope live_grep <CR>", "Find in files" },
+		["<leader>sp"] = {
+            "<cmd> Telescope egrepify<CR>",
+            "Find in files",
+        },
 		["<leader>sP"] = { "<cmd> Telescope grep_string <CR>", "Find current word in files" },
 		["<leader>sl"] = { "<cmd> Telescope resume <CR>", "Continue last search" },
         ["<leader>fc"] = { "<cmd> Telescope commands <CR>", "Find vim commands" },

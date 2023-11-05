@@ -6,6 +6,12 @@ local plugins = {
     -- Override plugin definition options
     --
     {
+        "nvim-telescope/telescope.nvim",
+        -- config = function()
+        --     require("telescope").setup(require("custom.configs.telescope_grep_config"))
+        -- end
+    },
+    {
         "neovim/nvim-lspconfig",
         config = function()
             require("plugins.configs.lspconfig")
@@ -80,15 +86,9 @@ local plugins = {
             require("telescope").load_extension("advanced_git_search")
         end,
         dependencies = {
-            {
-                "sindrets/diffview.nvim",
-            },
-            {
-                "tpope/vim-fugitive",
-            },
-            {
-                "tpope/vim-rhubarb",
-            },
+            { "sindrets/diffview.nvim", },
+            { "tpope/vim-fugitive", },
+            { "tpope/vim-rhubarb", },
         },
     },
     {
@@ -176,17 +176,17 @@ local plugins = {
         end,
         lazy=false
     },
-    {
-        "github/copilot.vim",
-        lazy = false,
-        config = function()  -- Mapping tab is already used by NvChad
-            vim.g.copilot_no_tab_map = true;
-            vim.g.copilot_assume_mapped = true;
-            vim.g.copilot_tab_fallback = "";
-            -- The mapping is set to other key, see custom/lua/mappings
-            -- or run <leader>ch to see copilot mapping section
-        end
-    },
+    -- {
+    --     "github/copilot.vim",
+    --     lazy = false,
+    --     config = function()  -- Mapping tab is already used by NvChad
+    --         vim.g.copilot_no_tab_map = true;
+    --         vim.g.copilot_assume_mapped = true;
+    --         vim.g.copilot_tab_fallback = "";
+    --         -- The mapping is set to other key, see custom/lua/mappings
+    --         -- or run <leader>ch to see copilot mapping section
+    --     end
+    -- },
     {
         "ggandor/leap.nvim",
         lazy = false,
@@ -212,7 +212,7 @@ local plugins = {
         dependencies = { 'nvim-treesitter/nvim-treesitter' },
         config = function()
             require('treesj').setup({
-                  use_default_keymaps = true,
+                use_default_keymaps = true,
             })
         end,
         lazy = false,
@@ -224,6 +224,50 @@ local plugins = {
         end,
         lazy = false
     },
+    {
+        "nvim-telescope/telescope-frecency.nvim",
+        config = function()
+            require("telescope").load_extension "frecency"
+        end,
+    },
+    {
+        'windwp/nvim-autopairs',
+        event = "InsertEnter",
+        opts = {} -- this is equalent to setup({}) function
+    },
+    {
+        'nvim-tree/nvim-web-devicons',
+        lazy = false,
+    },
+    {
+        'nvim-telescope/telescope-ui-select.nvim',
+        lazy = false,
+    },
+    {
+        "Sharonex/grape.nvim",
+        lazy = false,
+    },
+    {
+        "gbprod/substitute.nvim",
+        config = function()
+            require("substitute").setup({
+                range = {
+                    prefix = "g",
+                }
+            })
+        end
+    },
+    {
+        "f-person/git-blame.nvim",
+        lazy = false,
+    },
+    {
+        "fdschmidt93/telescope-egrepify.nvim",
+        lazy = false,
+        config = function()
+            require "telescope".load_extension("egrepify")
+        end
+    }
 }
 
 return plugins
