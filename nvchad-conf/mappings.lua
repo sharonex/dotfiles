@@ -59,7 +59,7 @@ M.general = {
         ["gpp"] ={"<cmd>lua require('substitute').line()<cr>"},
         ["gP"] ={"<cmd>lua require('substitute').eol()<cr>"},
         ["gx"] ={"<cmd>lua require('substitute.exchange').operator()<cr>"},
-        ["gsxx"] ={"<cmd>lua require('substitute.exchange').line()<cr>"},
+        ["gxx"] ={"<cmd>lua require('substitute.exchange').line()<cr>"},
         ["gxc"] = { "<cmd>lua require('substitute.exchange').cancel()<cr>"},
 	},
 	v = {

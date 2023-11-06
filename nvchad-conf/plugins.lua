@@ -238,10 +238,6 @@ local plugins = {
         lazy = false,
     },
     {
-        "Sharonex/grape.nvim",
-        lazy = false,
-    },
-    {
         "gbprod/substitute.nvim",
         config = function()
             require("substitute").setup({
@@ -261,6 +257,11 @@ local plugins = {
         config = function()
             require "telescope".load_extension("egrepify")
         end
+    },
+    {
+        "hashivim/vim-terraform",
+        ft = "tf",
+        lazy = false,
     }
 }
 

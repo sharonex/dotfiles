@@ -175,4 +175,38 @@ zinit light-mode for \
     zdharma-continuum/zinit-annex-rust
 
 ### End of Zinit's installer chunk
+function select-aws-profile() {
+    if [[ -n "$1" ]]; then
+        export AWS_PROFILE="$1"
+        if ! aws sts get-caller-identity &>/dev/null; then
+            aws sso login
+        fi
+        return
+    fi
+
+    profiles=($(grep '\[profile ' ~/.aws/config | sed -e 's/\[profile \(.*\)\]/\1/'))
+
+    local current_profile="$AWS_PROFILE"
+
+    for profile in $profiles; do
+        if [[ "$profile" == "$current_profile" ]]; then
+            echo "* $profile" >> /tmp/aws_highlighted_profiles.txt
+        else
+            echo "  $profile" >> /tmp/aws_highlighted_profiles.txt
+        fi
+    done
+
+    selected_profile=$(cat /tmp/aws_highlighted_profiles.txt | fzf | xargs)
+    rm /tmp/aws_highlighted_profiles.txt
+
+    selected_profile=$(echo $selected_profile | sed 's/^\* //')
+
+    if [[ -n "$selected_profile" ]]; then
+        export AWS_PROFILE="$selected_profile"
+    fi
+
+    if ! aws sts get-caller-identity &>/dev/null; then
+        aws sso login
+    fi
+}
 
