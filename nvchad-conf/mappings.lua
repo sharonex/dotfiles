@@ -54,6 +54,17 @@ M.general = {
         ["<leader>xx"] = {"<cmd>source % <CR>", "execute current file"},
         ["<leader>ll"] = {"<cmd>EditList<CR>", "Open recently edited positions list"},
         ["<C-m>"] = {"<cmd>:w<CR>", "Save file"},
+
+        ["K"] ={"<cmd>Lspsaga hover_doc<cr>", "Show Documentation"},
+        ["gr"] ={"<cmd> Lspsaga finder ref<cr>", "View references"},
+        ["gd"] ={"<cmd> Lspsaga goto_definition<cr>", "Goto definition"},
+
+        ["]d"] ={"<cmd> Lspsaga diagnostic_jump_next<cr>", "Diagonstics jump next"},
+        ["[d"] ={"<cmd>jLspsaga diagnostic_jump_prev<cr>", "Diagonstics jump prev"},
+        ["<leader>ca"] ={"<cmd>Lspsaga code_action<cr>", "Open code actions"},
+
+        ["<leader>ra"] ={"<cmd>Lspsaga rename<cr>", "LSP Rename"},
+
         -- Substitute, exchange
         ["gp"] ={"<cmd>lua require('substitute').operator()<cr>"},
         ["gpp"] ={"<cmd>lua require('substitute').line()<cr>"},
@@ -68,6 +79,7 @@ M.general = {
 		["L"] = { "$", "End of line" },
 		["H"] = { "0", "Start of line" },
 		[">"] = { ">gv", "indent" },
+        ["<leader>ca"] ={"<cmd>Lspsaga code_action <cr>", "Open code actions"},
 		["<leader>sp"] = {
 			function()
 				-- yank the highlighted text into register z

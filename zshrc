@@ -21,6 +21,8 @@ export DOTFILES="$HOME/.dotfiles"
 export TMUX_CONF_LOCAL="$DOTFILES/tmux.conf.local"
 export PATH="$PATH:/opt/homebrew/bin:$HOME/bin:$HOME/.local/bin:$GOPATH/bin:$GOROOT/bin:$HOME/go/bin:$HOME/.cargo/bin"
 
+export RUST_BACKTRACE=1
+
 # Alias
 alias vim="nvim"
 alias l="ls -l"
@@ -209,4 +211,3 @@ function select-aws-profile() {
         aws sso login
     fi
 }
-

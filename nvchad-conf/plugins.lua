@@ -1,5 +1,20 @@
 local overrides = require("custom.configs.overrides")
 
+-- Update this path
+local extension_path = vim.env.HOME .. '/.vscode/extensions/vadimcn.vscode-lldb-1.10.0/'
+local codelldb_path = extension_path .. 'adapter/codelldb'
+local liblldb_path = extension_path .. 'lldb/lib/liblldb'
+local this_os = vim.loop.os_uname().sysname;
+
+-- The path in windows is different
+if this_os:find "Windows" then
+  codelldb_path = extension_path .. "adapter\\codelldb.exe"
+  liblldb_path = extension_path .. "lldb\\bin\\liblldb.dll"
+else
+  -- The liblldb extension is .so for linux and .dylib for macOS
+  liblldb_path = liblldb_path .. (this_os == "Linux" and ".so" or ".dylib")
+end
+
 ---@type NvPluginSpec[]
 local plugins = {
 
@@ -113,14 +128,35 @@ local plugins = {
         "mfussenegger/nvim-dap",
     },
     {
+        "rcarriga/nvim-dap-ui",
+        lazy = false,
+    },
+    {
         "simrat39/rust-tools.nvim",
         ft = "rust",
         dependencies = "neovim/nvim-lspconfig",
         opts = function()
             return require("custom.configs.rust-tools")
         end,
-        config = function(_, opts)
-            require("rust-tools").setup(opts)
+        config = function(_)
+            require("rust-tools").setup({
+                dap = {
+                    adapter = require('rust-tools.dap').get_codelldb_adapter(
+                        codelldb_path, liblldb_path)
+                },
+                tools = {
+                    hover_actions = {
+                        auto_focus = true,
+                    },
+                }
+            })
+        end,
+    },
+    {
+        "rust-lang/rust.vim",
+        ft = "rust",
+        config = function()
+            vim.g.rustfmt_autosave = 1
         end,
     },
     {
@@ -170,17 +206,17 @@ local plugins = {
         end,
         lazy = false,
     },
-    -- {
-    --     "github/copilot.vim",
-    --     lazy = false,
-    --     config = function()  -- Mapping tab is already used by NvChad
-    --         vim.g.copilot_no_tab_map = true;
-    --         vim.g.copilot_assume_mapped = true;
-    --         vim.g.copilot_tab_fallback = "";
-    --         -- The mapping is set to other key, see custom/lua/mappings
-    --         -- or run <leader>ch to see copilot mapping section
-    --     end
-    -- },
+    {
+        "github/copilot.vim",
+        lazy = false,
+        config = function()  -- Mapping tab is already used by NvChad
+            vim.g.copilot_no_tab_map = true;
+            vim.g.copilot_assume_mapped = true;
+            vim.g.copilot_tab_fallback = "";
+            -- The mapping is set to other key, see custom/lua/mappings
+            -- or run <leader>ch to see copilot mapping section
+        end
+    },
     {
         "ggandor/leap.nvim",
         lazy = false,
@@ -262,6 +298,34 @@ local plugins = {
         "hashivim/vim-terraform",
         ft = "tf",
         lazy = false,
+    },
+    {
+        "rouge8/neotest-rust",
+        ft = "rust",
+        dependencies = {
+            "nvim-neotest/neotest",
+            "nvim-lua/plenary.nvim",
+        },
+        config = function()
+            require("neotest").setup({
+                adapters = {
+                    require("neotest-rust") {
+                        args = {"--failure-output=immediate"}
+                    }
+                }
+            })
+        end,
+    },
+    {
+        'nvimdev/lspsaga.nvim',
+        config = function()
+            require('lspsaga').setup({})
+        end,
+        lazy = false,
+        dependencies = {
+            'nvim-treesitter/nvim-treesitter',
+            'nvim-tree/nvim-web-devicons',
+        },
     }
 }
 
