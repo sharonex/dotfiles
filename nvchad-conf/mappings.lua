@@ -17,16 +17,12 @@ end
 
 M.general = {
     i = {
-        ["<C-a>"] = { "<ESC>^i", "Beginning of line" },
-        ["<C-f>"] = {
-            function()
-                vim.fn.feedkeys(vim.fn['copilot#Accept'](), '')
-            end,
-            "Copilot Accept",
-            {replace_keycodes = true, nowait=true, silent=true, expr=true, noremap=true}
-        }
+        ["<C-a>"] = { "<ESC>I" },
+        ["<C-c>"] = { "<ESC>" }
     },
 	n = {
+        ["<M-,>"] = { "<cmd> lua require('sibling-swap').swap_with_left_with_opp()<CR>", "swaps arguments to the left"},
+        ["<M-.>"] = { "<cmd> lua require('sibling-swap').swap_with_right_with_opp()<CR>", "swaps arguments to the right"},
 		["<C-h>"] = { "<cmd> TmuxNavigateLeft<CR>", "window left" },
 		["<C-l>"] = { "<cmd> TmuxNavigateRight<CR>", "window right" },
 		["<C-j>"] = { "<cmd> TmuxNavigateDown<CR>", "window down" },
@@ -60,7 +56,7 @@ M.general = {
         ["gd"] ={"<cmd> Lspsaga goto_definition<cr>", "Goto definition"},
 
         ["]d"] ={"<cmd> Lspsaga diagnostic_jump_next<cr>", "Diagonstics jump next"},
-        ["[d"] ={"<cmd>jLspsaga diagnostic_jump_prev<cr>", "Diagonstics jump prev"},
+        ["[d"] ={"<cmd> Lspsaga diagnostic_jump_prev<cr>", "Diagonstics jump prev"},
         ["<leader>ca"] ={"<cmd>Lspsaga code_action<cr>", "Open code actions"},
 
         ["<leader>ra"] ={"<cmd>Lspsaga rename<cr>", "LSP Rename"},
@@ -127,12 +123,7 @@ M.telescope = {
 		["<leader>sl"] = { "<cmd> Telescope resume <CR>", "Continue last search" },
         ["<leader>fc"] = { "<cmd> Telescope commands <CR>", "Find vim commands" },
         ["<leader>fk"] = { "<cmd> Telescope keymaps <CR>", "Look up key mappings"},
-        ["<leader>bb"] = {
-            function ()
-                require('telescope.builtin').buffers({ sort_lastused = true, ignore_current_buffer = true })
-            end,
-            "Show recent buffers"
-        },
+        ["<leader>bb"] = { "<cmd> Telescope frecency <CR>", "Show recent buffers" },
         ["<leader>fb"] = {
             function ()
                 require('telescope.builtin').buffers({ sort_lastused = true, ignore_current_buffer = true })
@@ -191,5 +182,24 @@ M.trouble = {
         ["<leader>qf"] = { "<cmd>TroubleToggle quickfix<cr>", "Quickfix" },
     }
 }
+
+M.ChatGPT = {
+   n = {
+       ["<leader>ac"] = { "<cmd>ChatGPT<CR>", "ChatGPT" },
+       ["<leader>ae"] = { "<cmd>ChatGPTEditWithInstruction<CR>", "Edit with instruction" },
+       ["<leader>ag"] = { "<cmd>ChatGPTRun grammar_correction<CR>", "Grammar Correction" },
+       ["<leader>at"] = { "<cmd>ChatGPTRun translate<CR>", "Translate" },
+       ["<leader>ak"] = { "<cmd>ChatGPTRun keywords<CR>", "Keywords" },
+       ["<leader>ad"] = { "<cmd>ChatGPTRun docstring<CR>", "Docstring" },
+       ["<leader>aa"] = { "<cmd>ChatGPTRun add_tests<CR>", "Add Tests" },
+       ["<leader>ao"] = { "<cmd>ChatGPTRun optimize_code<CR>", "Optimize Code" },
+       ["<leader>as"] = { "<cmd>ChatGPTRun summarize<CR>", "Summarize" },
+       ["<leader>af"] = { "<cmd>ChatGPTRun fix_bugs<CR>", "Fix Bugs" },
+       ["<leader>ax"] = { "<cmd>ChatGPTRun explain_code<CR>", "Explain Code" },
+       ["<leader>ar"] = { "<cmd>ChatGPTRun roxygen_edit<CR>", "Roxygen Edit" },
+       ["<leader>al"] = { "<cmd>ChatGPTRun code_readability_analysis<CR>", "Code Readability Analysis" },
+   },
+}
+M.ChatGPT.v = M.ChatGPT.n
 
 return M
