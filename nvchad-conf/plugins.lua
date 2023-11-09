@@ -266,6 +266,7 @@ local plugins = {
         config = function()
             require("telescope").load_extension "frecency"
         end,
+        lazy = false,
     },
     {
         'windwp/nvim-autopairs',
@@ -333,6 +334,28 @@ local plugins = {
             'nvim-treesitter/nvim-treesitter',
             'nvim-tree/nvim-web-devicons',
         },
+    },
+    {
+        "jackMort/ChatGPT.nvim",
+        lazy = false,
+        config = function()
+            require("chatgpt").setup()
+        end,
+        dependencies = {
+            "MunifTanjim/nui.nvim",
+            "nvim-lua/plenary.nvim",
+            "nvim-telescope/telescope.nvim"
+        }
+    },
+    {
+        'Wansmer/sibling-swap.nvim',
+        requires = { 'nvim-treesitter' },
+        lazy = false,
+        config = function()
+            require('sibling-swap').setup({
+                enable_default_keymaps = false,
+            })
+        end,
     }
 }
 

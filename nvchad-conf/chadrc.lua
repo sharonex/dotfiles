@@ -31,6 +31,7 @@ vim.opt.swapfile = false
 
 vim.wo.relativenumber = true
 
+vim.opt.termguicolors = true
 require("custom.configs.globals")
 
 return M
