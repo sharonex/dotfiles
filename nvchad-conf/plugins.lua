@@ -207,14 +207,21 @@ local plugins = {
         lazy = false,
     },
     {
-        "github/copilot.vim",
-        lazy = false,
-        config = function()  -- Mapping tab is already used by NvChad
-            vim.g.copilot_no_tab_map = true;
-            vim.g.copilot_assume_mapped = true;
-            vim.g.copilot_tab_fallback = "";
-            -- The mapping is set to other key, see custom/lua/mappings
-            -- or run <leader>ch to see copilot mapping section
+        "zbirenbaum/copilot.lua",
+        cmd = "Copilot",
+        event = "InsertEnter",
+        config = function()
+            require("copilot").setup({
+                panel = {
+                    enabled = true,
+                    auto_refresh = true,
+                },
+                suggestion = {
+                    enabled = true,
+                    auto_trigger = true,
+                    accept = false, -- disable built-in keymapping
+                },
+            })
         end
     },
     {
