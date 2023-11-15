@@ -22,9 +22,6 @@ local plugins = {
     --
     {
         "nvim-telescope/telescope.nvim",
-        -- config = function()
-        --     require("telescope").setup(require("custom.configs.telescope_grep_config"))
-        -- end
     },
     {
         "neovim/nvim-lspconfig",
@@ -68,20 +65,30 @@ local plugins = {
         lazy = false,
     },
     {
-        "rbgrouleff/bclose.vim",
-        lazy = false,
-    },
-    {
-        "francoiscabrol/ranger.vim",
-        lazy = false,
-    },
-    {
         "tpope/vim-surround",
         lazy = false,
     },
     {
         "kdheepak/lazygit.nvim",
         lazy = false,
+    },
+    {
+        'tpope/vim-fugitive',
+        lazy = false,
+        -- doesn't work :(
+        config = function ()
+            local fugitiveMappings = vim.api.nvim_create_augroup('FugitiveMappings', { clear = true })
+
+            -- Create an autocommand within that group
+            vim.api.nvim_create_autocmd('FileType', {
+                group = fugitiveMappings,
+                pattern = 'fugitive',
+                callback = function()
+                    -- Your mappings or commands go here
+                    vim.api.nvim_buf_set_keymap(0, 'n', 'o', '<CR>:Gedit', { noremap = true, silent = true })
+                end,
+            })
+        end
     },
     {
         "aaronhallaert/advanced-git-search.nvim",
@@ -160,17 +167,6 @@ local plugins = {
         end,
     },
     {
-        "ThePrimeagen/refactoring.nvim",
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "nvim-treesitter/nvim-treesitter",
-        },
-        config = function()
-            require("refactoring").setup()
-        end,
-        lazy = false,
-    },
-    {
         "christoomey/vim-tmux-navigator",
         lazy = false,
     },
@@ -192,10 +188,6 @@ local plugins = {
     },
     {
         'skywind3000/asyncrun.vim',
-        lazy = false,
-    },
-    {
-        "mkotha/conflict3",
         lazy = false,
     },
     {
@@ -243,16 +235,6 @@ local plugins = {
             -- or leave it empty to use the default settings
             -- refer to the configuration section below
         },
-    },
-    {
-        'Wansmer/treesj',
-        dependencies = { 'nvim-treesitter/nvim-treesitter' },
-        config = function()
-            require('treesj').setup({
-                use_default_keymaps = true,
-            })
-        end,
-        lazy = false,
     },
     {
         'lewis6991/spaceless.nvim',
@@ -303,11 +285,6 @@ local plugins = {
         end
     },
     {
-        "hashivim/vim-terraform",
-        ft = "tf",
-        lazy = false,
-    },
-    {
         "rouge8/neotest-rust",
         ft = "rust",
         dependencies = {
@@ -356,6 +333,19 @@ local plugins = {
                 enable_default_keymaps = false,
             })
         end,
+    },
+    {
+        'akinsho/git-conflict.nvim',
+        config = true,
+        lazy = false,
+    },
+    {
+        "kevinhwang91/nvim-bqf",
+        lazy = false,
+    },
+    {
+        'lewis6991/gitsigns.nvim',
+        lazy = false,
     }
 }
 

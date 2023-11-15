@@ -21,6 +21,14 @@ M.general = {
         ["<C-c>"] = { "<ESC>" }
     },
 	n = {
+        ["<C-o>"] = {"<C-o>zz"},
+        ["<C-i>"] = {"<C-i>zz"},
+        ["u"] = {"uzz"},
+        ["<C-r>"] = {"<C-r>zz"},
+        ["<A-S-Left>"] = {"4<C-W>>"},
+        ["<A-S-Right>"] = {"4<C-W><"},
+        ["<A-S-Up>"] = {"4<C-W>+"},
+        ["<A-S-Down>"] = {"4<C-W>-"},
         ["<M-,>"] = { "<cmd> lua require('sibling-swap').swap_with_left_with_opp()<CR>", "swaps arguments to the left"},
         ["<M-.>"] = { "<cmd> lua require('sibling-swap').swap_with_right_with_opp()<CR>", "swaps arguments to the right"},
 		["<C-h>"] = { "<cmd> TmuxNavigateLeft<CR>", "window left" },
@@ -31,16 +39,18 @@ M.general = {
 		["H"] = { "0", "Start of line" },
 		["<C-d>"] = { "<C-d>zz", "Page Down" },
 		["<C-u>"] = { "<C-u>zz", "Page Up" },
+        ["cgw"] = {"*Ncgn", "Repeatably change current word"},
 
         ["<leader>tl"] = { "<cmd> TSJToggle<CR>", "Toggle line split"};
         ["]e"] = {": cnext<CR>", "next quickfix error"},
         ["[e"] = {": cprev<CR>", "prev quickfix error"},
+        ["]g"] = {": Gitsigns next_hunk<CR>", "next git hunk"},
+        ["[g"] = {": Gitsigns prev_hunk<CR>", "prev git hunk"},
 
 		["<leader>u"] = { "<cmd>UndotreeToggle<CR><cmd>UndotreeFocus<CR>", "Toggle UndoTree" },
         ["<C-c>"] = { ":noh <CR>", "Clear highlights" },
         ["<leader>dd"] = {":lua vim.diagnostic.disable()<CR>", "Disable lsp diagnostics"},
         ["<leader>de"] = {":lua vim.diagnostic.enable()<CR>", "enable lsp diagnostics"},
-        ["<leader>e"] = {":Ranger<CR>", "Opens ranger on current directory"},
         ["<A-t>"] = {
             function()
                 require("nvterm.terminal").toggle "horizontal"
@@ -48,7 +58,6 @@ M.general = {
             "Toggle horizontal term",
         },
         ["<leader>xx"] = {"<cmd>source % <CR>", "execute current file"},
-        ["<leader>ll"] = {"<cmd>EditList<CR>", "Open recently edited positions list"},
         ["<C-m>"] = {"<cmd>:w<CR>", "Save file"},
 
         ["K"] ={"<cmd>Lspsaga hover_doc<cr>", "Show Documentation"},
@@ -73,8 +82,9 @@ M.general = {
         ["gs"] ={"<cmd>lua require('substitute').visual()<cr>"},
         ["gx"] ={"<cmd>lua require('substitute.exchange').visual()<cr>"},
 		["L"] = { "$", "End of line" },
-		["H"] = { "0", "Start of line" },
-		[">"] = { ">gv", "indent" },
+        ["H"] = { "0", "Start of line" },
+        ["<"] = { "<gv" },
+        [">"] = { ">gv" },
         ["<leader>ca"] ={"<cmd>Lspsaga code_action <cr>", "Open code actions"},
 		["<leader>sp"] = {
 			function()
@@ -103,7 +113,9 @@ M.extraGit = {
 		["<leader>gr"] = { ":Gitsigns reset_hunk<CR>", "Reset git hunk" },
 		["<leader>gp"] = { ":Gitsigns preview_hunk<CR>", "Pop up of git hunk diff" },
 		["<leader>g["] = { ":GitMediate<CR>", "Run git mediate conflict resolver" },
-		["<leader>gf"] = { ":Git<CR>", "Run git fugitive" },
+		["<leader>gf"] = { ":Git<CR>/Unstaged<CR>:noh<CR>j", "Run git fugitive" },
+		["<leader>gl"] = { ":Git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%aN%Creset' --abbrev-commit --date=relative <CR>", "Open fugitive log" },
+
 	},
 	v = {
 		["<leader>gal"] = {
@@ -177,6 +189,7 @@ M.harpoon = {
 
 M.trouble = {
     n = {
+        ["<leader>ll"] = { "<cmd>Lspsaga show_cursor_diagnostics<cr>", "Show cursor diagnostics" },
         ["<leader>ld"] = { "<cmd>TroubleToggle document_diagnostics<cr>", "Document diagnostics" },
         ["<leader>lw"] = { "<cmd>TroubleToggle workspace_diagnostics<cr>", "Workspace diagnostics" },
         ["<leader>qf"] = { "<cmd>TroubleToggle quickfix<cr>", "Quickfix" },
@@ -201,5 +214,22 @@ M.ChatGPT = {
    },
 }
 M.ChatGPT.v = M.ChatGPT.n
+
+M.disabled = {
+    n = {
+        ["<leader>h"] = "",
+        ["<leader>v"] = "",
+    }
+}
+
+M.Neotest = {
+    plugin = false,
+    n = {
+        ["<leader>tr"] = {"<cmd>Neotest run<CR>", "Run current test"},
+        ["<leader>to"] = {"<cmd>Neotest output-panel<CR>", "Open test output"},
+        ["<leader>ts"] = {"<cmd>Neotest summary<CR>", "Open test output"},
+    }
+
+}
 
 return M

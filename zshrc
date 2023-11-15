@@ -12,7 +12,6 @@ bindkey -e
 #GITSTATUS_LOG_LEVEL=DEBUG
 
 # Environmet Variables
-export PAGER=slit
 export VISUAL=nvim
 export EDITOR=nvim
 export GOPATH="$HOME/go"
@@ -22,7 +21,7 @@ export TMUX_CONF_LOCAL="$DOTFILES/tmux.conf.local"
 export PATH="$PATH:/opt/homebrew/bin:$HOME/bin:$HOME/.local/bin:$GOPATH/bin:$GOROOT/bin:$HOME/go/bin:$HOME/.cargo/bin"
 
 export RUST_BACKTRACE=1
-export OPENAI_API_KEY="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"
+export OPENAI_API_KEY="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"
 
 # Alias
 alias vim="nvim"
@@ -40,6 +39,7 @@ alias s="source ~/.zshrc"
 
 alias h="cat $DOTFILES/helpers.txt| fzf | pbcopy"
 
+alias b="git branch --show-current"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND="rg --files"
