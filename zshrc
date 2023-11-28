@@ -35,6 +35,9 @@ alias qqq="cd ../../../"                     # Go back 3 directory levels
 alias qqqq="cd ../../../../"                  # Go back 4 directory levels
 alias qqqqq="cd ../../../../../"               # Go back 5 directory levels
 
+alias p="cd ~/work/pelanor/"
+alias p2="cd ~/work/pelanor2/"
+
 alias s="source ~/.zshrc"
 
 alias h="cat $DOTFILES/helpers.txt| fzf | pbcopy"

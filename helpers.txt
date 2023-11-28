@@ -29,3 +29,7 @@ weka version get $WV && weka local upgrade --all --target-version $WV --skip-all
 ./teka upgrade --mode=local
 seq 0 79 | xargs -P20 -IHOST ssh T-stark-HOST -- weka local enable
 ./teka releases create-schedule -b 4.2.3-squarepoint --base-version 4.2.3 --trunk verbose-agent --build-opts="--release --disable-asserts" --release-recovery=yes -t ga --reason "Adds logs to agent around starting containers(But not too many logs)"
+
+
+aws s3 sync --delete  s3://pelanor-test-customer-data-archive/customer1/ ~/work/customers/customer1
+cargo run --release --bin analytics ~/work/customers --local --no-progress --max-artifact-age 3

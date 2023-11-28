@@ -1,20 +1,6 @@
 local overrides = require("custom.configs.overrides")
 
 -- Update this path
-local extension_path = vim.env.HOME .. '/.vscode/extensions/vadimcn.vscode-lldb-1.10.0/'
-local codelldb_path = extension_path .. 'adapter/codelldb'
-local liblldb_path = extension_path .. 'lldb/lib/liblldb'
-local this_os = vim.loop.os_uname().sysname;
-
--- The path in windows is different
-if this_os:find "Windows" then
-  codelldb_path = extension_path .. "adapter\\codelldb.exe"
-  liblldb_path = extension_path .. "lldb\\bin\\liblldb.dll"
-else
-  -- The liblldb extension is .so for linux and .dylib for macOS
-  liblldb_path = liblldb_path .. (this_os == "Linux" and ".so" or ".dylib")
-end
-
 ---@type NvPluginSpec[]
 local plugins = {
 
@@ -95,20 +81,9 @@ local plugins = {
         lazy = false,
         config = function()
             -- optional: setup telescope before loading the extension
-            require("telescope").setup({
-                -- move this to the place where you call the telescope setup function
-                extensions = {
-                    advanced_git_search = {
-                        -- fugitive or diffview
-                        diff_plugin = "diffview",
-                    },
-                },
-            })
-
             require("telescope").load_extension("advanced_git_search")
         end,
         dependencies = {
-            { "sindrets/diffview.nvim", },
             { "tpope/vim-fugitive", },
             { "tpope/vim-rhubarb", },
         },
@@ -145,24 +120,15 @@ local plugins = {
         opts = function()
             return require("custom.configs.rust-tools")
         end,
-        config = function(_)
-            require("rust-tools").setup({
-                dap = {
-                    adapter = require('rust-tools.dap').get_codelldb_adapter(
-                        codelldb_path, liblldb_path)
-                },
-                tools = {
-                    hover_actions = {
-                        auto_focus = true,
-                    },
-                }
-            })
+        config = function(_, opts)
+            require("rust-tools").setup(opts)
         end,
     },
     {
         "rust-lang/rust.vim",
         ft = "rust",
         config = function()
+            vim.g.rustfmt_command = 'rustfmt +nightly-2023-11-18'
             vim.g.rustfmt_autosave = 1
         end,
     },
@@ -221,9 +187,9 @@ local plugins = {
         lazy = false,
         config = function()
             require("leap").add_default_mappings()
-            require('leap').add_repeat_mappings(';', ',', {
-                relative_directions = true,
-            })
+            -- require('leap').add_repeat_mappings(';', ',', {
+            --     relative_directions = true,
+            -- })
         end
     },
     {
@@ -242,13 +208,6 @@ local plugins = {
             require'spaceless'.setup()
         end,
         lazy = false
-    },
-    {
-        "nvim-telescope/telescope-frecency.nvim",
-        config = function()
-            require("telescope").load_extension "frecency"
-        end,
-        lazy = false,
     },
     {
         'windwp/nvim-autopairs',
@@ -295,22 +254,13 @@ local plugins = {
             require("neotest").setup({
                 adapters = {
                     require("neotest-rust") {
-                        args = {"--failure-output=immediate"}
+                        args = {"--failure-output=immediate",
+                                -- "--nocapture",
+                        }
                     }
                 }
             })
         end,
-    },
-    {
-        'nvimdev/lspsaga.nvim',
-        config = function()
-            require('lspsaga').setup({})
-        end,
-        lazy = false,
-        dependencies = {
-            'nvim-treesitter/nvim-treesitter',
-            'nvim-tree/nvim-web-devicons',
-        },
     },
     {
         "jackMort/ChatGPT.nvim",
@@ -346,7 +296,26 @@ local plugins = {
     {
         'lewis6991/gitsigns.nvim',
         lazy = false,
-    }
+    },
+    {
+        'weilbith/nvim-code-action-menu',
+        lazy = false,
+        config = function()
+            vim.g.code_action_menu_show_action_kind = false
+            vim.g.code_action_menu_show_details = false
+        end
+    },
+    {
+        'unblevable/quick-scope',
+        lazy = false,
+        config = function()
+            vim.cmd [[
+              highlight QuickScopePrimary guifg='#af0f5f' gui=underline ctermfg=155 cterm=underline
+              highlight QuickScopeSecondary guifg='#5000ff' gui=underline ctermfg=81 cterm=underline
+            ]]
+
+        end
+    },
 }
 
 return plugins
