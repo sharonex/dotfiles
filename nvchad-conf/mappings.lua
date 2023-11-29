@@ -37,6 +37,7 @@ M.general = {
         ["}"] = {"}]"},
         ["[{"] = {"{"},
         ["}]"] = {"}"},
+        ["=="] = {"mb10k=20j`b", "Indent in 10 line chunk(up and down)"},
 
         ["<M-,>"] = { "<cmd> lua require('sibling-swap').swap_with_left_with_opp()<CR>", "swaps arguments to the left"},
         ["<M-.>"] = { "<cmd> lua require('sibling-swap').swap_with_right_with_opp()<CR>", "swaps arguments to the right"},
@@ -78,18 +79,21 @@ M.general = {
         ["gx"] ={"<cmd>lua require('substitute.exchange').operator()<cr>"},
         ["gxx"] ={"<cmd>lua require('substitute.exchange').line()<cr>"},
         ["gxc"] = { "<cmd>lua require('substitute.exchange').cancel()<cr>"},
+
+        -- Rust
+        ["<leader>re"] = {"<cmd>RustExpandMacro<CR>", "Rust expand macro"},
+        ["<leader>rc"] = {"<cmd>RustOpenCargo<CR>", "Rust open cargo"},
 	},
 	v = {
         ["gs"] ={"<cmd>lua require('substitute').visual()<cr>"},
         ["gx"] ={"<cmd>lua require('substitute.exchange').visual()<cr>"},
-		["L"] = { "$", "End of line" },
-        ["H"] = { "0", "Start of line" },
+		["L"] = { "$h", "End of line" },
+		["H"] = { "^", "Start of line" },
         ["J"] = {":m '>+1<CR>gv=gv", "Move line down"},
         ["K"] = {":m '<-2<CR>gv=gv", "Move line up"},
         ["<"] = { "<gv" },
         [">"] = { ">gv" },
         ["="] = { "=gv" },
-        ["<leader>ca"] ={"<cmd>Lspsaga code_action <cr>", "Open code actions"},
 		["<leader>sp"] = {
 			function()
 				-- yank the highlighted text into register z

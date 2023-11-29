@@ -255,7 +255,7 @@ local plugins = {
                 adapters = {
                     require("neotest-rust") {
                         args = {"--failure-output=immediate",
-                                -- "--nocapture",
+                            -- "--nocapture",
                         }
                     }
                 }
@@ -312,7 +312,7 @@ local plugins = {
             vim.cmd [[
               highlight QuickScopePrimary guifg='#af0f5f' gui=underline ctermfg=155 cterm=underline
               highlight QuickScopeSecondary guifg='#5000ff' gui=underline ctermfg=81 cterm=underline
-            ]]
+              ]]
 
         end
     },
