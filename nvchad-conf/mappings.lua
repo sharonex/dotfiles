@@ -83,6 +83,7 @@ M.general = {
         -- Rust
         ["<leader>re"] = {"<cmd>RustExpandMacro<CR>", "Rust expand macro"},
         ["<leader>rc"] = {"<cmd>RustOpenCargo<CR>", "Rust open cargo"},
+        ["<leader>rp"] = {"<cmd>RustParentModule<CR>", "Rust open parent module"},
 	},
 	v = {
         ["gs"] ={"<cmd>lua require('substitute').visual()<cr>"},
@@ -94,6 +95,7 @@ M.general = {
         ["<"] = { "<gv" },
         [">"] = { ">gv" },
         ["="] = { "=gv" },
+        ["v"] = { "<Plug>(expand_region_expand)", "Expand selection region"},
 		["<leader>sp"] = {
 			function()
 				-- yank the highlighted text into register z

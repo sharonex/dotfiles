@@ -263,34 +263,8 @@ local plugins = {
         end,
     },
     {
-        "jackMort/ChatGPT.nvim",
-        lazy = false,
-        config = function()
-            require("chatgpt").setup()
-        end,
-        dependencies = {
-            "MunifTanjim/nui.nvim",
-            "nvim-lua/plenary.nvim",
-            "nvim-telescope/telescope.nvim"
-        }
-    },
-    {
-        'Wansmer/sibling-swap.nvim',
-        requires = { 'nvim-treesitter' },
-        lazy = false,
-        config = function()
-            require('sibling-swap').setup({
-                enable_default_keymaps = false,
-            })
-        end,
-    },
-    {
         'akinsho/git-conflict.nvim',
         config = true,
-        lazy = false,
-    },
-    {
-        "kevinhwang91/nvim-bqf",
         lazy = false,
     },
     {
@@ -316,6 +290,62 @@ local plugins = {
 
         end
     },
+    {
+        'nvim-treesitter/nvim-treesitter-textobjects',
+        lazy = false,
+        config = function()
+            require'nvim-treesitter.configs'.setup {
+                textobjects = {
+                    select = {
+                        enable = true,
+                        lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
+                        keymaps = {
+                            -- You can use the capture groups defined in textobjects.scm
+                            ["af"] = "@function.outer",
+                            ["if"] = "@function.inner",
+                        },
+                    },
+                    swap = {
+                        enable = true,
+                        swap_next = {
+                            ["<leader>a"] = "@parameter.inner",
+                        },
+                        swap_previous = {
+                            ["<leader>A"] = "@parameter.inner",
+                        },
+                    },
+                    move = {
+                        enable = true,
+                        set_jumps = true, -- whether to set jumps in the jumplist
+                        goto_next_start = {
+                            ["]m"] = "@function.outer",
+                            ["]]"] = "@class.outer",
+                        },
+                        goto_next_end = {
+                            ["]M"] = "@function.outer",
+                            ["]["] = "@class.outer",
+                        },
+                        goto_previous_start = {
+                            ["[m"] = "@function.outer",
+                            ["[["] = "@class.outer",
+                        },
+                        goto_previous_end = {
+                            ["[M"] = "@function.outer",
+                            ["[]"] = "@class.outer",
+                        },
+                    },
+                },
+            }
+        end
+    },
+    {
+       'terryma/vim-expand-region',
+        lazy = false,
+    },
+    {
+        "kevinhwang91/nvim-bqf",
+        lazy = false,
+    }
 }
 
 return plugins
