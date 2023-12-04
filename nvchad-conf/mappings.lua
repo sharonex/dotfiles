@@ -209,32 +209,6 @@ M.trouble = {
     }
 }
 
-M.ChatGPT = {
-   n = {
-       ["<leader>ac"] = { "<cmd>ChatGPT<CR>", "ChatGPT" },
-       ["<leader>ae"] = { "<cmd>ChatGPTEditWithInstruction<CR>", "Edit with instruction" },
-       ["<leader>ag"] = { "<cmd>ChatGPTRun grammar_correction<CR>", "Grammar Correction" },
-       ["<leader>at"] = { "<cmd>ChatGPTRun translate<CR>", "Translate" },
-       ["<leader>ak"] = { "<cmd>ChatGPTRun keywords<CR>", "Keywords" },
-       ["<leader>ad"] = { "<cmd>ChatGPTRun docstring<CR>", "Docstring" },
-       ["<leader>aa"] = { "<cmd>ChatGPTRun add_tests<CR>", "Add Tests" },
-       ["<leader>ao"] = { "<cmd>ChatGPTRun optimize_code<CR>", "Optimize Code" },
-       ["<leader>as"] = { "<cmd>ChatGPTRun summarize<CR>", "Summarize" },
-       ["<leader>af"] = { "<cmd>ChatGPTRun fix_bugs<CR>", "Fix Bugs" },
-       ["<leader>ax"] = { "<cmd>ChatGPTRun explain_code<CR>", "Explain Code" },
-       ["<leader>ar"] = { "<cmd>ChatGPTRun roxygen_edit<CR>", "Roxygen Edit" },
-       ["<leader>al"] = { "<cmd>ChatGPTRun code_readability_analysis<CR>", "Code Readability Analysis" },
-   },
-}
-M.ChatGPT.v = M.ChatGPT.n
-
-M.disabled = {
-    n = {
-        ["<leader>h"] = "",
-        ["<leader>v"] = "",
-    }
-}
-
 M.Neotest = {
     plugin = false,
     n = {

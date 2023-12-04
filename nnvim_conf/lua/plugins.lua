@@ -171,30 +171,18 @@ require('lazy').setup({
             end,
         },
     },
-
-    {
-        -- Theme inspired by Atom
-        'navarasu/onedark.nvim',
-        priority = 1000,
-        config = function()
-            vim.cmd.colorscheme 'onedark'
-        end,
-    },
-
     {
         -- Set lualine as statusline
         'nvim-lualine/lualine.nvim',
         -- See `:help lualine.txt`
-        opts = {
-            options = {
-                icons_enabled = false,
-                theme = 'onedark',
-                component_separators = '|',
-                section_separators = '',
-            },
-        },
+        config = function()
+            require('lualine').setup({
+                sections = {
+                    lualine_c = { { 'filename', path = 1 } }
+                },
+	})
+        end,
     },
-
     {
         -- Add indentation guides even on blank lines
         'lukas-reineke/indent-blankline.nvim',
@@ -231,7 +219,13 @@ require('lazy').setup({
             pcall(require('telescope').load_extension, 'fzf')
         end
     },
-
+    {
+        'nvim-tree/nvim-tree.lua',
+        lazy = false,
+        config = function()
+            require("nvim-tree").setup()
+        end
+    },
     {
         -- Highlight, edit, and navigate code
         'nvim-treesitter/nvim-treesitter',
@@ -389,7 +383,14 @@ require('lazy').setup({
     },
     {
         'ThePrimeagen/harpoon',
-        lazy = false
+        branch = "harpoon2",
+        lazy = false,
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+        },
+        config = function()
+            require("harpoon"):setup({})
+        end
     },
     {
         "Sharonex/git-mediate.nvim",
@@ -436,6 +437,24 @@ require('lazy').setup({
             -- or leave it empty to use the default settings
             -- refer to the configuration section below
         },
+    },
+    {
+        "windwp/nvim-autopairs",
+        opts = {
+            fast_wrap = {},
+            disable_filetype = { "TelescopePrompt", "vim" },
+        },
+        config = function(_, opts)
+            require("nvim-autopairs").setup(opts)
+
+            -- setup cmp for autopairs
+            local cmp_autopairs = require "nvim-autopairs.completion.cmp"
+            require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
+        end,
+    },
+    {
+        "nvim-tree/nvim-web-devicons",
+        lazy = false,
     },
     {
         'lewis6991/spaceless.nvim',
@@ -500,8 +519,7 @@ require('lazy').setup({
               highlight QuickScopePrimary guifg='#af0f5f' gui=underline ctermfg=155 cterm=underline
               highlight QuickScopeSecondary guifg='#5000ff' gui=underline ctermfg=81 cterm=underline
               ]]
-
-        end
+        end,
     },
     {
         "kevinhwang91/nvim-bqf",
@@ -511,5 +529,27 @@ require('lazy').setup({
         'terryma/vim-expand-region',
         lazy = false,
     },
+    {
+        'notken12/base46-colors',
+        lazy = false,
+    },
+    {
+        "smoka7/multicursors.nvim",
+        event = "VeryLazy",
+        dependencies = {
+            'smoka7/hydra.nvim',
+        },
+        opts = {},
+        cmd = { 'MCstart', 'MCvisual', 'MCclear', 'MCpattern', 'MCvisualPattern', 'MCunderCursor' },
+        keys = {
+            {
+                mode = { 'v', 'n' },
+                '<Leader>m',
+                '<cmd>MCstart<cr>',
+                desc = 'Create a selection for selected text or word under the cursor',
+            },
+        },
+    }
+
 
 }, {})

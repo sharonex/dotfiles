@@ -6,6 +6,8 @@ vim.g.maplocalleader = ' '
 
 require("plugins")
 
+vim.cmd [[colorscheme ayu_dark]]
+
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
@@ -47,8 +49,26 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
--- [[ Basic Keymaps ]]
+vim.o.tabstop = 4 -- A TAB character looks like 4 spaces
+vim.o.expandtab = true -- Pressing the TAB key will insert spaces instead of a TAB character
+vim.o.softtabstop = 4 -- Number of spaces inserted instead of a TAB character
+vim.o.shiftwidth = 4 -- Number of spaces inserted when indenting
 
+vim.opt.swapfile = false
+
+vim.wo.relativenumber = true
+
+vim.diagnostic.config({severity_sort = true})
+-- nicer lsp diagnostics icons
+local signs = { Error = "", Warn = "", Hint = "󰌵", Info = "" }
+for type, icon in pairs(signs) do
+  local hl = "DiagnosticSign" .. type
+  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+end
+vim.cmd [[ hi DiagnosticSignError guifg=#EF5350 ]]
+vim.cmd [[ hi DiagnosticError guifg=#EF5350 ]]
+
+-- [[ Basic Keymaps ]]
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
@@ -61,9 +81,3 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 require('mappings')
-
--- [[ Configure nvim-cmp ]]
--- See `:help cmp`
-
--- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et

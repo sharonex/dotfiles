@@ -1,7 +1,6 @@
 local overrides = require("custom.configs.overrides")
 
 -- Update this path
----@type NvPluginSpec[]
 local plugins = {
 
     -- Override plugin definition options
