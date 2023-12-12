@@ -31,7 +31,7 @@ require('lazy').setup({
 
     {
         'williamboman/mason.nvim',
-        dependencies = {'williamboman/mason-lspconfig.nvim'},
+        dependencies = { 'williamboman/mason-lspconfig.nvim' },
         config = function()
             require('mason').setup()
             require('mason-lspconfig').setup()
@@ -97,9 +97,9 @@ require('lazy').setup({
                 mapping = cmp.mapping.preset.insert {
                     ['<C-n>'] = cmp.mapping.select_next_item(),
                     ['<C-p>'] = cmp.mapping.select_prev_item(),
-                    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-                    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-                    ['<C-Space>'] = cmp.mapping.complete {},
+                    -- Commented out since I use C-f for from tpope/rsi
+                    -- ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+                    -- ['<C-f>'] = cmp.mapping.scroll_docs(4),
                     ['<CR>'] = cmp.mapping.confirm {
                         behavior = cmp.ConfirmBehavior.Replace,
                         select = true,
@@ -132,7 +132,7 @@ require('lazy').setup({
     },
 
     -- Useful plugin to show you pending keybinds.
-    { 'folke/which-key.nvim', opts = {} },
+    { 'folke/which-key.nvim',  opts = {} },
     {
         -- Adds git related signs to the gutter, as well as utilities for managing changes
         'lewis6991/gitsigns.nvim',
@@ -146,8 +146,6 @@ require('lazy').setup({
                 changedelete = { text = '~' },
             },
             on_attach = function(bufnr)
-                vim.keymap.set('n', '<leader>hp', require('gitsigns').preview_hunk, { buffer = bufnr, desc = 'Preview git hunk' })
-
                 -- don't override the built-in and fugitive keymaps
                 local gs = package.loaded.gitsigns
                 vim.keymap.set({ 'n', 'v' }, ']c', function()
@@ -180,7 +178,7 @@ require('lazy').setup({
                 sections = {
                     lualine_c = { { 'filename', path = 1 } }
                 },
-	})
+            })
         end,
     },
     {
@@ -299,14 +297,19 @@ require('lazy').setup({
                     },
                 }
             end, 0)
-
         end
     },
 
     -- sharon configs
     {
-        "tpope/vim-surround",
-        lazy = false,
+        "kylechui/nvim-surround",
+        version = "*", -- Use for stability; omit to use `main` branch for the latest features
+        event = "VeryLazy",
+        config = function()
+            require("nvim-surround").setup({
+                -- Configuration here, or leave empty to use defaults
+            })
+        end
     },
     {
         "kdheepak/lazygit.nvim",
@@ -316,7 +319,7 @@ require('lazy').setup({
         'tpope/vim-fugitive',
         lazy = false,
         -- doesn't work :(
-        config = function ()
+        config = function()
             -- TODO: This is meant to be a fugitive mapping region. But it doesn't work.
             -- I think ThePrimeagen's config has a working example of this.
             local fugitiveMappings = vim.api.nvim_create_augroup('FugitiveMappings', { clear = true })
@@ -370,12 +373,14 @@ require('lazy').setup({
         end,
     },
     {
-        "rust-lang/rust.vim",
-        ft = "rust",
-        config = function()
-            vim.g.rustfmt_command = 'rustfmt +nightly-2023-11-18'
-            vim.g.rustfmt_autosave = 1
-        end,
+        "gbprod/yanky.nvim",
+        dependencies = {
+            { "kkharji/sqlite.lua" }
+        },
+        opts = {
+            ring = { storage = "sqlite" },
+        },
+        lazy = false,
     },
     {
         "christoomey/vim-tmux-navigator",
@@ -383,18 +388,17 @@ require('lazy').setup({
     },
     {
         'ThePrimeagen/harpoon',
-        branch = "harpoon2",
-        lazy = false,
+        branch = "master",
         dependencies = {
             'nvim-lua/plenary.nvim',
         },
-        config = function()
-            require("harpoon"):setup({})
-        end
+        -- config = function()
+        --     require("harpoon"):setup({})
+        -- end
     },
     {
-        "Sharonex/git-mediate.nvim",
-        dependencies={"mkotha/conflict3", "skywind3000/asyncrun.vim"},
+        dir = "/Users/sharonavni/personal/git-mediate.nvim",
+        dependencies = { "skywind3000/asyncrun.vim", "kevinhwang91/nvim-bqf" },
         config = function()
             require("git-mediate").setup()
         end,
@@ -459,7 +463,7 @@ require('lazy').setup({
     {
         'lewis6991/spaceless.nvim',
         config = function()
-            require'spaceless'.setup()
+            require 'spaceless'.setup()
         end,
         lazy = false
     },
@@ -474,7 +478,7 @@ require('lazy').setup({
         end
     },
     {
-        "f-person/git-blame.nvim",
+        "tpope/vim-rsi",
         lazy = false,
     },
     {
@@ -495,7 +499,7 @@ require('lazy').setup({
             require("neotest").setup({
                 adapters = {
                     require("neotest-rust") {
-                        args = {"--failure-output=immediate",
+                        args = { "--failure-output=immediate",
                             -- "--nocapture",
                         }
                     }
@@ -513,7 +517,6 @@ require('lazy').setup({
     },
     {
         'unblevable/quick-scope',
-        lazy = false,
         config = function()
             vim.cmd [[
               highlight QuickScopePrimary guifg='#af0f5f' gui=underline ctermfg=155 cterm=underline
@@ -530,26 +533,22 @@ require('lazy').setup({
         lazy = false,
     },
     {
-        'notken12/base46-colors',
+        "mg979/vim-visual-multi",
+        branch = "master",
+        config = function()
+            vim.cmd("VMTheme codedark")
+        end,
+    },
+    {
+        "nvim-pack/nvim-spectre",
         lazy = false,
     },
     {
-        "smoka7/multicursors.nvim",
-        event = "VeryLazy",
-        dependencies = {
-            'smoka7/hydra.nvim',
-        },
-        opts = {},
-        cmd = { 'MCstart', 'MCvisual', 'MCclear', 'MCpattern', 'MCvisualPattern', 'MCunderCursor' },
-        keys = {
-            {
-                mode = { 'v', 'n' },
-                '<Leader>m',
-                '<cmd>MCstart<cr>',
-                desc = 'Create a selection for selected text or word under the cursor',
-            },
-        },
-    }
-
-
-}, {})
+        'notken12/base46-colors',
+        lazy = false,
+        config = function()
+            vim.cmd("colorscheme ayu_dark")
+        end
+    },
+}, {
+})

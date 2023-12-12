@@ -6,7 +6,15 @@ vim.g.maplocalleader = ' '
 
 require("plugins")
 
-vim.cmd [[colorscheme ayu_dark]]
+vim.cmd [[
+  highlight QuickScopePrimary guifg='#af0f5f' gui=underline ctermfg=155 cterm=underline
+  highlight QuickScopeSecondary guifg='#5000ff' gui=underline ctermfg=81 cterm=underline
+]]
+
+-- Disable automatic commenting on newline
+vim.cmd("autocmd BufEnter * set formatoptions-=cro")
+vim.cmd("autocmd BufEnter * setlocal formatoptions-=cro")
+
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -49,21 +57,21 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
-vim.o.tabstop = 4 -- A TAB character looks like 4 spaces
+vim.o.tabstop = 4      -- A TAB character looks like 4 spaces
 vim.o.expandtab = true -- Pressing the TAB key will insert spaces instead of a TAB character
-vim.o.softtabstop = 4 -- Number of spaces inserted instead of a TAB character
-vim.o.shiftwidth = 4 -- Number of spaces inserted when indenting
+vim.o.softtabstop = 4  -- Number of spaces inserted instead of a TAB character
+vim.o.shiftwidth = 4   -- Number of spaces inserted when indenting
 
 vim.opt.swapfile = false
 
 vim.wo.relativenumber = true
 
-vim.diagnostic.config({severity_sort = true})
+vim.diagnostic.config({ severity_sort = true })
 -- nicer lsp diagnostics icons
 local signs = { Error = "", Warn = "", Hint = "󰌵", Info = "" }
 for type, icon in pairs(signs) do
-  local hl = "DiagnosticSign" .. type
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+    local hl = "DiagnosticSign" .. type
+    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
 vim.cmd [[ hi DiagnosticSignError guifg=#EF5350 ]]
 vim.cmd [[ hi DiagnosticError guifg=#EF5350 ]]
@@ -73,11 +81,14 @@ vim.cmd [[ hi DiagnosticError guifg=#EF5350 ]]
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
-  callback = function()
-    vim.highlight.on_yank()
-  end,
-  group = highlight_group,
-  pattern = '*',
+    callback = function()
+        vim.highlight.on_yank()
+    end,
+    group = highlight_group,
+    pattern = '*',
 })
+
+-- Enable format on save
+vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.format()]]
 
 require('mappings')

@@ -7,6 +7,8 @@ fi
 
 bindkey -e
 
+bindkey "^[[3~" delete-char
+
 #zmodload zsh/zprof
 
 #GITSTATUS_LOG_LEVEL=DEBUG
@@ -15,6 +17,7 @@ bindkey -e
 export VISUAL=nvim
 export EDITOR=nvim
 export GOPATH="$HOME/go"
+export WORDCHARS=$WORDCHARS-
 
 export DOTFILES="$HOME/.dotfiles"
 export TMUX_CONF_LOCAL="$DOTFILES/tmux.conf.local"
@@ -77,6 +80,12 @@ autoload -Uz _zinit
 #  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 #fi
 
+my-backward-delete-word() {
+    local WORDCHARS=${WORDCHARS/\//}
+    zle backward-delete-word
+}
+zle -N my-backward-delete-word
+bindkey '^W' my-backward-delete-word
 # https://github.com/zdharma/fast-syntax-highlighting#zinit
 zinit wait lucid for \
  atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" \
