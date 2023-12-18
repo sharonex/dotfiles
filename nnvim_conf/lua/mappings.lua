@@ -80,6 +80,14 @@ vim.keymap.set(
     "<cmd> Telescope lsp_dynamic_workspace_symbols <CR>",
     { desc = "Search workspace symbols" }
 )
+
+-- vim.keymap.set(
+--     "",
+--     "<Leader>lq",
+--     require("lsp_lines").toggle,
+--     { desc = "Toggle lsp_lines" }
+-- )
+
 -------------------------------------------------------
 
 -- Tmux window navigation
@@ -91,7 +99,7 @@ vim.keymap.set("n", "<C-k>", "<cmd> TmuxNavigateUp<CR>", { desc = "window up" })
 
 -- Setup neovim lua configuration
 
-vim.keymap.set("n", "<C-t>", ":NvimTreeFindFileToggle<CR>", { desc = "Toggle nvim tree" })
+vim.keymap.set("n", "<C-q>", ":NvimTreeFindFileToggle<CR>", { desc = "Toggle nvim tree" })
 
 -------------- Editing -------------------------------
 -- Gnu line shortcuts in insert mode
@@ -107,8 +115,6 @@ vim.keymap.set("n", "<A-S-Right>", "4<C-W><", { desc = "Resize to the right" })
 vim.keymap.set("n", "<A-S-Up>", "4<C-W>+", { desc = "Resize to up" })
 vim.keymap.set("n", "<A-S-Down>", "4<C-W>-", { desc = "Resize to down" })
 vim.keymap.set("v", "p", '"_dP', { desc = "Paste without yanking" })
-
-vim.keymap.set("n", "J", "mpJx`p", { desc = "Join lines without spaces" })
 
 vim.keymap.set("n", "L", "$", { desc = "End of line" })
 vim.keymap.set("n", "H", "^", { desc = "Start of line" })

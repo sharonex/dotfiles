@@ -1,6 +1,6 @@
 [user]
 	name = Sharon Avni
-	email = sharon.a@pelanor.io
+	email = sharon@pelanor.io
 [core]
 	excludesfile = /Users/sharonavni/.gitignore_global
 [commit]

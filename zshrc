@@ -22,8 +22,7 @@ export WORDCHARS=$WORDCHARS-
 export DOTFILES="$HOME/.dotfiles"
 export TMUX_CONF_LOCAL="$DOTFILES/tmux.conf.local"
 export PATH="$PATH:/opt/homebrew/bin:$HOME/bin:$HOME/.local/bin:$GOPATH/bin:$GOROOT/bin:$HOME/go/bin:$HOME/.cargo/bin"
-
-export RUST_BACKTRACE=1
+export RUST_BACKTRACE=0
 export OPENAI_API_KEY="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"
 
 # Alias
@@ -46,6 +45,9 @@ alias s="source ~/.zshrc"
 alias h="cat $DOTFILES/helpers.txt| fzf | pbcopy"
 
 alias b="git branch --show-current"
+
+alias gpr="git pull origin main --rebase && git push origin `b`"
+
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND="rg --files"

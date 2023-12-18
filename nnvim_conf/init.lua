@@ -7,8 +7,10 @@ vim.g.maplocalleader = ' '
 require("plugins")
 
 vim.cmd [[
-  highlight QuickScopePrimary guifg='#af0f5f' gui=underline ctermfg=155 cterm=underline
-  highlight QuickScopeSecondary guifg='#5000ff' gui=underline ctermfg=81 cterm=underline
+  hi QuickScopePrimary guifg='#af0f5f' gui=underline ctermfg=155 cterm=underline
+  hi QuickScopeSecondary guifg='#5000ff' gui=underline ctermfg=81 cterm=underline
+  hi diffAdded ctermfg=188 ctermbg=64 cterm=bold guifg=#50FA7B guibg=NONE gui=NONE
+  hi diffRemoved ctermfg=88 ctermbg=NONE cterm=NONE guifg=#FA5057 guibg=NONE gui=NONE
 ]]
 
 -- Disable automatic commenting on newline
@@ -65,16 +67,6 @@ vim.o.shiftwidth = 4   -- Number of spaces inserted when indenting
 vim.opt.swapfile = false
 
 vim.wo.relativenumber = true
-
-vim.diagnostic.config({ severity_sort = true })
--- nicer lsp diagnostics icons
-local signs = { Error = "", Warn = "", Hint = "󰌵", Info = "" }
-for type, icon in pairs(signs) do
-    local hl = "DiagnosticSign" .. type
-    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-end
-vim.cmd [[ hi DiagnosticSignError guifg=#EF5350 ]]
-vim.cmd [[ hi DiagnosticError guifg=#EF5350 ]]
 
 -- [[ Basic Keymaps ]]
 -- [[ Highlight on yank ]]

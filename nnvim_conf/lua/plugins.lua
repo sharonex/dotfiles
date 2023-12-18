@@ -318,12 +318,11 @@ require('lazy').setup({
     {
         'tpope/vim-fugitive',
         lazy = false,
-        -- doesn't work :(
         config = function()
+            -- doesn't work :(
             -- TODO: This is meant to be a fugitive mapping region. But it doesn't work.
             -- I think ThePrimeagen's config has a working example of this.
             local fugitiveMappings = vim.api.nvim_create_augroup('FugitiveMappings', { clear = true })
-
             -- Create an autocommand within that group
             vim.api.nvim_create_autocmd('FileType', {
                 group = fugitiveMappings,
@@ -550,5 +549,25 @@ require('lazy').setup({
             vim.cmd("colorscheme ayu_dark")
         end
     },
-}, {
+    {
+        'nvimtools/none-ls.nvim',
+        event = "VeryLazy",
+        opts = function()
+            return require("configs.null-ls")
+        end,
+    },
+    {
+        'windwp/nvim-ts-autotag',
+        ft = { "html", "javascript", "javascriptreact", "typescript", "typescriptreact", "svelte", "vue" },
+        config = function()
+            require('nvim-ts-autotag').setup()
+        end
+    },
+    {
+        "ErichDonGubler/lsp_lines.nvim",
+        config = function()
+            require("lsp_lines").setup()
+        end,
+
+    },
 })

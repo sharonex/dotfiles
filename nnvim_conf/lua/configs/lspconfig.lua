@@ -12,7 +12,7 @@ M.servers = {
   -- gopls = {},
   -- pyright = {},
   -- rust_analyzer = {},
-  -- tsserver = {},
+  tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
   lua_ls = {
@@ -20,10 +20,35 @@ M.servers = {
       workspace = { checkThirdParty = false },
       telemetry = { enable = false },
       -- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-      diagnostics = { disable = { 'missing-fields' }, globals = {'vim'} },
+      diagnostics = { disable = { 'missing-fields' }, globals = { 'vim' } },
     },
   },
 }
+
+-- vim.lsp.handlers["textDocument/publishDiagnostics"] =
+--     vim.lsp.with(
+--       vim.lsp.diagnostic.on_publish_diagnostics,
+--       {
+--         virtual_text = true,
+--       }
+--     )
+
+M.lines_enabled = false
+M.toggle_lsp_lines = function()
+  M.lines_enabled = not M.lines_enabled
+  vim.diagnostic.config({
+    virtual_lines = M.lines_enabled,
+    virtual_text = not M.lines_enabled,
+    severity_sort = not M.lines_enabled
+  })
+end
+
+vim.diagnostic.config({
+  severity_sort = true,
+  virtual_text = true,
+})
+
+vim.keymap.set('n', '<leader>lq', M.toggle_lsp_lines, { desc = '[L]SP [Q]uickfix Toggle' })
 
 M.on_attach = function(_, bufnr)
   -- NOTE: Remember that lua is a real programming language, and as such it is possible
@@ -90,12 +115,21 @@ mason_lspconfig.setup {
   ensure_installed = vim.tbl_keys(M.servers),
 }
 
+-- nicer lsp diagnostics icons
+local signs = { Error = "", Warn = "", Hint = "󰌵", Info = "" }
+for type, icon in pairs(signs) do
+  local hl = "DiagnosticSign" .. type
+  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+end
+vim.cmd [[ hi DiagnosticSignError guifg=#EF5350 ]]
+vim.cmd [[ hi DiagnosticError guifg=#EF5350 ]]
+
 
 mason_lspconfig.setup_handlers {
   function(server_name)
     require('lspconfig')[server_name].setup {
       capabilities = capabilities,
-      --on_attach = on_attach,
+      on_attach = M.on_attach,
       settings = M.servers[server_name],
       filetypes = (M.servers[server_name] or {}).filetypes,
     }
