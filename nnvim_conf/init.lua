@@ -5,14 +5,6 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 require("plugins")
-
-vim.cmd [[
-  hi QuickScopePrimary guifg='#af0f5f' gui=underline ctermfg=155 cterm=underline
-  hi QuickScopeSecondary guifg='#5000ff' gui=underline ctermfg=81 cterm=underline
-  hi diffAdded ctermfg=188 ctermbg=64 cterm=bold guifg=#50FA7B guibg=NONE gui=NONE
-  hi diffRemoved ctermfg=88 ctermbg=NONE cterm=NONE guifg=#FA5057 guibg=NONE gui=NONE
-]]
-
 -- Disable automatic commenting on newline
 vim.cmd("autocmd BufEnter * set formatoptions-=cro")
 vim.cmd("autocmd BufEnter * setlocal formatoptions-=cro")
@@ -82,5 +74,15 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 -- Enable format on save
 vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.format()]]
+
+vim.cmd [[
+  hi QuickScopePrimary guifg='#af0f5f' gui=underline ctermfg=155 cterm=underline
+  hi QuickScopeSecondary guifg='#5000ff' gui=underline ctermfg=81 cterm=underline
+  hi diffAdded ctermfg=188 ctermbg=64 cterm=bold guifg=#50FA7B guibg=NONE gui=NONE
+  hi diffRemoved ctermfg=88 ctermbg=NONE cterm=NONE guifg=#FA5057 guibg=NONE gui=NONE
+  hi DiagnosticSignError guifg=#EF5350
+  hi DiagnosticError guifg=#EF5350
+]]
+
 
 require('mappings')

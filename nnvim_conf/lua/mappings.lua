@@ -120,6 +120,9 @@ vim.keymap.set("n", "L", "$", { desc = "End of line" })
 vim.keymap.set("n", "H", "^", { desc = "Start of line" })
 vim.keymap.set("v", "L", "$h", { desc = "End of line" })
 vim.keymap.set("v", "H", "^", { desc = "Start of line" })
+-- No need to make a motion for L because all motions in upper case already go to the end of line
+vim.keymap.set('o', 'H', ':normal H<CR>', { noremap = false, silent = true })
+
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Page Down" })
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Page Up" })
 
@@ -128,6 +131,14 @@ vim.keymap.set("n", "<C-w>kj", "<C-w>j<C-w>q", { desc = "Kill window below" })
 vim.keymap.set("n", "<C-w>kk", "<C-w>k<C-w>q", { desc = "Kill window above" })
 vim.keymap.set("n", "<C-w>kl", "<C-w>l<C-w>q", { desc = "Kill window to the right" })
 vim.keymap.set("n", "==", "mb10k=20j`b", { desc = "Indent in 10 line chunk(up and down)" })
+
+-- motions
+vim.keymap.set({ "o", "x" }, "il", ":<c-u>normal! $v^<cr>", { noremap = true, silent = true })
+
+vim.keymap.set({ "o", "x" }, 'ii', ":lua require('configs/indentation_object')(false)<CR>",
+    { noremap = true, silent = true })
+vim.keymap.set({ "o", "x" }, 'ai', ":lua require('configs/indentation_object')(true)<CR>",
+    { noremap = true, silent = true })
 
 vim.keymap.set('n', '<leader>S', '<cmd>lua require("spectre").toggle()<CR>', {
     desc = "Toggle [S]pectre"
@@ -158,9 +169,6 @@ vim.keymap.set("n", "<leader>xx", "<cmd>source % <CR>", { desc = "execute curren
 vim.keymap.set("n", "gx", "<cmd>lua require('substitute.exchange').operator()<cr>", { desc = "" })
 vim.keymap.set("n", "gxc", "<cmd>lua require('substitute.exchange').cancel()<cr>", { desc = "" })
 vim.keymap.set("v", "gx", "<cmd>lua require('substitute.exchange').visual()<cr>", { desc = "" })
-
--- Code actions
-vim.keymap.set({ "n", "v" }, "<leader>ca", "<cmd>CodeActionMenu<cr>", { desc = "Open code actions" })
 
 -- Rust
 vim.keymap.set("n", "<leader>re", "<cmd>RustExpandMacro<CR>", { desc = "[R]ust expand macro" })

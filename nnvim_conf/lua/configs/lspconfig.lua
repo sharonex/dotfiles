@@ -33,7 +33,7 @@ M.servers = {
 --       }
 --     )
 
-M.lines_enabled = false
+M.lines_enabled = true
 M.toggle_lsp_lines = function()
   M.lines_enabled = not M.lines_enabled
   vim.diagnostic.config({
@@ -42,6 +42,8 @@ M.toggle_lsp_lines = function()
     severity_sort = not M.lines_enabled
   })
 end
+-- Start with virtual lines disabled
+M.toggle_lsp_lines()
 
 vim.diagnostic.config({
   severity_sort = true,
@@ -70,12 +72,12 @@ M.on_attach = function(_, bufnr)
       desc = 'LSP: ' .. desc
     end
 
-    vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
+    vim.keymap.set('v', keys, func, { buffer = bufnr, desc = desc })
   end
 
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-  nmap("<leader>ca", "<cmd>CodeActionMenu<cr>", '[C]ode [A]ction')
-  vmap("<leader>ca", "<cmd>CodeActionMenu<cr>", '[C]ode [A]ction')
+  nmap("<leader>ca", require("actions-preview").code_actions, '[C]ode [A]ction')
+  vmap("<leader>ca", require("actions-preview").code_actions, '[C]ode [A]ction')
 
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
@@ -121,9 +123,6 @@ for type, icon in pairs(signs) do
   local hl = "DiagnosticSign" .. type
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
-vim.cmd [[ hi DiagnosticSignError guifg=#EF5350 ]]
-vim.cmd [[ hi DiagnosticError guifg=#EF5350 ]]
-
 
 mason_lspconfig.setup_handlers {
   function(server_name)
