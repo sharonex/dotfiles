@@ -5,6 +5,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 require("plugins")
+
 -- Disable automatic commenting on newline
 vim.cmd("autocmd BufEnter * set formatoptions-=cro")
 vim.cmd("autocmd BufEnter * setlocal formatoptions-=cro")
@@ -83,6 +84,5 @@ vim.cmd [[
   hi DiagnosticSignError guifg=#EF5350
   hi DiagnosticError guifg=#EF5350
 ]]
-
 
 require('mappings')

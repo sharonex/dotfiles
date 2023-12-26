@@ -531,7 +531,9 @@ require('lazy').setup({
         "mg979/vim-visual-multi",
         branch = "master",
         config = function()
-            vim.cmd("VMTheme codedark")
+            vim.cmd [[
+                VMTheme codedark
+            ]]
         end,
     },
     {
@@ -566,4 +568,11 @@ require('lazy').setup({
         end,
 
     },
+    {
+        "stevearc/oil.nvim",
+        lazy = false,
+        config = function()
+            require("oil").setup()
+        end,
+    }
 })
