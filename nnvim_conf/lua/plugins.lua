@@ -339,6 +339,12 @@ require('lazy').setup({
     --     end
     -- },
     {
+        'mrjones2014/smart-splits.nvim',
+        config = function()
+            require('smart-splits').setup()
+        end,
+    },
+    {
         "simrat39/rust-tools.nvim",
         ft = "rust",
         dependencies = "neovim/nvim-lspconfig",
@@ -357,10 +363,6 @@ require('lazy').setup({
         opts = {
             ring = { storage = "sqlite" },
         },
-        lazy = false,
-    },
-    {
-        "christoomey/vim-tmux-navigator",
         lazy = false,
     },
     {

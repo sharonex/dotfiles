@@ -27,7 +27,7 @@ vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagn
 
 -- See `:help telescope.builtin`
 vim.keymap.set("n", "<leader>?", require("telescope.builtin").oldfiles, { desc = "[?] Find recently opened files" })
-vim.keymap.set("n", "<leader><space>", require("telescope.builtin").buffers, { desc = "[ ] Find existing buffers" })
+-- vim.keymap.set("n", "<leader><space>", require("telescope.builtin").buffers, { desc = "[ ] Find existing buffers" })
 vim.keymap.set(
     "n",
     "<leader>/",
@@ -84,11 +84,21 @@ vim.keymap.set({ "n", "v" }, "<leader>p", function() require("telescope").extens
 -------------------------------------------------------
 
 -- Tmux window navigation
+vim.keymap.set('n', '<A-h>', require('smart-splits').resize_left)
+vim.keymap.set('n', '<A-j>', require('smart-splits').resize_down)
+vim.keymap.set('n', '<A-k>', require('smart-splits').resize_up)
+vim.keymap.set('n', '<A-l>', require('smart-splits').resize_right)
+-- moving between splits
+vim.keymap.set('n', '<C-h>', require('smart-splits').move_cursor_left)
+vim.keymap.set('n', '<C-j>', require('smart-splits').move_cursor_down)
+vim.keymap.set('n', '<C-k>', require('smart-splits').move_cursor_up)
+vim.keymap.set('n', '<C-l>', require('smart-splits').move_cursor_right)
+-- swapping buffers between windows
+vim.keymap.set('n', '<leader><leader>h', require('smart-splits').swap_buf_left)
+vim.keymap.set('n', '<leader><leader>j', require('smart-splits').swap_buf_down)
+vim.keymap.set('n', '<leader><leader>k', require('smart-splits').swap_buf_up)
+vim.keymap.set('n', '<leader><leader>l', require('smart-splits').swap_buf_right)
 
-vim.keymap.set("n", "<C-h>", "<cmd> TmuxNavigateLeft<CR>", { desc = "window left" })
-vim.keymap.set("n", "<C-l>", "<cmd> TmuxNavigateRight<CR>", { desc = "window right" })
-vim.keymap.set("n", "<C-j>", "<cmd> TmuxNavigateDown<CR>", { desc = "window down" })
-vim.keymap.set("n", "<C-k>", "<cmd> TmuxNavigateUp<CR>", { desc = "window up" })
 
 -- Setup neovim lua configuration
 
@@ -104,10 +114,6 @@ vim.keymap.set("i", "<C-c>", "<ESC>", { desc = "" })
 vim.keymap.set("n", "<C-o>", "<C-o>zz", { desc = "" })
 vim.keymap.set("n", "<C-i>", "<C-i>zz", { desc = "" })
 
-vim.keymap.set("n", "<A-S-Left>", "4<C-W>>", { desc = "Resize to the left" })
-vim.keymap.set("n", "<A-S-Right>", "4<C-W><", { desc = "Resize to the right" })
-vim.keymap.set("n", "<A-S-Up>", "4<C-W>+", { desc = "Resize to up" })
-vim.keymap.set("n", "<A-S-Down>", "4<C-W>-", { desc = "Resize to down" })
 -- vim.keymap.set("v", "p", '"_dP', { desc = "Paste without yanking" })
 
 vim.keymap.set("n", "L", "$", { desc = "End of line" })
