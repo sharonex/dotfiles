@@ -74,13 +74,6 @@ vim.keymap.set("n", "<leader>sk", "<cmd> Telescope keymaps <CR>", { desc = "Look
 vim.keymap.set({ "n", "v" }, "<leader>p", function() require("telescope").extensions.yank_history.yank_history({}) end,
     { desc = "Open yank History" })
 
-vim.keymap.set(
-    "n",
-    "<leader>ss",
-    "<cmd> Telescope lsp_dynamic_workspace_symbols <CR>",
-    { desc = "Search workspace symbols" }
-)
-
 -- vim.keymap.set(
 --     "",
 --     "<Leader>lq",
@@ -100,6 +93,7 @@ vim.keymap.set("n", "<C-k>", "<cmd> TmuxNavigateUp<CR>", { desc = "window up" })
 -- Setup neovim lua configuration
 
 vim.keymap.set("n", "<C-q>", ":NvimTreeFindFileToggle<CR>", { desc = "Toggle nvim tree" })
+vim.keymap.set("n", "<leader>tc", ":tabclose<CR>", { desc = "[T]ab [C]lose" })
 
 -------------- Editing -------------------------------
 -- Gnu line shortcuts in insert mode
@@ -114,7 +108,7 @@ vim.keymap.set("n", "<A-S-Left>", "4<C-W>>", { desc = "Resize to the left" })
 vim.keymap.set("n", "<A-S-Right>", "4<C-W><", { desc = "Resize to the right" })
 vim.keymap.set("n", "<A-S-Up>", "4<C-W>+", { desc = "Resize to up" })
 vim.keymap.set("n", "<A-S-Down>", "4<C-W>-", { desc = "Resize to down" })
-vim.keymap.set("v", "p", '"_dP', { desc = "Paste without yanking" })
+-- vim.keymap.set("v", "p", '"_dP', { desc = "Paste without yanking" })
 
 vim.keymap.set("n", "L", "$", { desc = "End of line" })
 vim.keymap.set("n", "H", "^", { desc = "Start of line" })
@@ -133,8 +127,6 @@ vim.keymap.set("n", "<C-w>kl", "<C-w>l<C-w>q", { desc = "Kill window to the righ
 vim.keymap.set("n", "==", "mb10k=20j`b", { desc = "Indent in 10 line chunk(up and down)" })
 
 -- motions
-vim.keymap.set({ "o", "x" }, "il", ":<c-u>normal! $v^<cr>", { noremap = true, silent = true })
-
 vim.keymap.set({ "o", "x" }, 'ii', ":lua require('configs/indentation_object')(false)<CR>",
     { noremap = true, silent = true })
 vim.keymap.set({ "o", "x" }, 'ai', ":lua require('configs/indentation_object')(true)<CR>",
@@ -143,6 +135,20 @@ vim.keymap.set({ "o", "x" }, 'ai', ":lua require('configs/indentation_object')(t
 vim.keymap.set('n', '<leader>S', '<cmd>lua require("spectre").toggle()<CR>', {
     desc = "Toggle [S]pectre"
 })
+
+-- Folds
+vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
+vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
+vim.keymap.set('n', '-', "zc", { desc = "Close fold" })
+vim.keymap.set('n', '+', "zo", { desc = "Open fold" })
+vim.keymap.set('n', 'K', function()
+    local winid = require('ufo').peekFoldedLinesUnderCursor()
+    if not winid then
+        -- choose one of coc.nvim and nvim lsp
+        vim.fn.CocActionAsync('definitionHover') -- coc.nvim
+        vim.lsp.buf.hover()
+    end
+end)
 
 vim.keymap.set("n", "cgw", "*Ncgn", { desc = "Repeatably change current word" })
 
@@ -169,40 +175,84 @@ vim.keymap.set("n", "<leader>xx", "<cmd>source % <CR>", { desc = "execute curren
 vim.keymap.set("n", "gx", "<cmd>lua require('substitute.exchange').operator()<cr>", { desc = "" })
 vim.keymap.set("n", "gxc", "<cmd>lua require('substitute.exchange').cancel()<cr>", { desc = "" })
 vim.keymap.set("v", "gx", "<cmd>lua require('substitute.exchange').visual()<cr>", { desc = "" })
+vim.keymap.set("n", "gp", "<cmd>lua require('substitute').operator()<cr>", { desc = "" })
+vim.keymap.set("v", "gP", "<cmd>lua require('substitute').eol()<cr>", { desc = "" })
 
 -- Rust
-vim.keymap.set("n", "<leader>re", "<cmd>RustExpandMacro<CR>", { desc = "[R]ust expand macro" })
-vim.keymap.set("n", "<leader>rc", "<cmd>RustOpenCargo<CR>", { desc = "[R]ust open cargo" })
-vim.keymap.set("n", "<leader>rp", "<cmd>RustParentModule<CR>", { desc = "[R]ust open parent module" })
+vim.keymap.set("n", "<leader>re", "<cmd>RustLsp expandMacro<CR>", { desc = "[R]ust expand macro" })
+vim.keymap.set("n", "<leader>rc", "<cmd>RustLsp openCargo<CR>", { desc = "[R]ust open cargo" })
+vim.keymap.set("n", "<leader>rp", "<cmd>RustLsp parentModule<CR>", { desc = "[R]ust open parent module" })
 
 
 -------------- Git ----------------------------------
 vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>", { desc = "Opens Lazy[G]it" })
 vim.keymap.set("n", "<leader>gB", "<cmd> Git blame<CR>", { desc = "Run [G]it [B]lame on file" })
 vim.keymap.set("n", "<leader>gb", "<cmd> Gitsigns toggle_current_line_blame<CR>", { desc = "[G]it [B]lame on each line" })
-vim.keymap.set(
-    "n",
-    "<leader>gaf",
-    ":AdvancedGitSearch diff_commit_file<CR>",
-    { desc = "Show last commits that changed current file" }
-)
-vim.keymap.set("n", "<leader>gas", ":AdvancedGitSearch search_log_content<CR>", { desc = "Search git log for something" })
+-- vim.keymap.set("n", "<leader>gas", ":AdvancedGitSearch search_log_content<CR>", { desc = "Search git log for something" })
 vim.keymap.set({ "n", "v" }, "<leader>gs", ":Gitsigns stage_hunk<CR>", { desc = "[G]it [S]tage hunk" })
-vim.keymap.set("n", "<leader>gr", ":Gitsigns reset_hunk<CR>", { desc = "[G]it [R]eset hunk" })
+vim.keymap.set({ "n", "v" }, "<leader>gu", ":Gitsigns reset_hunk<CR>", { desc = "[G]it [U]ndo hunk" })
 vim.keymap.set("n", "<leader>gp", ":Gitsigns preview_hunk<CR>", { desc = "[G]it [p]op hunk diff" })
 vim.keymap.set("n", "<leader>g[", ":GitMediate<CR>", { desc = "Run git mediate conflict resolver" })
 vim.keymap.set("n", "<leader>gf", ":Git<CR>/taged<CR>:noh<CR>j", { desc = "[G]it [F]ugitive" })
-vim.keymap.set("n", "<leader>gl", ":Git log<CR>", { desc = "[G]it fugitive [L]og" })
+vim.keymap.set("n", "<leader>gl", ":Git log <CR>", { desc = "[G]it fugitive [L]og" })
+vim.keymap.set("n", "<leader>grc", ":Git rebase --continue<CR>", { desc = "[G]it [R]ebase [C]ontinue" })
+vim.keymap.set("n", "<leader>gra", ":Git rebase --abort<CR>", { desc = "[G]it [R]ebase [A]ontinue" })
+vim.keymap.set("n", "<leader>gd", ":DiffviewOpen<CR>", { desc = "[G]it [D]iff" })
 
-vim.keymap.set(
-    "v",
-    "<leader>gal",
-    ":'<,'>AdvancedGitSearch diff_commit_line<CR>",
-    { desc = "Show last commits that changed highlighted lines" }
-)
+vim.keymap.set({ "n", "v" }, "<leader>gh", ":DiffviewFileHistory %<CR>", { desc = "[G]it [H]istory" })
+
 vim.keymap.set("n", "]g", ": Gitsigns next_hunk<CR>", { desc = "next git hunk" })
 vim.keymap.set("n", "[g", ": Gitsigns prev_hunk<CR>", { desc = "prev git hunk" })
--------------------------------------------------------
+-----------------------------------------------------
+
+-------------- LSP ----------------------------------
+local lsp_mappings = function(_)
+    local nmap = function(keys, func, desc)
+        if desc then
+            desc = 'LSP: ' .. desc
+        end
+
+        vim.keymap.set('n', keys, func, { desc = desc })
+    end
+
+    local vmap = function(keys, func, desc)
+        if desc then
+            desc = 'LSP: ' .. desc
+        end
+
+        vim.keymap.set('v', keys, func, { desc = desc })
+    end
+
+    nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+    nmap("<leader>ca", require("actions-preview").code_actions, '[C]ode [A]ction')
+    vmap("<leader>ca", require("actions-preview").code_actions, '[C]ode [A]ction')
+
+    nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+    nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+    nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+    nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
+    nmap('<leader>sd', require('telescope.builtin').lsp_document_symbols, '[S]earch [D]ocument')
+    nmap('<leader>ss', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[S]earch [S]ymbols')
+
+    -- See `:help K` for why this keymap
+    nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
+    nmap('<A-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+
+    -- Lesser used LSP functionality
+    nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+    nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
+    nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
+    nmap('<leader>wl', function()
+        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, '[W]orkspace [L]ist Folders')
+
+    -- Create a command `:Format` local to the LSP buffer
+    vim.api.nvim_buf_create_user_command(0, 'Format', function(_)
+        vim.lsp.buf.format()
+    end, { desc = 'Format current buffer with LSP' })
+end
+
+lsp_mappings()
 
 -- Harpoon 2
 -- local harpoon = require("harpoon")
@@ -230,6 +280,9 @@ vim.keymap.set("n", "<leader>lc", "<cmd> lua vim.diagnostic.open_float({scope=\"
 vim.keymap.set("n", "<leader>ld", "<cmd> TroubleToggle document_diagnostics<cr>", { desc = "Document diagnostics" })
 vim.keymap.set("n", "<leader>lw", "<cmd> TroubleToggle workspace_diagnostics<cr>", { desc = "Workspace diagnostics" })
 vim.keymap.set("n", "<leader>qf", "<cmd> TroubleToggle quickfix<cr>", { desc = " open [Q]uick[f]ix" })
+
+-- Oil
+vim.keymap.set("n", "|", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
 vim.keymap.set("n", "<leader>tr", "<cmd>Neotest run<CR>", { desc = "Run current test" })
 

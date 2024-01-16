@@ -21,7 +21,7 @@ export WORDCHARS=$WORDCHARS-
 
 export DOTFILES="$HOME/.dotfiles"
 export TMUX_CONF_LOCAL="$DOTFILES/tmux.conf.local"
-export PATH="/opt/homebrew/bin:$HOME/bin:$HOME/.local/bin:$GOPATH/bin:$GOROOT/bin:$HOME/go/bin:$HOME/.cargo/bin:$PATH"
+export PATH="/opt/homebrew/bin:$HOME/bin:$HOME/.local/bin:$GOPATH/bin:$GOROOT/bin:$HOME/go/bin:$HOME/.cargo/bin:$PATH:$HOME/Library/Python/3.11/bin:$HOME/bin/nnvim/bin"
 export RUST_BACKTRACE=0
 export OPENAI_API_KEY="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"
 

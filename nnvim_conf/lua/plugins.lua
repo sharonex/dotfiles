@@ -78,57 +78,10 @@ require('lazy').setup({
 
             -- Adds a number of user-friendly snippets
             'rafamadriz/friendly-snippets',
+            'onsails/lspkind.nvim',
+            'mlaursen/vim-react-snippets',
         },
-        config = function()
-            local cmp = require 'cmp'
-            local luasnip = require 'luasnip'
-            require('luasnip.loaders.from_vscode').lazy_load()
-            luasnip.config.setup {}
-
-            cmp.setup {
-                snippet = {
-                    expand = function(args)
-                        luasnip.lsp_expand(args.body)
-                    end,
-                },
-                completion = {
-                    completeopt = 'menu,menuone,noinsert'
-                },
-                mapping = cmp.mapping.preset.insert {
-                    ['<C-n>'] = cmp.mapping.select_next_item(),
-                    ['<C-p>'] = cmp.mapping.select_prev_item(),
-                    -- Commented out since I use C-f for from tpope/rsi
-                    -- ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-                    -- ['<C-f>'] = cmp.mapping.scroll_docs(4),
-                    ['<CR>'] = cmp.mapping.confirm {
-                        behavior = cmp.ConfirmBehavior.Replace,
-                        select = true,
-                    },
-                    ['<Tab>'] = cmp.mapping(function(fallback)
-                        if cmp.visible() then
-                            cmp.select_next_item()
-                        elseif luasnip.expand_or_locally_jumpable() then
-                            luasnip.expand_or_jump()
-                        else
-                            fallback()
-                        end
-                    end, { 'i', 's' }),
-                    ['<S-Tab>'] = cmp.mapping(function(fallback)
-                        if cmp.visible() then
-                            cmp.select_prev_item()
-                        elseif luasnip.locally_jumpable(-1) then
-                            luasnip.jump(-1)
-                        else
-                            fallback()
-                        end
-                    end, { 'i', 's' }),
-                },
-                sources = {
-                    { name = 'nvim_lsp' },
-                    { name = 'luasnip' },
-                },
-            }
-        end
+        config = require('configs.cmp_config'),
     },
 
     -- Useful plugin to show you pending keybinds.
@@ -232,71 +185,73 @@ require('lazy').setup({
         },
         build = ':TSUpdate',
         config = function()
-            vim.defer_fn(function()
-                require('nvim-treesitter.configs').setup {
-                    -- Add languages to be installed here that you want installed for treesitter
-                    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
+            require('nvim-treesitter.configs').setup {
+                -- Add languages to be installed here that you want installed for treesitter
+                ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
 
-                    -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-                    auto_install = false,
+                -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
+                auto_install = false,
 
-                    highlight = { enable = true },
-                    indent = { enable = true },
-                    incremental_selection = {
+                highlight = { enable = true },
+                indent = { enable = true },
+                incremental_selection = {
+                    enable = true,
+                    keymaps = {
+                        init_selection = '<s-space>',
+                        scope_incremental = '<CR>',
+                        node_incremental = '<TAB>',
+                        node_decremental = '<S-TAB>',
+                    },
+                },
+                textobjects = {
+                    select = {
                         enable = true,
+                        lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
                         keymaps = {
-                            init_selection = '<c-space>',
-                            node_incremental = '<c-space>',
-                            scope_incremental = '<c-s>',
-                            node_decremental = '<M-space>',
+                            -- You can use the capture groups defined in textobjects.scm
+                            ['aa'] = '@parameter.outer',
+                            ['ia'] = '@parameter.inner',
+                            ['af'] = '@function.outer',
+                            ['if'] = '@function.inner',
+                            ['ac'] = '@class.outer',
+                            ['ic'] = '@class.inner',
+                            ['a/'] = '@comment.outer',
+                            ['i/'] = '@comment.inner',
+                            ['al'] = '@statement.outer',
+                            ['il'] = '@statement.outer',
                         },
                     },
-                    textobjects = {
-                        select = {
-                            enable = true,
-                            lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
-                            keymaps = {
-                                -- You can use the capture groups defined in textobjects.scm
-                                ['aa'] = '@parameter.outer',
-                                ['ia'] = '@parameter.inner',
-                                ['af'] = '@function.outer',
-                                ['if'] = '@function.inner',
-                                ['ac'] = '@class.outer',
-                                ['ic'] = '@class.inner',
-                            },
+                    move = {
+                        enable = true,
+                        set_jumps = true, -- whether to set jumps in the jumplist
+                        goto_next_start = {
+                            [']m'] = '@function.outer',
+                            [']]'] = '@class.outer',
                         },
-                        move = {
-                            enable = true,
-                            set_jumps = true, -- whether to set jumps in the jumplist
-                            goto_next_start = {
-                                [']m'] = '@function.outer',
-                                [']]'] = '@class.outer',
-                            },
-                            goto_next_end = {
-                                [']M'] = '@function.outer',
-                                [']['] = '@class.outer',
-                            },
-                            goto_previous_start = {
-                                ['[m'] = '@function.outer',
-                                ['[['] = '@class.outer',
-                            },
-                            goto_previous_end = {
-                                ['[M'] = '@function.outer',
-                                ['[]'] = '@class.outer',
-                            },
+                        goto_next_end = {
+                            [']M'] = '@function.outer',
+                            [']['] = '@class.outer',
                         },
-                        swap = {
-                            enable = true,
-                            swap_next = {
-                                ['<leader>a'] = '@parameter.inner',
-                            },
-                            swap_previous = {
-                                ['<leader>A'] = '@parameter.inner',
-                            },
+                        goto_previous_start = {
+                            ['[m'] = '@function.outer',
+                            ['[['] = '@class.outer',
+                        },
+                        goto_previous_end = {
+                            ['[M'] = '@function.outer',
+                            ['[]'] = '@class.outer',
                         },
                     },
-                }
-            end, 0)
+                    swap = {
+                        enable = true,
+                        swap_next = {
+                            ['<leader>a'] = '@parameter.inner',
+                        },
+                        swap_previous = {
+                            ['<leader>A'] = '@parameter.inner',
+                        },
+                    },
+                },
+            }
         end
     },
 
@@ -335,18 +290,6 @@ require('lazy').setup({
         end
     },
     {
-        "aaronhallaert/advanced-git-search.nvim",
-        lazy = false,
-        config = function()
-            -- optional: setup telescope before loading the extension
-            require("telescope").load_extension("advanced_git_search")
-        end,
-        dependencies = {
-            { "tpope/vim-fugitive", },
-            { "tpope/vim-rhubarb", },
-        },
-    },
-    {
         "rmagatti/auto-session",
         lazy = false,
         config = function()
@@ -360,6 +303,41 @@ require('lazy').setup({
         "mbbill/undotree",
         lazy = false,
     },
+    -- {
+    --     'mrcjkb/rustaceanvim',
+    --     version = '^3', -- Recommended
+    --     ft = { 'rust' },
+    --     {
+    --         "lvimuser/lsp-inlayhints.nvim",
+    --         opts = {}
+    --     },
+    --     config = function()
+    --         vim.g.rust_recommended_style = false
+    --         -- vim.cmd.RustLsp { 'flyCheck', 'cancel' }
+    --         vim.g.rustaceanvim = {
+    --             inlay_hints = {
+    --                 highlight = "NonText",
+    --             },
+    --             tools = {
+    --                 hover_actions = {
+    --                     auto_focus = true,
+    --                 },
+    --             },
+    --             server = {
+    --                 on_attach = function(client, bufnr)
+    --                     print("Attaching inlay hints")
+    --                     require("lsp-inlayhints").on_attach(client, bufnr)
+    --                 end
+    --             },
+    --             settings = {
+    --                 -- rust-analyzer language server configuration
+    --                 -- ['rust-analyzer'] = {
+    --                 --     checkOnSave = false,
+    --                 -- },
+    --             }
+    --         }
+    --     end
+    -- },
     {
         "simrat39/rust-tools.nvim",
         ft = "rust",
@@ -484,6 +462,26 @@ require('lazy').setup({
         "fdschmidt93/telescope-egrepify.nvim",
         lazy = false,
         config = function()
+            local egrep_actions = require "telescope._extensions.egrepify.actions"
+            require("telescope").setup {
+                extensions = {
+                    egrepify = {
+                        attach_mappings = false,
+                        -- default mappings
+                        mappings = {
+                            i = {
+                                -- toggle prefixes, prefixes is default
+                                ["<C-z>"] = egrep_actions.toggle_prefixes,
+                                -- toggle AND, AND is default, AND matches tokens and any chars in between
+                                ["<C-&>"] = egrep_actions.toggle_and,
+                                -- toggle permutations, permutations of tokens is opt-in
+                                ["<C-r>"] = egrep_actions.toggle_permutations,
+                            },
+                        },
+                    },
+                },
+            }
+
             require "telescope".load_extension("egrepify")
         end
     },
@@ -541,19 +539,17 @@ require('lazy').setup({
         lazy = false,
     },
     {
-        'notken12/base46-colors',
-        lazy = false,
-        config = function()
-            vim.cmd("colorscheme ayu_dark")
-        end
-    },
-    {
         'nvimtools/none-ls.nvim',
         event = "VeryLazy",
         opts = function()
             return require("configs.null-ls")
         end,
     },
+    -- {
+    --     "pmizio/typescript-tools.nvim",
+    --     dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+    --     opts = {},
+    -- },
     {
         'windwp/nvim-ts-autotag',
         ft = { "html", "javascript", "javascriptreact", "typescript", "typescriptreact", "svelte", "vue" },
@@ -574,5 +570,70 @@ require('lazy').setup({
         config = function()
             require("oil").setup()
         end,
-    }
+    },
+    {
+        'sindrets/diffview.nvim',
+        event = "VeryLazy",
+    },
+    -- {
+    --     "catppuccin/nvim",
+    --     lazy = false,
+    --     config = function()
+    --         vim.cmd("colorscheme catppuccin-mocha")
+    --     end
+    -- },
+    {
+        'navarasu/onedark.nvim',
+        lazy = false,
+        config = function()
+            require('onedark').setup {
+                -- Main options --
+                style = 'deep',               -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
+                transparent = false,          -- Show/hide background
+                term_colors = true,           -- Change terminal color as per the selected theme style
+                ending_tildes = false,        -- Show the end-of-buffer tildes. By default they are hidden
+                cmp_itemkind_reverse = false, -- reverse item kind highlights in cmp menu
+
+                -- toggle theme style ---
+                toggle_style_key = "<leader>tx",
+            }
+            vim.cmd("colorscheme onedark")
+        end
+    },
+    {
+        'pwntester/octo.nvim',
+        lazy = false,
+        config = function()
+            require "octo".setup({
+                colors = { -- used for highlight groups (see Colors section below)
+                    white = "#ffffff",
+                    grey = "#2A354C",
+                    black = "#000000",
+                    red = "#fdb8c0",
+                    dark_red = "#da3633",
+                    green = "#acf2bd",
+                    dark_green = "#238636",
+                    yellow = "#d3c846",
+                    dark_yellow = "#735c0f",
+                    blue = "#58A6FF",
+                    dark_blue = "#0366d6",
+                    purple = "#6f42c1",
+                },
+
+            })
+        end
+    },
+    {
+        "kevinhwang91/nvim-ufo",
+        event = "BufRead",
+        dependencies = { 'kevinhwang91/promise-async' },
+        config = function()
+            vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
+            require("ufo").setup({
+                provider_selector = function(_, _, _)
+                    return { 'lsp', 'indent' }
+                end,
+            })
+        end,
+    },
 })

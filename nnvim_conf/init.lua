@@ -79,10 +79,22 @@ vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.format()]]
 vim.cmd [[
   hi QuickScopePrimary guifg='#af0f5f' gui=underline ctermfg=155 cterm=underline
   hi QuickScopeSecondary guifg='#5000ff' gui=underline ctermfg=81 cterm=underline
-  hi diffAdded ctermfg=188 ctermbg=64 cterm=bold guifg=#50FA7B guibg=NONE gui=NONE
-  hi diffRemoved ctermfg=88 ctermbg=NONE cterm=NONE guifg=#FA5057 guibg=NONE gui=NONE
-  hi DiagnosticSignError guifg=#EF5350
-  hi DiagnosticError guifg=#EF5350
+  " hi DiffAdd    ctermfg=NONE ctermbg=Green guifg=NONE guibg=#003800
+  " hi DiffChange ctermfg=NONE ctermbg=Blue guifg=NONE guibg=#0000ff
+  " hi DiffDelete ctermfg=NONE ctermbg=Red guifg=NONE guibg=#3f0000
+  " hi DiffText   ctermfg=NONE ctermbg=Yellow guifg=NONE guibg=#474700
+  " hi DiagnosticSignError guifg=#EF5350
+  " hi DiagnosticError guifg=#EF5350
 ]]
 
+vim.g.rust_recommended_style = false
+
 require('mappings')
+require('configs/abbrev')
+
+vim.opt.fillchars:append { diff = "╱" }
+vim.o.foldmethod = 'manual'
+vim.o.foldcolumn = '0'
+vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
+vim.o.foldlevelstart = 99
+vim.o.foldenable = true
