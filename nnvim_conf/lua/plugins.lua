@@ -168,6 +168,30 @@ require('lazy').setup({
         config = function()
             -- Enable telescope fzf native, if installed
             pcall(require('telescope').load_extension, 'fzf')
+            local project_actions = require("telescope._extensions.project.actions")
+            require('telescope').setup {
+                defaults = {
+                    path_display = { "full" }
+                },
+                extensions = {
+                    project = {
+                        base_dirs = {
+                            { path = '~/work',     max_depth = 2 },
+                            { path = '~/personal', max_depth = 2 },
+                        },
+                        theme = "dropdown",
+                        order_by = "asc",
+                        search_by = "title",
+                        sync_with_nvim_tree = true, -- default false
+                        -- default for on_project_selected = find project files
+                        on_project_selected = function(prompt_bufnr)
+                            -- Do anything you want in here. For example:
+                            project_actions.change_working_directory(prompt_bufnr, false)
+                            require("harpoon.ui").nav_file(1)
+                        end
+                    }
+                }
+            }
         end
     },
     {
@@ -227,6 +251,7 @@ require('lazy').setup({
                         goto_next_start = {
                             [']m'] = '@function.outer',
                             [']]'] = '@class.outer',
+                            [']l'] = '@statement.outer',
                         },
                         goto_next_end = {
                             [']M'] = '@function.outer',
@@ -234,6 +259,7 @@ require('lazy').setup({
                         },
                         goto_previous_start = {
                             ['[m'] = '@function.outer',
+                            ['[l'] = '@statement.outer',
                             ['[['] = '@class.outer',
                         },
                         goto_previous_end = {
@@ -303,58 +329,59 @@ require('lazy').setup({
         "mbbill/undotree",
         lazy = false,
     },
-    -- {
-    --     'mrcjkb/rustaceanvim',
-    --     version = '^3', -- Recommended
-    --     ft = { 'rust' },
-    --     {
-    --         "lvimuser/lsp-inlayhints.nvim",
-    --         opts = {}
-    --     },
-    --     config = function()
-    --         vim.g.rust_recommended_style = false
-    --         -- vim.cmd.RustLsp { 'flyCheck', 'cancel' }
-    --         vim.g.rustaceanvim = {
-    --             inlay_hints = {
-    --                 highlight = "NonText",
-    --             },
-    --             tools = {
-    --                 hover_actions = {
-    --                     auto_focus = true,
-    --                 },
-    --             },
-    --             server = {
-    --                 on_attach = function(client, bufnr)
-    --                     print("Attaching inlay hints")
-    --                     require("lsp-inlayhints").on_attach(client, bufnr)
-    --                 end
-    --             },
-    --             settings = {
-    --                 -- rust-analyzer language server configuration
-    --                 -- ['rust-analyzer'] = {
-    --                 --     checkOnSave = false,
-    --                 -- },
-    --             }
-    --         }
-    --     end
-    -- },
+    -- Rustacenvim config from appelgriebsch/Nv
+    {
+        "mrcjkb/rustaceanvim",
+        version = "^3", -- Recommended
+        dependencies = { 'lvimuser/lsp-inlayhints.nvim' },
+        ft = { "rust" },
+        config = function()
+            vim.g.rustaceanvim = {
+                inlay_hints = {
+                    highlight = "NonText",
+                },
+                tools = {
+                    hover_actions = {
+                        auto_focus = true,
+                    },
+                },
+                server = {
+                    on_attach = function(client, bufnr)
+                        require("lsp-inlayhints").on_attach(client, bufnr)
+                    end,
+                    ["rust-analyzer"] = {
+                        checkOnSave = {
+                            command = "clippy",
+                        },
+                        cargo = {
+                            allFeatures = true,
+                        },
+                    },
+                }
+            }
+        end
+    },
+    {
+        'ibhagwan/fzf-lua',
+        lazy = false,
+    },
     {
         'mrjones2014/smart-splits.nvim',
         config = function()
             require('smart-splits').setup()
         end,
     },
-    {
-        "simrat39/rust-tools.nvim",
-        ft = "rust",
-        dependencies = "neovim/nvim-lspconfig",
-        opts = function()
-            return require("configs.rust-tools")
-        end,
-        config = function(_, opts)
-            require("rust-tools").setup(opts)
-        end,
-    },
+    -- {
+    --     "simrat39/rust-tools.nvim",
+    --     ft = "rust",
+    --     dependencies = "neovim/nvim-lspconfig",
+    --     opts = function()
+    --         return require("configs.rust-tools")
+    --     end,
+    --     config = function(_, opts)
+    --         require("rust-tools").setup(opts)
+    --     end,
+    -- },
     {
         "gbprod/yanky.nvim",
         dependencies = {
@@ -401,15 +428,34 @@ require('lazy').setup({
             })
         end
     },
+    -- {
+    --     "ggandor/leap.nvim",
+    --     lazy = false,
+    --     config = function()
+    --         require("leap").add_default_mappings()
+    --         -- require('leap').add_repeat_mappings(';', ',', {
+    --         --     relative_directions = true,
+    --         -- })
+    --     end
+    -- },
     {
-        "ggandor/leap.nvim",
-        lazy = false,
-        config = function()
-            require("leap").add_default_mappings()
-            -- require('leap').add_repeat_mappings(';', ',', {
-            --     relative_directions = true,
-            -- })
-        end
+        "folke/flash.nvim",
+        event = "VeryLazy",
+        opts = {
+            modes = {
+                char = {
+                    enabled = false,
+                }
+            }
+        },
+        -- stylua: ignore
+        keys = {
+            { "s",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
+            { "S",     mode = { "n", "x", "o" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
+            { "r",     mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
+            { "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+            { "<c-t>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
+        },
     },
     {
         "folke/trouble.nvim",
@@ -488,25 +534,6 @@ require('lazy').setup({
         end
     },
     {
-        "rouge8/neotest-rust",
-        ft = "rust",
-        dependencies = {
-            "nvim-neotest/neotest",
-            "nvim-lua/plenary.nvim",
-        },
-        config = function()
-            require("neotest").setup({
-                adapters = {
-                    require("neotest-rust") {
-                        args = { "--failure-output=immediate",
-                            -- "--nocapture",
-                        }
-                    }
-                }
-            })
-        end,
-    },
-    {
         'aznhe21/actions-preview.nvim',
         lazy = false,
     },
@@ -519,14 +546,10 @@ require('lazy').setup({
               ]]
         end,
     },
-    {
-        "kevinhwang91/nvim-bqf",
-        lazy = false,
-    },
-    {
-        'terryma/vim-expand-region',
-        lazy = false,
-    },
+    -- {
+    --     "kevinhwang91/nvim-bqf",
+    --     lazy = false,
+    -- },
     {
         "mg979/vim-visual-multi",
         branch = "master",
@@ -535,10 +558,6 @@ require('lazy').setup({
                 VMTheme codedark
             ]]
         end,
-    },
-    {
-        "nvim-pack/nvim-spectre",
-        lazy = false,
     },
     {
         'nvimtools/none-ls.nvim',
@@ -603,39 +622,10 @@ require('lazy').setup({
         end
     },
     {
-        'pwntester/octo.nvim',
+        'nvim-telescope/telescope-project.nvim',
         lazy = false,
         config = function()
-            require "octo".setup({
-                colors = { -- used for highlight groups (see Colors section below)
-                    white = "#ffffff",
-                    grey = "#2A354C",
-                    black = "#000000",
-                    red = "#fdb8c0",
-                    dark_red = "#da3633",
-                    green = "#acf2bd",
-                    dark_green = "#238636",
-                    yellow = "#d3c846",
-                    dark_yellow = "#735c0f",
-                    blue = "#58A6FF",
-                    dark_blue = "#0366d6",
-                    purple = "#6f42c1",
-                },
-
-            })
+            require('telescope').load_extension('project')
         end
-    },
-    {
-        "kevinhwang91/nvim-ufo",
-        event = "BufRead",
-        dependencies = { 'kevinhwang91/promise-async' },
-        config = function()
-            vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
-            require("ufo").setup({
-                provider_selector = function(_, _, _)
-                    return { 'lsp', 'indent' }
-                end,
-            })
-        end,
-    },
+    }
 })

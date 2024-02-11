@@ -60,15 +60,15 @@ local egrepify_with_text = function()
 end
 
 -------------- Telescope ----------------------------------
-vim.keymap.set("n", "<leader>ff", require("telescope.builtin").git_files, { desc = "[F]ind [F]iles" })
-vim.keymap.set("n", "<leader>sf", require("telescope.builtin").git_files, { desc = "[S]earch [F]iles" })
+vim.keymap.set("n", "<leader>ff", require("telescope.builtin").git_files, { desc = "[F]ind (Git) [F]iles" })
+vim.keymap.set("n", "<leader>sf", require("telescope.builtin").find_files, { desc = "[S]earch [F]iles" })
 vim.keymap.set("n", "<leader>sh", require("telescope.builtin").help_tags, { desc = "[S]earch [H]elp" })
-vim.keymap.set("n", "<leader>sg", require("telescope.builtin").live_grep, { desc = "[S]earch by [G]rep" })
+vim.keymap.set("n", "<leader>sr", require("telescope").extensions.project.project, { desc = "[S]earch [R]epo" })
 vim.keymap.set("n", "<leader>sl", require("telescope.builtin").resume, { desc = "[S]earch [L]ast again" })
 vim.keymap.set("n", "<leader>sp", "<cmd> Telescope egrepify<CR>", { desc = "Find in files" })
 vim.keymap.set({ "n", "v" }, "<leader>sP", egrepify_with_text, { desc = "Find current word in files" })
 vim.keymap.set("v", "<leader>sp", egrepify_with_text, { desc = "Find selection in files" })
-vim.keymap.set("n", "<leader>ss", "<cmd> Telescope current_buffer_fuzzy_find <CR>", { desc = "Find in current file" })
+-- vim.keymap.set("n", "<leader>ss", "<cmd> Telescope current_buffer_fuzzy_find <CR>", { desc = "Find in current file" })
 vim.keymap.set("n", "<leader>sc", "<cmd> Telescope commands <CR>", { desc = "Find vim commands" })
 vim.keymap.set("n", "<leader>sk", "<cmd> Telescope keymaps <CR>", { desc = "Look up key mappings" })
 vim.keymap.set({ "n", "v" }, "<leader>p", function() require("telescope").extensions.yank_history.yank_history({}) end,
@@ -123,8 +123,8 @@ vim.keymap.set("v", "H", "^", { desc = "Start of line" })
 -- No need to make a motion for L because all motions in upper case already go to the end of line
 vim.keymap.set('o', 'H', ':normal H<CR>', { noremap = false, silent = true })
 
-vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Page Down" })
-vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Page Up" })
+-- vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Page Down" })
+-- vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Page Up" })
 
 vim.keymap.set("n", "<C-w>kh", "<C-w>h<C-w>q", { desc = "Kill window to the left" })
 vim.keymap.set("n", "<C-w>kj", "<C-w>j<C-w>q", { desc = "Kill window below" })
@@ -138,23 +138,19 @@ vim.keymap.set({ "o", "x" }, 'ii', ":lua require('configs/indentation_object')(f
 vim.keymap.set({ "o", "x" }, 'ai', ":lua require('configs/indentation_object')(true)<CR>",
     { noremap = true, silent = true })
 
-vim.keymap.set('n', '<leader>S', '<cmd>lua require("spectre").toggle()<CR>', {
-    desc = "Toggle [S]pectre"
-})
-
 -- Folds
-vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
-vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
-vim.keymap.set('n', '-', "zc", { desc = "Close fold" })
-vim.keymap.set('n', '+', "zo", { desc = "Open fold" })
-vim.keymap.set('n', 'K', function()
-    local winid = require('ufo').peekFoldedLinesUnderCursor()
-    if not winid then
-        -- choose one of coc.nvim and nvim lsp
-        vim.fn.CocActionAsync('definitionHover') -- coc.nvim
-        vim.lsp.buf.hover()
-    end
-end)
+-- vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
+-- vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
+-- vim.keymap.set('n', '-', "zc", { desc = "Close fold" })
+-- vim.keymap.set('n', '+', "zo", { desc = "Open fold" })
+-- vim.keymap.set('n', 'K', function()
+--     local winid = require('ufo').peekFoldedLinesUnderCursor()
+--     if not winid then
+--         -- choose one of coc.nvim and nvim lsp
+--         vim.fn.CocActionAsync('definitionHover') -- coc.nvim
+--         vim.lsp.buf.hover()
+--     end
+-- end)
 
 vim.keymap.set("n", "cgw", "*Ncgn", { desc = "Repeatably change current word" })
 
@@ -182,13 +178,18 @@ vim.keymap.set("n", "gx", "<cmd>lua require('substitute.exchange').operator()<cr
 vim.keymap.set("n", "gxc", "<cmd>lua require('substitute.exchange').cancel()<cr>", { desc = "" })
 vim.keymap.set("v", "gx", "<cmd>lua require('substitute.exchange').visual()<cr>", { desc = "" })
 vim.keymap.set("n", "gp", "<cmd>lua require('substitute').operator()<cr>", { desc = "" })
-vim.keymap.set("v", "gP", "<cmd>lua require('substitute').eol()<cr>", { desc = "" })
+vim.keymap.set("n", "gP", "<cmd>lua require('substitute').eol()<cr>", { desc = "" })
 
 -- Rust
+-- vim.keymap.set("n", "<leader>re", "<cmd>RustExpandMacro<CR>", { desc = "[R]ust expand macro" })
+-- vim.keymap.set("n", "<leader>rc", "<cmd>RustOpenCargo<CR>", { desc = "[R]ust open cargo" })
+-- vim.keymap.set("n", "<leader>rp", "<cmd>RustParentModule<CR>", { desc = "[R]ust open parent module" })
+
 vim.keymap.set("n", "<leader>re", "<cmd>RustLsp expandMacro<CR>", { desc = "[R]ust expand macro" })
 vim.keymap.set("n", "<leader>rc", "<cmd>RustLsp openCargo<CR>", { desc = "[R]ust open cargo" })
 vim.keymap.set("n", "<leader>rp", "<cmd>RustLsp parentModule<CR>", { desc = "[R]ust open parent module" })
-
+vim.keymap.set("n", "<leader>rr", "<cmd>RustLsp reloadWorkspace<CR>", { desc = "[R]ust [R]estart" })
+vim.keymap.set("n", "<leader>rf", "<cmd>RustLsp flyCheck <CR>", { desc = "[R]ust [F]lycheck" })
 
 -------------- Git ----------------------------------
 vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>", { desc = "Opens Lazy[G]it" })
@@ -239,6 +240,7 @@ local lsp_mappings = function(_)
     nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
     nmap('<leader>sd', require('telescope.builtin').lsp_document_symbols, '[S]earch [D]ocument')
     nmap('<leader>ss', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[S]earch [S]ymbols')
+    nmap('<leader>st', "<cmd> FzfLua tags_live_grep<CR>", '[S]earch [T]ags')
 
     -- See `:help K` for why this keymap
     nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
@@ -277,6 +279,22 @@ vim.keymap.set("n", "<leader>1", function() require("harpoon.ui").nav_file(1) en
 vim.keymap.set("n", "<leader>2", function() require("harpoon.ui").nav_file(2) end)
 vim.keymap.set("n", "<leader>3", function() require("harpoon.ui").nav_file(3) end)
 vim.keymap.set("n", "<leader>4", function() require("harpoon.ui").nav_file(4) end)
+
+-- flash.nvim
+local function flash_yank_and_paste()
+    -- Yank the visually selected text
+    -- Perform the treesitter search which should visually select the text
+    vim.api.nvim_command('normal! y')
+    require("flash").treesitter_search({ restore = true })
+
+    -- Move to the desired location where you want to paste
+
+    -- Paste the yanked text
+    vim.api.nvim_command('normal! p')
+end
+
+vim.keymap.set("v", "gr", flash_yank_and_paste)
+
 
 -- trouble
 vim.keymap.set("n", "<leader>ll", "<cmd> lua vim.diagnostic.open_float({scope=\"line\"}) <cr>",

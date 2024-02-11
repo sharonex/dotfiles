@@ -45,48 +45,19 @@ vim.diagnostic.config({
 
 vim.keymap.set('n', '<leader>lq', M.toggle_lsp_lines, { desc = '[L]SP [Q]uickfix Toggle' })
 
--- Attach inlay hints. Should be unnecessary in neovim 0.10
 vim.api.nvim_create_augroup("LspAttach_inlayhints", {})
 vim.api.nvim_create_autocmd("LspAttach", {
   group = "LspAttach_inlayhints",
   callback = function(args)
-    if vim.fn.has('nvim-0.10') == 1 then
-      print("In neovim 0.10")
-      vim.lsp.inlay_hint.enable(0, true)
-    else
-      -- if not (args.data and args.data.client_id) then
-      --   return
-      -- end
-      --
-      -- local bufnr = args.buf
-      -- local client = vim.lsp.get_client_by_id(args.data.client_id)
-      -- require("lsp-inlayhints").on_attach(client, bufnr)
+    if not (args.data and args.data.client_id) then
+      return
     end
+
+    local bufnr = args.buf
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    require("lsp-inlayhints").on_attach(client, bufnr)
   end,
 })
-
--- vim.api.nvim_create_autocmd("LspAttach", {
---   group = "LspAttach_inlayhints",
---   callback = function(args)
---     if vim.fn.has('nvim-0.10') == 1 then
---       vim.lsp.inlay_hint.enable()
---     else
---       if not (args.data and args.data.client_id) then
---         return
---       end
---
---       local bufnr = args.buf
---       local client = vim.lsp.get_client_by_id(args.data.client_id)
---       require("lsp-inlayhints").on_attach(client, bufnr)
---       if client.server_capabilities.inlayHintProvider then
---         vim.g.inlay_hints_visible = true
---         vim.lsp.inlay_hint(0, true)
---       else
---         print("no inlay hints available")
---       end
---     end
---   end,
--- })
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()

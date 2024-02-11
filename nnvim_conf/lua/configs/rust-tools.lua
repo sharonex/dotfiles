@@ -28,7 +28,8 @@ local options = {
         hover_actions = {
             auto_focus = true,
         },
-    }
+        autoSetHints = false,
+    },
 }
 
 return options
