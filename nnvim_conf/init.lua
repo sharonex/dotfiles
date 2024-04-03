@@ -4,12 +4,18 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+vim.opt.path:append '/opt/homebrew/bin/'
+
 require("plugins")
 
 -- Disable automatic commenting on newline
 vim.cmd("autocmd BufEnter * set formatoptions-=cro")
 vim.cmd("autocmd BufEnter * setlocal formatoptions-=cro")
 
+-- Setup rust ctags support
+-- vim.cmd("autocmd BufRead *.rs :setlocal tags=./rusty-tags.vi;/")
+-- vim.cmd(
+--     'autocmd BufWritePost *.rs :silent! exec "!rusty-tags vi --quiet --start-dir=" . expand("%:p:h") . "&" | redraw!')
 
 -- [[ Setting options ]]
 -- See `:help vim.o`

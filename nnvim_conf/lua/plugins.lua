@@ -288,7 +288,30 @@ require('lazy').setup({
         event = "VeryLazy",
         config = function()
             require("nvim-surround").setup({
-                -- Configuration here, or leave empty to use defaults
+                surrounds = {
+                    ["R"] = {
+                        add = function()
+                            return { { "anyhow::Result<" }, { ">" } }
+                        end,
+                    },
+                    ["O"] = {
+                        add = function()
+                            return { { "Option<" }, { ">" } }
+                        end,
+                    },
+                    ["S"] = {
+                        add = function()
+                            return { { "Some(" }, { ")" } }
+                        end,
+                    },
+                    ["K"] = {
+                        add = function()
+                            return { { "Ok(" }, { ")" } }
+                        end,
+                    }
+
+
+                }
             })
         end
     },
@@ -336,34 +359,36 @@ require('lazy').setup({
         dependencies = { 'lvimuser/lsp-inlayhints.nvim' },
         ft = { "rust" },
         config = function()
+            require("lsp-inlayhints").setup()
+            local extension_path = vim.env.HOME .. '/.vscode/extensions/vadimcn.vscode-lldb-1.10.0/'
+            local codelldb_path = extension_path .. 'adapter/codelldb'
+            local liblldb_path = extension_path .. 'lldb/lib/liblldb.dylib'
+            local cfg = require('rustaceanvim.config')
             vim.g.rustaceanvim = {
-                inlay_hints = {
-                    highlight = "NonText",
-                },
-                tools = {
-                    hover_actions = {
-                        auto_focus = true,
-                    },
-                },
                 server = {
                     on_attach = function(client, bufnr)
                         require("lsp-inlayhints").on_attach(client, bufnr)
+                        require("lsp-inlayhints").show()
                     end,
-                    ["rust-analyzer"] = {
-                        checkOnSave = {
-                            command = "clippy",
-                        },
-                        cargo = {
-                            allFeatures = true,
-                        },
-                    },
-                }
+                },
+                dap = {
+                    adapter = cfg.get_codelldb_adapter(codelldb_path, liblldb_path),
+                },
             }
         end
     },
     {
         'ibhagwan/fzf-lua',
         lazy = false,
+        config = function()
+            -- require 'fzf-lua'.setup {
+            --     winopts = {
+            --         split = "belowright new",
+            --         height = 0.4
+            --     }
+            -- }
+        end
+
     },
     {
         'mrjones2014/smart-splits.nvim',
@@ -627,5 +652,46 @@ require('lazy').setup({
         config = function()
             require('telescope').load_extension('project')
         end
-    }
+    },
+    -- {
+    --     'rcarriga/nvim-dap-ui',
+    --     lazy = false,
+    --     dependencies = { 'mfussenegger/nvim-dap' },
+    --     config = function()
+    --         require('dapui').setup()
+    --         local dap, dapui = require("dap"), require("dapui")
+    --         dap.listeners.before.attach.dapui_config = function()
+    --             dapui.open()
+    --         end
+    --         dap.listeners.before.launch.dapui_config = function()
+    --             dapui.open()
+    --         end
+    --         dap.listeners.before.event_terminated.dapui_config = function()
+    --             dapui.close()
+    --         end
+    --         dap.listeners.before.event_exited.dapui_config = function()
+    --             dapui.close()
+    --         end
+    --     end
+    -- },
+    {
+        'b0o/incline.nvim',
+        config = function()
+            require('configs.incline')
+        end,
+        -- Optional: Lazy load Incline
+        event = 'VeryLazy',
+    },
+
+    {
+        "NeogitOrg/neogit",
+        dependencies = {
+            "nvim-lua/plenary.nvim",  -- required
+            "sindrets/diffview.nvim", -- optional - Diff integration
+
+            -- Only one of these is needed, not both.
+            "nvim-telescope/telescope.nvim", -- optional
+        },
+        config = true
+    },
 })

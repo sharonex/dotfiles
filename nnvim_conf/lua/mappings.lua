@@ -3,7 +3,7 @@
 -- document existing key chains
 require("which-key").register {
     ["<leader>c"] = { name = "[C]ode", _ = "which_key_ignore" },
-    ["<leader>d"] = { name = "[D]ocument", _ = "which_key_ignore" },
+    ["<leader>d"] = { name = "[D]ebug", _ = "which_key_ignore" },
     ["<leader>g"] = { name = "[G]it", _ = "which_key_ignore" },
     ["<leader>h"] = { name = "[H]arpoon", _ = "which_key_ignore" },
     ["<leader>r"] = { name = "[R]ename", _ = "which_key_ignore" },
@@ -19,6 +19,8 @@ vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 vim.keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
+vim.keymap.set("n", "<C-w>v", "<C-w>v<C-w>l")
+vim.keymap.set("n", "<C-w>s", "<C-w>s<C-w>j")
 -- Diagnostic keymaps
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic message" })
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next diagnostic message" })
@@ -60,13 +62,16 @@ local egrepify_with_text = function()
 end
 
 -------------- Telescope ----------------------------------
-vim.keymap.set("n", "<leader>ff", require("telescope.builtin").git_files, { desc = "[F]ind (Git) [F]iles" })
+vim.keymap.set("n", "<leader>f", require("telescope.builtin").git_files, { desc = "[F]ind (Git) Files" })
 vim.keymap.set("n", "<leader>sf", require("telescope.builtin").find_files, { desc = "[S]earch [F]iles" })
 vim.keymap.set("n", "<leader>sh", require("telescope.builtin").help_tags, { desc = "[S]earch [H]elp" })
 vim.keymap.set("n", "<leader>sr", require("telescope").extensions.project.project, { desc = "[S]earch [R]epo" })
 vim.keymap.set("n", "<leader>sl", require("telescope.builtin").resume, { desc = "[S]earch [L]ast again" })
 vim.keymap.set("n", "<leader>sp", "<cmd> Telescope egrepify<CR>", { desc = "Find in files" })
 vim.keymap.set({ "n", "v" }, "<leader>sP", egrepify_with_text, { desc = "Find current word in files" })
+vim.keymap.set("v", "<leader>sp", egrepify_with_text, { desc = "Find selection in files" })
+vim.keymap.set({ "n", "v" }, "<leader>sT", require("telescope.builtin").live_grep,
+    { desc = "Find current word in files" })
 vim.keymap.set("v", "<leader>sp", egrepify_with_text, { desc = "Find selection in files" })
 -- vim.keymap.set("n", "<leader>ss", "<cmd> Telescope current_buffer_fuzzy_find <CR>", { desc = "Find in current file" })
 vim.keymap.set("n", "<leader>sc", "<cmd> Telescope commands <CR>", { desc = "Find vim commands" })
@@ -104,6 +109,8 @@ vim.keymap.set('n', '<leader><leader>l', require('smart-splits').swap_buf_right)
 
 vim.keymap.set("n", "<C-q>", ":NvimTreeFindFileToggle<CR>", { desc = "Toggle nvim tree" })
 vim.keymap.set("n", "<leader>tc", ":tabclose<CR>", { desc = "[T]ab [C]lose" })
+vim.keymap.set("n", "<leader>tn", ":tabnext<CR>", { desc = "[T]ab [N]ext" })
+vim.keymap.set("n", "<leader>tn", ":tabprev<CR>", { desc = "[T]ab [P]rev" })
 
 -------------- Editing -------------------------------
 -- Gnu line shortcuts in insert mode
@@ -121,7 +128,11 @@ vim.keymap.set("n", "H", "^", { desc = "Start of line" })
 vim.keymap.set("v", "L", "$h", { desc = "End of line" })
 vim.keymap.set("v", "H", "^", { desc = "Start of line" })
 -- No need to make a motion for L because all motions in upper case already go to the end of line
-vim.keymap.set('o', 'H', ':normal H<CR>', { noremap = false, silent = true })
+vim.keymap.set('o', 'L', '$', { noremap = false, silent = true })
+vim.keymap.set('o', 'H', 'H<CR>', { noremap = false, silent = true })
+vim.keymap.set('i', '<C-p>', '<C-o>k', { noremap = false, silent = true })
+vim.keymap.set('i', '<C-n>', '<C-o>j', { noremap = false, silent = true })
+
 
 -- vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Page Down" })
 -- vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Page Up" })
@@ -190,6 +201,8 @@ vim.keymap.set("n", "<leader>rc", "<cmd>RustLsp openCargo<CR>", { desc = "[R]ust
 vim.keymap.set("n", "<leader>rp", "<cmd>RustLsp parentModule<CR>", { desc = "[R]ust open parent module" })
 vim.keymap.set("n", "<leader>rr", "<cmd>RustLsp reloadWorkspace<CR>", { desc = "[R]ust [R]estart" })
 vim.keymap.set("n", "<leader>rf", "<cmd>RustLsp flyCheck <CR>", { desc = "[R]ust [F]lycheck" })
+vim.keymap.set("n", "<leader>rs", "<cmd>lua require(\"lsp-inlayhints\").show() <CR>",
+    { desc = "[R]ust [S]how inlay hints" })
 
 -------------- Git ----------------------------------
 vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>", { desc = "Opens Lazy[G]it" })
@@ -204,6 +217,7 @@ vim.keymap.set("n", "<leader>gf", ":Git<CR>/taged<CR>:noh<CR>j", { desc = "[G]it
 vim.keymap.set("n", "<leader>gl", ":Git log <CR>", { desc = "[G]it fugitive [L]og" })
 vim.keymap.set("n", "<leader>grc", ":Git rebase --continue<CR>", { desc = "[G]it [R]ebase [C]ontinue" })
 vim.keymap.set("n", "<leader>gra", ":Git rebase --abort<CR>", { desc = "[G]it [R]ebase [A]ontinue" })
+vim.keymap.set("n", "<leader>gn", ":Neogit kind=vsplit <CR>", { desc = "[G]it [N]eogit" })
 vim.keymap.set("n", "<leader>gd", ":DiffviewOpen<CR>", { desc = "[G]it [D]iff" })
 
 vim.keymap.set({ "n", "v" }, "<leader>gh", ":DiffviewFileHistory %<CR>", { desc = "[G]it [H]istory" })
@@ -235,11 +249,11 @@ local lsp_mappings = function(_)
     vmap("<leader>ca", require("actions-preview").code_actions, '[C]ode [A]ction')
 
     nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-    nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+    nmap('gr', "<cmd> FzfLua lsp_references<CR>", '[G]oto [R]eferences')
     nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
     nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
     nmap('<leader>sd', require('telescope.builtin').lsp_document_symbols, '[S]earch [D]ocument')
-    nmap('<leader>ss', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[S]earch [S]ymbols')
+    nmap('<leader>ss', '<cmd> FzfLua lsp_live_workspace_symbols<CR>', '[S]earch [S]ymbols')
     nmap('<leader>st', "<cmd> FzfLua tags_live_grep<CR>", '[S]earch [T]ags')
 
     -- See `:help K` for why this keymap
@@ -280,22 +294,6 @@ vim.keymap.set("n", "<leader>2", function() require("harpoon.ui").nav_file(2) en
 vim.keymap.set("n", "<leader>3", function() require("harpoon.ui").nav_file(3) end)
 vim.keymap.set("n", "<leader>4", function() require("harpoon.ui").nav_file(4) end)
 
--- flash.nvim
-local function flash_yank_and_paste()
-    -- Yank the visually selected text
-    -- Perform the treesitter search which should visually select the text
-    vim.api.nvim_command('normal! y')
-    require("flash").treesitter_search({ restore = true })
-
-    -- Move to the desired location where you want to paste
-
-    -- Paste the yanked text
-    vim.api.nvim_command('normal! p')
-end
-
-vim.keymap.set("v", "gr", flash_yank_and_paste)
-
-
 -- trouble
 vim.keymap.set("n", "<leader>ll", "<cmd> lua vim.diagnostic.open_float({scope=\"line\"}) <cr>",
     { desc = "Show line diagnostics" })
@@ -321,3 +319,9 @@ vim.keymap.set("n", "<leader>tg",
     end,
     { desc = "Run last test" }
 )
+-- Debugging
+vim.keymap.set("n", "<leader>dt", "<cmd>DapToggleBreakpoint<CR>", { desc = "[D]ebug [B]reakpoint" })
+vim.keymap.set("n", "<leader>do", "<cmd>DapStepOver<CR>", { desc = "[D]ebug [O]ver" })
+vim.keymap.set("n", "<leader>di", "<cmd>DapStepInto<CR>", { desc = "[D]ebug [I]nto" })
+vim.keymap.set("n", "<leader>dc", "<cmd>DapContinue<CR>", { desc = "[D]ebug [C]ontinue" })
+vim.keymap.set("n", "<leader>dx", "<cmd>DapTerminate<CR>", { desc = "[D]ebug [X]it" })

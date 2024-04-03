@@ -18,10 +18,11 @@ export VISUAL=nvim
 export EDITOR=nvim
 export GOPATH="$HOME/go"
 export WORDCHARS=$WORDCHARS-
+# export NEOVIM_BIN="$HOME/bin/nnvim/bin/nvim"
 
 export DOTFILES="$HOME/.dotfiles"
 export TMUX_CONF_LOCAL="$DOTFILES/tmux.conf.local"
-export PATH="$HOME/bin/nnvim/bin:/opt/homebrew/bin:$HOME/bin:$HOME/.local/bin:$GOPATH/bin:$GOROOT/bin:$HOME/go/bin:$HOME/.cargo/bin:$PATH:$HOME/Library/Python/3.11/bin"
+export PATH="/opt/homebrew/bin:$HOME/bin:$HOME/.local/bin:$GOPATH/bin:$GOROOT/bin:$HOME/go/bin:$HOME/.cargo/bin:$PATH:$HOME/Library/Python/3.11/bin:$HOME/bin/nnvim/bin"
 export RUST_BACKTRACE=0
 export OPENAI_API_KEY="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"
 
@@ -30,6 +31,8 @@ alias vim="nvim"
 alias l="ls -l"
 alias ll="ls -la"
 alias psg="ps -ef | grep"
+
+alias lg="lazygit --debug"
 
 alias q="cd ../"                           # Go back 1 directory level
 alias qq="cd ../../"                       # Go back 2 directory levels
@@ -55,6 +58,7 @@ export FZF_DEFAULT_OPTS="-m --height 50% --border"
 
 export HISTFILESIZE=1000000000
 export HISTSIZE=1000000000
+export SAVEHIST=10000000
 setopt hist_ignore_all_dups
 setopt hist_ignore_space
 setopt inc_append_history
