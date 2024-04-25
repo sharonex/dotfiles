@@ -1,5 +1,4 @@
 local helpers = require 'incline.helpers'
-local navic = require 'nvim-navic'
 local devicons = require 'nvim-web-devicons'
 require('incline').setup {
   window = {
@@ -7,7 +6,7 @@ require('incline').setup {
     margin = { horizontal = 0, vertical = 0 },
   },
   render = function(props)
-    local filename = vim.fn.expand('%')
+    local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':t')
     if filename == '' then
       filename = '[No Name]'
     end
@@ -19,15 +18,6 @@ require('incline').setup {
       { filename, gui = modified and 'bold,italic' or 'bold' },
       guibg = '#44406e',
     }
-    if props.focused then
-      for _, item in ipairs(navic.get_data(props.buf) or {}) do
-        table.insert(res, {
-          { ' > ',     group = 'NavicSeparator' },
-          { item.icon, group = 'NavicIcons' .. item.type },
-          { item.name, group = 'NavicText' },
-        })
-      end
-    end
     table.insert(res, ' ')
     return res
   end,

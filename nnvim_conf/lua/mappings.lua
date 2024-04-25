@@ -65,7 +65,7 @@ end
 vim.keymap.set("n", "<leader>f", require("telescope.builtin").git_files, { desc = "[F]ind (Git) Files" })
 vim.keymap.set("n", "<leader>sf", require("telescope.builtin").find_files, { desc = "[S]earch [F]iles" })
 vim.keymap.set("n", "<leader>sh", require("telescope.builtin").help_tags, { desc = "[S]earch [H]elp" })
-vim.keymap.set("n", "<leader>sr", require("telescope").extensions.project.project, { desc = "[S]earch [R]epo" })
+-- vim.keymap.set("n", "<leader>sr", require("telescope").extensions.project.project, { desc = "[S]earch [R]epo" })
 vim.keymap.set("n", "<leader>sl", require("telescope.builtin").resume, { desc = "[S]earch [L]ast again" })
 vim.keymap.set("n", "<leader>sp", "<cmd> Telescope egrepify<CR>", { desc = "Find in files" })
 vim.keymap.set({ "n", "v" }, "<leader>sP", egrepify_with_text, { desc = "Find current word in files" })
@@ -111,10 +111,11 @@ vim.keymap.set("n", "<C-q>", ":NvimTreeFindFileToggle<CR>", { desc = "Toggle nvi
 vim.keymap.set("n", "<leader>tc", ":tabclose<CR>", { desc = "[T]ab [C]lose" })
 vim.keymap.set("n", "<leader>tn", ":tabnext<CR>", { desc = "[T]ab [N]ext" })
 vim.keymap.set("n", "<leader>tn", ":tabprev<CR>", { desc = "[T]ab [P]rev" })
+vim.keymap.set("n", "<C-t>", ":ToggleTerm<CR>", { desc = "Toggle terminal" })
 
 -------------- Editing -------------------------------
 -- Gnu line shortcuts in insert mode
-vim.keymap.set({ "n", "x" }, "y", "<Plug>(YankyYank)")
+-- vim.keymap.set({ "n", "x" }, "y", "<Plug>(YankyYank)")
 
 vim.keymap.set("i", "<C-c>", "<ESC>", { desc = "" })
 
@@ -258,7 +259,7 @@ local lsp_mappings = function(_)
 
     -- See `:help K` for why this keymap
     nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-    nmap('<A-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+    -- nmap('<A-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
     -- Lesser used LSP functionality
     nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')

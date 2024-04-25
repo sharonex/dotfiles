@@ -168,29 +168,10 @@ require('lazy').setup({
         config = function()
             -- Enable telescope fzf native, if installed
             pcall(require('telescope').load_extension, 'fzf')
-            local project_actions = require("telescope._extensions.project.actions")
             require('telescope').setup {
                 defaults = {
                     path_display = { "full" }
                 },
-                extensions = {
-                    project = {
-                        base_dirs = {
-                            { path = '~/work',     max_depth = 2 },
-                            { path = '~/personal', max_depth = 2 },
-                        },
-                        theme = "dropdown",
-                        order_by = "asc",
-                        search_by = "title",
-                        sync_with_nvim_tree = true, -- default false
-                        -- default for on_project_selected = find project files
-                        on_project_selected = function(prompt_bufnr)
-                            -- Do anything you want in here. For example:
-                            project_actions.change_working_directory(prompt_bufnr, false)
-                            require("harpoon.ui").nav_file(1)
-                        end
-                    }
-                }
             }
         end
     },
@@ -239,8 +220,6 @@ require('lazy').setup({
                             ['if'] = '@function.inner',
                             ['ac'] = '@class.outer',
                             ['ic'] = '@class.inner',
-                            ['a/'] = '@comment.outer',
-                            ['i/'] = '@comment.inner',
                             ['al'] = '@statement.outer',
                             ['il'] = '@statement.outer',
                         },
@@ -393,7 +372,9 @@ require('lazy').setup({
     {
         'mrjones2014/smart-splits.nvim',
         config = function()
-            require('smart-splits').setup()
+            require('smart-splits').setup({
+                ignored_buftypes = {},
+            })
         end,
     },
     -- {
@@ -407,16 +388,16 @@ require('lazy').setup({
     --         require("rust-tools").setup(opts)
     --     end,
     -- },
-    {
-        "gbprod/yanky.nvim",
-        dependencies = {
-            { "kkharji/sqlite.lua" }
-        },
-        opts = {
-            ring = { storage = "sqlite" },
-        },
-        lazy = false,
-    },
+    -- {
+    --     "gbprod/yanky.nvim",
+    --     dependencies = {
+    --         { "kkharji/sqlite.lua" }
+    --     },
+    --     opts = {
+    --         ring = { storage = "sqlite" },
+    --     },
+    --     lazy = false,
+    -- },
     {
         'ThePrimeagen/harpoon',
         branch = "master",
@@ -500,10 +481,10 @@ require('lazy').setup({
         },
         config = function(_, opts)
             require("nvim-autopairs").setup(opts)
-
-            -- setup cmp for autopairs
-            local cmp_autopairs = require "nvim-autopairs.completion.cmp"
-            require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
+            --
+            -- -- setup cmp for autopairs
+            -- local cmp_autopairs = require "nvim-autopairs.completion.cmp"
+            -- require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
         end,
     },
     {
@@ -562,15 +543,15 @@ require('lazy').setup({
         'aznhe21/actions-preview.nvim',
         lazy = false,
     },
-    {
-        'unblevable/quick-scope',
-        config = function()
-            vim.cmd [[
-              highlight QuickScopePrimary guifg='#af0f5f' gui=underline ctermfg=155 cterm=underline
-              highlight QuickScopeSecondary guifg='#5000ff' gui=underline ctermfg=81 cterm=underline
-              ]]
-        end,
-    },
+    -- {
+    --     'unblevable/quick-scope',
+    --     config = function()
+    --         vim.cmd [[
+    --           highlight QuickScopePrimary guifg='#af0f5f' gui=underline ctermfg=155 cterm=underline
+    --           highlight QuickScopeSecondary guifg='#5000ff' gui=underline ctermfg=81 cterm=underline
+    --           ]]
+    --     end,
+    -- },
     -- {
     --     "kevinhwang91/nvim-bqf",
     --     lazy = false,
@@ -584,13 +565,13 @@ require('lazy').setup({
             ]]
         end,
     },
-    {
-        'nvimtools/none-ls.nvim',
-        event = "VeryLazy",
-        opts = function()
-            return require("configs.null-ls")
-        end,
-    },
+    -- {
+    --     'nvimtools/none-ls.nvim',
+    --     event = "VeryLazy",
+    --     opts = function()
+    --         return require("configs.null-ls")
+    --     end,
+    -- },
     -- {
     --     "pmizio/typescript-tools.nvim",
     --     dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
@@ -603,13 +584,13 @@ require('lazy').setup({
             require('nvim-ts-autotag').setup()
         end
     },
-    {
-        "ErichDonGubler/lsp_lines.nvim",
-        config = function()
-            require("lsp_lines").setup()
-        end,
-
-    },
+    -- {
+    --     "ErichDonGubler/lsp_lines.nvim",
+    --     config = function()
+    --         require("lsp_lines").setup()
+    --     end,
+    --
+    -- },
     {
         "stevearc/oil.nvim",
         lazy = false,
@@ -647,10 +628,22 @@ require('lazy').setup({
         end
     },
     {
-        'nvim-telescope/telescope-project.nvim',
-        lazy = false,
+        'akinsho/toggleterm.nvim',
+        version = "*",
         config = function()
-            require('telescope').load_extension('project')
+            require 'toggleterm'.setup {
+            }
+            function _G.set_terminal_keymaps()
+                local opts = { buffer = 0 }
+                vim.keymap.set('t', '<C-x>', [[<C-\><C-n>]], opts)
+                vim.keymap.set('t', '<C-h>', [[<Cmd>wincmd h<CR>]], opts)
+                vim.keymap.set('t', '<C-j>', [[<Cmd>wincmd j<CR>]], opts)
+                vim.keymap.set('t', '<C-k>', [[<Cmd>wincmd k<CR>]], opts)
+                vim.keymap.set('t', '<C-l>', [[<Cmd>wincmd l<CR>]], opts)
+            end
+
+            -- if you only want these mappings for toggle term use term://*toggleterm#* instead
+            vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
         end
     },
     -- {
@@ -674,15 +667,14 @@ require('lazy').setup({
     --         end
     --     end
     -- },
-    {
-        'b0o/incline.nvim',
-        config = function()
-            require('configs.incline')
-        end,
-        -- Optional: Lazy load Incline
-        event = 'VeryLazy',
-    },
-
+    -- {
+    --     'b0o/incline.nvim',
+    --     config = function()
+    --         require('configs.incline')
+    --     end,
+    --     -- Optional: Lazy load Incline
+    --     event = 'VeryLazy',
+    -- },
     {
         "NeogitOrg/neogit",
         dependencies = {

@@ -5,7 +5,15 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 vim.opt.path:append '/opt/homebrew/bin/'
-
+vim.cmd [[
+    let g:neovide_input_macos_alt_is_meta = v:true
+    " Allow copy paste in neovim
+    let g:neovide_input_use_logo = 1
+    map <D-v> "+p<CR>
+    map! <D-v> <C-R>+
+    tmap <D-v> <C-R>+
+    vmap <D-c> "+y<CR>
+]]
 require("plugins")
 
 -- Disable automatic commenting on newline

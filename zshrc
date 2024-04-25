@@ -29,7 +29,7 @@ export OPENAI_API_KEY="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"
 # Alias
 alias vim="nvim"
 alias l="ls -l"
-alias ll="ls -la"
+alias ll="ls -lah"
 alias psg="ps -ef | grep"
 
 alias lg="lazygit --debug"
@@ -50,6 +50,14 @@ alias h="cat $DOTFILES/helpers.txt| fzf | pbcopy"
 alias b="git branch --show-current"
 
 alias gpr="git pull origin main --rebase && git push origin `b` -f"
+
+# Pelanor aliases
+
+set_customer() {
+    rm  ~/work/customers/current/* -f
+    ln -s ~/work/customers/current/customer1/ ~/work/customers/$1/
+}
+alias customer="set_customer"
 
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
