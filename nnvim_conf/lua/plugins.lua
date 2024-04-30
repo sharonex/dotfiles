@@ -348,7 +348,17 @@ require('lazy').setup({
                     on_attach = function(client, bufnr)
                         require("lsp-inlayhints").on_attach(client, bufnr)
                         require("lsp-inlayhints").show()
+                        vim.cmd("autocmd BufWritePre * silent :!cargo +nightly fmt")
                     end,
+                    default_settings = {
+                        -- rust-analyzer language server configuration
+                        ['rust-analyzer'] = {
+                            checkOnSave = {
+                                command = "clippy",
+                                extraArgs = { "--no-deps" },
+                            },
+                        },
+                    },
                 },
                 dap = {
                     adapter = cfg.get_codelldb_adapter(codelldb_path, liblldb_path),

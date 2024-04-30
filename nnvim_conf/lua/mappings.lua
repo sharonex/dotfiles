@@ -202,6 +202,7 @@ vim.keymap.set("n", "<leader>rc", "<cmd>RustLsp openCargo<CR>", { desc = "[R]ust
 vim.keymap.set("n", "<leader>rp", "<cmd>RustLsp parentModule<CR>", { desc = "[R]ust open parent module" })
 vim.keymap.set("n", "<leader>rr", "<cmd>RustLsp reloadWorkspace<CR>", { desc = "[R]ust [R]estart" })
 vim.keymap.set("n", "<leader>rf", "<cmd>RustLsp flyCheck <CR>", { desc = "[R]ust [F]lycheck" })
+vim.keymap.set("n", "<leader>rx", "<cmd>RustLsp flyCheck clear <CR>", { desc = "[R]ust [F]lycheck [X]remove" })
 vim.keymap.set("n", "<leader>rs", "<cmd>lua require(\"lsp-inlayhints\").show() <CR>",
     { desc = "[R]ust [S]how inlay hints" })
 
