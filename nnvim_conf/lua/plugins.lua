@@ -335,21 +335,16 @@ require('lazy').setup({
     {
         "mrcjkb/rustaceanvim",
         version = "^3", -- Recommended
-        dependencies = { 'lvimuser/lsp-inlayhints.nvim' },
         ft = { "rust" },
         config = function()
-            require("lsp-inlayhints").setup()
-            local extension_path = vim.env.HOME .. '/.vscode/extensions/vadimcn.vscode-lldb-1.10.0/'
+            local codelldb = require('mason-registry').get_package('codelldb')
+            local extension_path = codelldb:get_install_path() .. '/extension/'
             local codelldb_path = extension_path .. 'adapter/codelldb'
             local liblldb_path = extension_path .. 'lldb/lib/liblldb.dylib'
+
             local cfg = require('rustaceanvim.config')
             vim.g.rustaceanvim = {
                 server = {
-                    on_attach = function(client, bufnr)
-                        require("lsp-inlayhints").on_attach(client, bufnr)
-                        require("lsp-inlayhints").show()
-                        vim.cmd("autocmd BufWritePre * silent :!cargo +nightly fmt")
-                    end,
                     default_settings = {
                         -- rust-analyzer language server configuration
                         ['rust-analyzer'] = {
@@ -420,7 +415,7 @@ require('lazy').setup({
     },
     {
         dir = "/Users/sharonavni/personal/git-mediate.nvim",
-        dependencies = { "skywind3000/asyncrun.vim", "kevinhwang91/nvim-bqf" },
+        dependencies = { "skywind3000/asyncrun.vim", "echasnovski/mini.diff" },
         config = function()
             require("git-mediate").setup()
         end,
@@ -656,27 +651,27 @@ require('lazy').setup({
             vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
         end
     },
-    -- {
-    --     'rcarriga/nvim-dap-ui',
-    --     lazy = false,
-    --     dependencies = { 'mfussenegger/nvim-dap' },
-    --     config = function()
-    --         require('dapui').setup()
-    --         local dap, dapui = require("dap"), require("dapui")
-    --         dap.listeners.before.attach.dapui_config = function()
-    --             dapui.open()
-    --         end
-    --         dap.listeners.before.launch.dapui_config = function()
-    --             dapui.open()
-    --         end
-    --         dap.listeners.before.event_terminated.dapui_config = function()
-    --             dapui.close()
-    --         end
-    --         dap.listeners.before.event_exited.dapui_config = function()
-    --             dapui.close()
-    --         end
-    --     end
-    -- },
+    {
+        'rcarriga/nvim-dap-ui',
+        lazy = false,
+        dependencies = { 'mfussenegger/nvim-dap', 'nvim-neotest/nvim-nio' },
+        config = function()
+            require('dapui').setup()
+            local dap, dapui = require("dap"), require("dapui")
+            dap.listeners.before.attach.dapui_config = function()
+                dapui.open()
+            end
+            dap.listeners.before.launch.dapui_config = function()
+                dapui.open()
+            end
+            dap.listeners.before.event_terminated.dapui_config = function()
+                dapui.close()
+            end
+            dap.listeners.before.event_exited.dapui_config = function()
+                dapui.close()
+            end
+        end
+    },
     -- {
     --     'b0o/incline.nvim',
     --     config = function()

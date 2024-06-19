@@ -25,11 +25,12 @@
     cob = switch --recurse-submodules
     cod = switch --recurse-submodules --detach
     unset-hooks = config --global core.hooksPath /dev/null
+    custom-hooks = config --global core.hooksPath
     set-hooks = config --global --unset core.hooksPath
     recent = "!f() { git branch --sort=committerdate \"$@\" | grep -v throwaway/;  }; f"
 
 [core]
-	hooksPath = /dev/null
+	hooksPath = /Users/sharonavni/.dotfiles/nnvim_hooks/my_hooks/
     #pager = delta
 
 [interactive]

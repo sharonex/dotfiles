@@ -201,9 +201,10 @@ vim.keymap.set("n", "<leader>re", "<cmd>RustLsp expandMacro<CR>", { desc = "[R]u
 vim.keymap.set("n", "<leader>rc", "<cmd>RustLsp openCargo<CR>", { desc = "[R]ust open cargo" })
 vim.keymap.set("n", "<leader>rp", "<cmd>RustLsp parentModule<CR>", { desc = "[R]ust open parent module" })
 vim.keymap.set("n", "<leader>rr", "<cmd>RustLsp reloadWorkspace<CR>", { desc = "[R]ust [R]estart" })
-vim.keymap.set("n", "<leader>rf", "<cmd>RustLsp flyCheck <CR>", { desc = "[R]ust [F]lycheck" })
+vim.keymap.set("n", "<leader>rd", "<cmd>RustLsp flyCheck <CR>", { desc = "[R]ust [D]iagnostics" })
+vim.keymap.set("n", "<leader>rf", "<cmd>!cargo +nightly fmt <CR>", { desc = "[R]ust [F]ormat" })
 vim.keymap.set("n", "<leader>rx", "<cmd>RustLsp flyCheck clear <CR>", { desc = "[R]ust [F]lycheck [X]remove" })
-vim.keymap.set("n", "<leader>rs", "<cmd>lua require(\"lsp-inlayhints\").show() <CR>",
+vim.keymap.set("n", "<leader>rs", "<cmd>lua vim.lsp.inlay_hint.enable() <CR>",
     { desc = "[R]ust [S]how inlay hints" })
 
 -------------- Git ----------------------------------
@@ -301,9 +302,9 @@ vim.keymap.set("n", "<leader>ll", "<cmd> lua vim.diagnostic.open_float({scope=\"
     { desc = "Show line diagnostics" })
 vim.keymap.set("n", "<leader>lc", "<cmd> lua vim.diagnostic.open_float({scope=\"cursor\"}) <cr>",
     { desc = "Show line diagnostics" })
-vim.keymap.set("n", "<leader>ld", "<cmd> TroubleToggle document_diagnostics<cr>", { desc = "Document diagnostics" })
-vim.keymap.set("n", "<leader>lw", "<cmd> TroubleToggle workspace_diagnostics<cr>", { desc = "Workspace diagnostics" })
-vim.keymap.set("n", "<leader>qf", "<cmd> TroubleToggle quickfix<cr>", { desc = " open [Q]uick[f]ix" })
+vim.keymap.set("n", "<leader>ld", "<cmd> Trouble diagnostics toggle filter.buf=0<cr>", { desc = "Document diagnostics" })
+vim.keymap.set("n", "<leader>lw", "<cmd> Trouble diagnostics toggle<cr>", { desc = "Workspace diagnostics" })
+vim.keymap.set("n", "<leader>qf", "<cmd> Trouble qflist toggle<cr>", { desc = " open [Q]uick[f]ix" })
 
 -- Oil
 vim.keymap.set("n", "|", "<CMD>Oil<CR>", { desc = "Open parent directory" })
@@ -322,7 +323,7 @@ vim.keymap.set("n", "<leader>tg",
     { desc = "Run last test" }
 )
 -- Debugging
-vim.keymap.set("n", "<leader>dt", "<cmd>DapToggleBreakpoint<CR>", { desc = "[D]ebug [B]reakpoint" })
+vim.keymap.set("n", "<leader>dt", "<cmd>DapToggleBreakpoint<CR>", { desc = "[D]ebug [T]oggle Breakpoint" })
 vim.keymap.set("n", "<leader>do", "<cmd>DapStepOver<CR>", { desc = "[D]ebug [O]ver" })
 vim.keymap.set("n", "<leader>di", "<cmd>DapStepInto<CR>", { desc = "[D]ebug [I]nto" })
 vim.keymap.set("n", "<leader>dc", "<cmd>DapContinue<CR>", { desc = "[D]ebug [C]ontinue" })
