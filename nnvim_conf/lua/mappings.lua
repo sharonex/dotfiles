@@ -207,6 +207,13 @@ vim.keymap.set("n", "<leader>rx", "<cmd>RustLsp flyCheck clear <CR>", { desc = "
 vim.keymap.set("n", "<leader>rs", "<cmd>lua vim.lsp.inlay_hint.enable() <CR>",
     { desc = "[R]ust [S]how inlay hints" })
 
+-- vim.keymap.set("n", "<leader>rdc", function()
+--     vim.g.rustaceanvim.server.default_settings['rust-analyzer'].checkOnSave.command = "check"
+-- end, { desc = "[R]ust [D]iagnostics [C]heck" })
+--
+-- vim.keymap.set("n", "<leader>rdp", function()
+--     vim.g.rustaceanvim.server.default_settings['rust-analyzer'].checkOnSave.command = "clippy"
+-- end, { desc = "[R]ust [D]iagnostics Cli[p]py" })
 -------------- Git ----------------------------------
 vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>", { desc = "Opens Lazy[G]it" })
 vim.keymap.set("n", "<leader>gB", "<cmd> Git blame<CR>", { desc = "Run [G]it [B]lame on file" })
@@ -216,6 +223,8 @@ vim.keymap.set({ "n", "v" }, "<leader>gs", ":Gitsigns stage_hunk<CR>", { desc = 
 vim.keymap.set({ "n", "v" }, "<leader>gu", ":Gitsigns reset_hunk<CR>", { desc = "[G]it [U]ndo hunk" })
 vim.keymap.set("n", "<leader>gp", ":Gitsigns preview_hunk<CR>", { desc = "[G]it [p]op hunk diff" })
 vim.keymap.set("n", "<leader>g[", ":GitMediate<CR>", { desc = "Run git mediate conflict resolver" })
+vim.keymap.set("n", "<leader>g]", ":GitMediateTerm<CR>",
+    { desc = "Run git mediate conflict resolver in terminal mode(with colors)" })
 vim.keymap.set("n", "<leader>gf", ":Git<CR>/taged<CR>:noh<CR>j", { desc = "[G]it [F]ugitive" })
 vim.keymap.set("n", "<leader>gl", ":Git log <CR>", { desc = "[G]it fugitive [L]og" })
 vim.keymap.set("n", "<leader>grc", ":Git rebase --continue<CR>", { desc = "[G]it [R]ebase [C]ontinue" })
@@ -296,6 +305,8 @@ vim.keymap.set("n", "<leader>1", function() require("harpoon.ui").nav_file(1) en
 vim.keymap.set("n", "<leader>2", function() require("harpoon.ui").nav_file(2) end)
 vim.keymap.set("n", "<leader>3", function() require("harpoon.ui").nav_file(3) end)
 vim.keymap.set("n", "<leader>4", function() require("harpoon.ui").nav_file(4) end)
+vim.keymap.set("n", "<leader>5", function() require("harpoon.ui").nav_file(5) end)
+vim.keymap.set("n", "<leader>6", function() require("harpoon.ui").nav_file(6) end)
 
 -- trouble
 vim.keymap.set("n", "<leader>ll", "<cmd> lua vim.diagnostic.open_float({scope=\"line\"}) <cr>",

@@ -8,89 +8,79 @@ local M = {}
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
 M.servers = {
-  -- clangd = {},
-  -- gopls = {},
-  -- pyright = {},
-  -- rust_analyzer = {},
-  tsserver = {},
-  -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+    -- clangd = {},
+    -- gopls = {},
+    -- pyright = {},
+    -- rust_analyzer = {
+    --     on_attach = function(_, bufnr)
+    --         vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+    --     end
+    -- },
+    tsserver = {},
+    -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
-  lua_ls = {
-    Lua = {
-      workspace = { checkThirdParty = false },
-      telemetry = { enable = false },
-      -- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-      diagnostics = { disable = { 'missing-fields' }, globals = { 'vim' } },
-      hint = { enable = true },
+    lua_ls = {
+        Lua = {
+            workspace = { checkThirdParty = false },
+            telemetry = { enable = false },
+            -- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
+            diagnostics = { disable = { 'missing-fields' }, globals = { 'vim' } },
+            hint = { enable = true },
+        },
     },
-  },
 }
 
 M.lines_enabled = true
 M.toggle_lsp_lines = function()
-  M.lines_enabled = not M.lines_enabled
-  vim.diagnostic.config({
-    virtual_lines = M.lines_enabled,
-    virtual_text = not M.lines_enabled,
-    severity_sort = not M.lines_enabled
-  })
+    M.lines_enabled = not M.lines_enabled
+    vim.diagnostic.config({
+        virtual_lines = M.lines_enabled,
+        virtual_text = not M.lines_enabled,
+        severity_sort = not M.lines_enabled
+    })
 end
 -- Start with virtual lines disabled
 M.toggle_lsp_lines()
 
 vim.diagnostic.config({
-  severity_sort = true,
-  virtual_text = true,
+    severity_sort = true,
+    virtual_text = true,
 })
 
 vim.keymap.set('n', '<leader>lq', M.toggle_lsp_lines, { desc = '[L]SP [Q]uickfix Toggle' })
 
--- vim.api.nvim_create_augroup("LspAttach_inlayhints", {})
--- vim.api.nvim_create_autocmd("LspAttach", {
---   group = "LspAttach_inlayhints",
---   callback = function(args)
---     if not (args.data and args.data.client_id) then
---       return
---     end
---
---     local client = vim.lsp.get_client_by_id(args.data.client_id)
---     require("lsp-inlayhints").on_attach(client, 0)
---     require("lsp-inlayhints").show()
---   end,
--- })
---
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 M.capabilities = capabilities
 capabilities.textDocument.foldingRange = {
-  dynamicRegistration = false,
-  lineFoldingOnly = true
+    dynamicRegistration = false,
+    lineFoldingOnly = true
 }
 
 -- Ensure the servers above are installed
 local mason_lspconfig = require 'mason-lspconfig'
 
 mason_lspconfig.setup {
-  ensure_installed = vim.tbl_keys(M.servers),
+    ensure_installed = vim.tbl_keys(M.servers),
 }
 
 -- nicer lsp diagnostics icons
 local signs = { Error = "", Warn = "", Hint = "󰌵", Info = "" }
 for type, icon in pairs(signs) do
-  local hl = "DiagnosticSign" .. type
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+    local hl = "DiagnosticSign" .. type
+    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
 
 mason_lspconfig.setup_handlers {
-  function(server_name)
-    require('lspconfig')[server_name].setup {
-      capabilities = capabilities,
-      on_attach = M.on_attach,
-      settings = M.servers[server_name],
-      filetypes = (M.servers[server_name] or {}).filetypes,
-    }
-  end,
+    function(server_name)
+        require('lspconfig')[server_name].setup {
+            capabilities = capabilities,
+            on_attach = M.on_attach,
+            settings = M.servers[server_name],
+            filetypes = (M.servers[server_name] or {}).filetypes,
+        }
+    end,
 }
 
 return M

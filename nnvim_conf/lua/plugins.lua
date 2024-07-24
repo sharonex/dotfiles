@@ -23,9 +23,6 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
     -- NOTE: First, some plugins that don't require any configuration
 
-    -- Git related plugins
-    'tpope/vim-rhubarb',
-
     -- Detect tabstop and shiftwidth automatically
     'tpope/vim-sleuth',
 
@@ -58,12 +55,6 @@ require('lazy').setup({
         config = function()
             require("configs.lspconfig")
         end,
-    },
-    {
-        'folke/neodev.nvim',
-        config = function()
-            require('neodev').setup()
-        end
     },
     {
         -- Autocompletion
@@ -334,7 +325,6 @@ require('lazy').setup({
     -- Rustacenvim config from appelgriebsch/Nv
     {
         "mrcjkb/rustaceanvim",
-        version = "^3", -- Recommended
         ft = { "rust" },
         config = function()
             local codelldb = require('mason-registry').get_package('codelldb')
@@ -345,6 +335,9 @@ require('lazy').setup({
             local cfg = require('rustaceanvim.config')
             vim.g.rustaceanvim = {
                 server = {
+                    on_attach = function(_, _)
+                        vim.lsp.inlay_hint.enable()
+                    end,
                     default_settings = {
                         -- rust-analyzer language server configuration
                         ['rust-analyzer'] = {
@@ -382,17 +375,6 @@ require('lazy').setup({
             })
         end,
     },
-    -- {
-    --     "simrat39/rust-tools.nvim",
-    --     ft = "rust",
-    --     dependencies = "neovim/nvim-lspconfig",
-    --     opts = function()
-    --         return require("configs.rust-tools")
-    --     end,
-    --     config = function(_, opts)
-    --         require("rust-tools").setup(opts)
-    --     end,
-    -- },
     -- {
     --     "gbprod/yanky.nvim",
     --     dependencies = {
@@ -439,34 +421,40 @@ require('lazy').setup({
             })
         end
     },
-    -- {
-    --     "ggandor/leap.nvim",
-    --     lazy = false,
-    --     config = function()
-    --         require("leap").add_default_mappings()
-    --         -- require('leap').add_repeat_mappings(';', ',', {
-    --         --     relative_directions = true,
-    --         -- })
-    --     end
-    -- },
     {
-        "folke/flash.nvim",
-        event = "VeryLazy",
-        opts = {
-            modes = {
-                char = {
-                    enabled = false,
-                }
+        "ggandor/leap.nvim",
+        lazy = false,
+        config = function()
+            require("leap").add_default_mappings()
+            require('leap').add_repeat_mappings(';', ',', {
+                relative_directions = true,
+            })
+        end
+    },
+    {
+        "ggandor/leap-spooky.nvim",
+        lazy = false,
+        config = function()
+            require('leap-spooky').setup {
             }
-        },
-        -- stylua: ignore
-        keys = {
-            { "s",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
-            { "S",     mode = { "n", "x", "o" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
-            { "r",     mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
-            { "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-            { "<c-t>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
-        },
+        end
+    },
+    {
+        "ggandor/flit.nvim",
+        lazy = false,
+        config = function()
+            require('flit').setup {
+                keys = { f = 'f', F = 'F', t = 't', T = 'T' },
+                -- A string like "nv", "nvo", "o", etc.
+                labeled_modes = "v",
+                -- Repeat with the trigger key itself.
+                clever_repeat = true,
+                multiline = true,
+                -- Like `leap`s similar argument (call-specific overrides).
+                -- E.g.: opts = { equivalence_classes = {} }
+                opts = {}
+            }
+        end
     },
     {
         "folke/trouble.nvim",
@@ -476,6 +464,7 @@ require('lazy').setup({
             -- your configuration comes here
             -- or leave it empty to use the default settings
             -- refer to the configuration section below
+            use_diagnostic_signs = false -- enabling this will use the signs defined in your lsp client
         },
     },
     {
@@ -518,6 +507,16 @@ require('lazy').setup({
         lazy = false,
     },
     {
+        'AndrewRadev/linediff.vim',
+        lazy = false,
+        config = function()
+            vim.cmd [[
+                let g:linediff_first_buffer_command  = 'rightbelow new'
+                let g:linediff_further_buffer_command = 'rightbelow horizontal new'
+            ]]
+        end
+    },
+    {
         "fdschmidt93/telescope-egrepify.nvim",
         lazy = false,
         config = function()
@@ -549,6 +548,18 @@ require('lazy').setup({
         lazy = false,
     },
     -- {
+    --     'jinh0/eyeliner.nvim',
+    --     lazy = false,
+    --     config = function()
+    --         -- vim.api.nvim_set_hl(0, 'EyelinerPrimary', { fg = '#FF4500', bold = true, underline = true })
+    --         -- vim.api.nvim_set_hl(0, 'EyelinerSecondary', { fg = '#00FF00', underline = true })
+    --         require 'eyeliner'.setup {
+    --             highlight_on_key = false, -- show highlights only after keypress
+    --             dim = false               -- dim all other characters if set to true (recommended!)
+    --         }
+    --     end
+    -- },
+    -- {
     --     'unblevable/quick-scope',
     --     config = function()
     --         vim.cmd [[
@@ -557,10 +568,10 @@ require('lazy').setup({
     --           ]]
     --     end,
     -- },
-    -- {
-    --     "kevinhwang91/nvim-bqf",
-    --     lazy = false,
-    -- },
+    {
+        "kevinhwang91/nvim-bqf",
+        lazy = false,
+    },
     {
         "mg979/vim-visual-multi",
         branch = "master",

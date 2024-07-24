@@ -6,7 +6,7 @@ vim.g.maplocalleader = ' '
 
 vim.opt.path:append '/opt/homebrew/bin/'
 vim.cmd [[
-    let g:neovide_input_macos_alt_is_meta = v:true
+    let g:neovide_input_macos_option_key_is_meta = 'only_left'
     " Allow copy paste in neovim
     let g:neovide_input_use_logo = 1
     map <D-v> "+p<CR>
@@ -93,6 +93,8 @@ vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.format()]]
 vim.cmd [[
   hi QuickScopePrimary guifg='#af0f5f' gui=underline ctermfg=155 cterm=underline
   hi QuickScopeSecondary guifg='#5000ff' gui=underline ctermfg=81 cterm=underline
+  " highlight EyelinerPrimary gui=underline,bold
+  " highlight EyelinerSecondary gui=underline
   " hi DiffAdd    ctermfg=NONE ctermbg=Green guifg=NONE guibg=#003800
   " hi DiffChange ctermfg=NONE ctermbg=Blue guifg=NONE guibg=#0000ff
   " hi DiffDelete ctermfg=NONE ctermbg=Red guifg=NONE guibg=#3f0000
