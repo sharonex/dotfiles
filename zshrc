@@ -239,3 +239,26 @@ function select-aws-profile() {
         aws sso login
     fi
 }
+
+function sync_customers() {
+    if [ "$#" -ne 2 ]; then
+        echo "Usage: customer_sync.sh <CUSTOMERS_DIR> <PROD_PROFILE>"
+        return 1
+    fi
+
+    CUSTOMERS_DIR=$1
+    PROD_PROFILE=$2
+
+    export AWS_PROFILE=$PROD_PROFILE;
+
+    if ! aws sts get-caller-identity &> /dev/null
+    then
+        aws sso login
+    fi
+
+    selected_customer=`aws s3 ls pelanor-production-customer-data-archive | awk -F ' ' '{print $2}' | tr -s '\n'| fzf`
+
+    artifacts_dir=$CUSTOMERS_DIR/$selected_customer/artifacts
+    mkdir -p $artifacts_dir
+    aws s3 sync s3://pelanor-production-customer-data-archive/$selected_customer $artifacts_dir
+}

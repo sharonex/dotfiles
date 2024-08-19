@@ -342,8 +342,7 @@ require('lazy').setup({
                         -- rust-analyzer language server configuration
                         ['rust-analyzer'] = {
                             checkOnSave = {
-                                command = "clippy",
-                                extraArgs = { "--no-deps" },
+                                command = "check",
                             },
                         },
                     },
@@ -370,9 +369,7 @@ require('lazy').setup({
     {
         'mrjones2014/smart-splits.nvim',
         config = function()
-            require('smart-splits').setup({
-                ignored_buftypes = {},
-            })
+            require('smart-splits').setup()
         end,
     },
     -- {
@@ -397,7 +394,7 @@ require('lazy').setup({
     },
     {
         dir = "/Users/sharonavni/personal/git-mediate.nvim",
-        dependencies = { "skywind3000/asyncrun.vim", "echasnovski/mini.diff" },
+        dependencies = { "skywind3000/asyncrun.vim" },
         config = function()
             require("git-mediate").setup()
         end,
@@ -643,25 +640,25 @@ require('lazy').setup({
             vim.cmd("colorscheme onedark")
         end
     },
-    {
-        'akinsho/toggleterm.nvim',
-        version = "*",
-        config = function()
-            require 'toggleterm'.setup {
-            }
-            function _G.set_terminal_keymaps()
-                local opts = { buffer = 0 }
-                vim.keymap.set('t', '<C-x>', [[<C-\><C-n>]], opts)
-                vim.keymap.set('t', '<C-h>', [[<Cmd>wincmd h<CR>]], opts)
-                vim.keymap.set('t', '<C-j>', [[<Cmd>wincmd j<CR>]], opts)
-                vim.keymap.set('t', '<C-k>', [[<Cmd>wincmd k<CR>]], opts)
-                vim.keymap.set('t', '<C-l>', [[<Cmd>wincmd l<CR>]], opts)
-            end
-
-            -- if you only want these mappings for toggle term use term://*toggleterm#* instead
-            vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
-        end
-    },
+    -- {
+    --     'akinsho/toggleterm.nvim',
+    --     version = "*",
+    --     config = function()
+    --         require 'toggleterm'.setup {
+    --         }
+    --         function _G.set_terminal_keymaps()
+    --             local opts = { buffer = 0 }
+    --             vim.keymap.set('t', '<C-x>', [[<C-\><C-n>]], opts)
+    --             vim.keymap.set('t', '<C-h>', [[<Cmd>wincmd h<CR>]], opts)
+    --             vim.keymap.set('t', '<C-j>', [[<Cmd>wincmd j<CR>]], opts)
+    --             vim.keymap.set('t', '<C-k>', [[<Cmd>wincmd k<CR>]], opts)
+    --             vim.keymap.set('t', '<C-l>', [[<Cmd>wincmd l<CR>]], opts)
+    --         end
+    --
+    --         -- if you only want these mappings for toggle term use term://*toggleterm#* instead
+    --         vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
+    --     end
+    -- },
     {
         'rcarriga/nvim-dap-ui',
         lazy = false,
