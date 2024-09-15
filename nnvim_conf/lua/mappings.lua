@@ -29,7 +29,6 @@ vim.keymap.set("n", "<C-w>s", "<C-w>s<C-w>j")
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic message" })
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next diagnostic message" })
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostics list" })
 
 -- See `:help telescope.builtin`
 vim.keymap.set("n", "<leader>?", require("telescope.builtin").oldfiles, { desc = "[?] Find recently opened files" })
@@ -147,13 +146,6 @@ vim.keymap.set("n", "<C-w>kj", "<C-w>j<C-w>q", { desc = "Kill window below" })
 vim.keymap.set("n", "<C-w>kk", "<C-w>k<C-w>q", { desc = "Kill window above" })
 vim.keymap.set("n", "<C-w>kl", "<C-w>l<C-w>q", { desc = "Kill window to the right" })
 vim.keymap.set("n", "==", "mb10k=20j`b", { desc = "Indent in 10 line chunk(up and down)" })
-
--- motions
-vim.keymap.set({ "o", "x" }, 'ii', ":lua require('configs/indentation_object')(false)<CR>",
-    { noremap = true, silent = true })
-vim.keymap.set({ "o", "x" }, 'ai', ":lua require('configs/indentation_object')(true)<CR>",
-    { noremap = true, silent = true })
-
 -- Folds
 -- vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
 -- vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
@@ -191,7 +183,6 @@ vim.keymap.set("n", "<leader>xx", "<cmd>source % <CR>", { desc = "execute curren
 
 -- Exchange
 vim.keymap.set("n", "gx", "<cmd>lua require('substitute.exchange').operator()<cr>", { desc = "" })
-vim.keymap.set("n", "gxc", "<cmd>lua require('substitute.exchange').cancel()<cr>", { desc = "" })
 vim.keymap.set("v", "gx", "<cmd>lua require('substitute.exchange').visual()<cr>", { desc = "" })
 vim.keymap.set("n", "gp", "<cmd>lua require('substitute').operator()<cr>", { desc = "" })
 vim.keymap.set("n", "gP", "<cmd>lua require('substitute').eol()<cr>", { desc = "" })
@@ -206,10 +197,16 @@ vim.keymap.set("n", "<leader>rc", "<cmd>RustLsp openCargo<CR>", { desc = "[R]ust
 vim.keymap.set("n", "<leader>rp", "<cmd>RustLsp parentModule<CR>", { desc = "[R]ust open parent module" })
 vim.keymap.set("n", "<leader>rr", "<cmd>RustLsp reloadWorkspace<CR>", { desc = "[R]ust [R]estart" })
 vim.keymap.set("n", "<leader>rd", "<cmd>RustLsp renderDiagnostic <CR>", { desc = "[R]ust [D]iagnostics" })
+vim.keymap.set("n", "<leader>rd", "<cmd>RustLsp renderDiagnostic <CR>", { desc = "[R]ust [D]iagnostics" })
 vim.keymap.set("n", "<leader>rf", "<cmd>!cargo +nightly fmt <CR>", { desc = "[R]ust [F]ormat" })
-vim.keymap.set("n", "<leader>rx", "<cmd>RustLsp flyCheck clear <CR>", { desc = "[R]ust [F]lycheck [X]remove" })
-vim.keymap.set("n", "<leader>rs", "<cmd>lua vim.lsp.inlay_hint.enable() <CR>",
-    { desc = "[R]ust [S]how inlay hints" })
+vim.keymap.set("n", "<leader>rb", function() vim.cmd.RustLsp { 'flyCheck', 'run' } end,
+    { desc = "[R]ust [F]lycheck [B]uild" })
+
+vim.keymap.set("n", "<leader>rx", function()
+        vim.cmd.RustLsp { 'flyCheck', 'cancel' }
+        vim.cmd.RustLsp { 'flyCheck', 'clear' }
+    end,
+    { desc = "[R]ust [F]lycheck [X]remove" })
 
 -- vim.keymap.set("n", "<leader>rdc", function()
 --     vim.g.rustaceanvim.server.default_settings['rust-analyzer'].checkOnSave.command = "check"

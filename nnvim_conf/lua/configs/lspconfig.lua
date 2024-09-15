@@ -16,8 +16,11 @@ M.servers = {
     --         vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
     --     end
     -- },
-    tsserver = {},
+    -- tsserver = {},
     -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+    -- eslint = {
+    --     filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
+    -- },
 
     lua_ls = {
         Lua = {
@@ -30,24 +33,26 @@ M.servers = {
     },
 }
 
-M.lines_enabled = true
-M.toggle_lsp_lines = function()
-    M.lines_enabled = not M.lines_enabled
+
+local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+M.on_attach = function(client, bufnr)
+        if client.supports_method("textDocument/formatting") then
+            vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+            vim.api.nvim_create_autocmd("BufWritePre", {
+                group = augroup,
+                buffer = bufnr,
+                callback = function()
+                    vim.lsp.buf.format({ bufnr = bufnr })
+                end,
+            })
+        end
+    end,
+
+
     vim.diagnostic.config({
-        virtual_lines = M.lines_enabled,
-        virtual_text = not M.lines_enabled,
-        severity_sort = not M.lines_enabled
+        severity_sort = true,
+        virtual_text = true,
     })
-end
--- Start with virtual lines disabled
-M.toggle_lsp_lines()
-
-vim.diagnostic.config({
-    severity_sort = true,
-    virtual_text = true,
-})
-
-vim.keymap.set('n', '<leader>lq', M.toggle_lsp_lines, { desc = '[L]SP [Q]uickfix Toggle' })
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()

@@ -170,7 +170,11 @@ require('lazy').setup({
         'nvim-tree/nvim-tree.lua',
         lazy = false,
         config = function()
-            require("nvim-tree").setup()
+            require("nvim-tree").setup({
+                view = {
+                    width = 50,
+                },
+            })
         end
     },
     {
@@ -343,6 +347,11 @@ require('lazy').setup({
                         ['rust-analyzer'] = {
                             checkOnSave = {
                                 command = "check",
+                                -- command = "clippy",
+                                -- extraArgs = { "--no-deps" },
+                            },
+                            check = {
+                                workspace = false
                             },
                         },
                     },
@@ -428,14 +437,14 @@ require('lazy').setup({
             })
         end
     },
-    {
-        "ggandor/leap-spooky.nvim",
-        lazy = false,
-        config = function()
-            require('leap-spooky').setup {
-            }
-        end
-    },
+    -- {
+    --     "ggandor/leap-spooky.nvim",
+    --     lazy = false,
+    --     config = function()
+    --         require('leap-spooky').setup {
+    --         }
+    --     end
+    -- },
     {
         "ggandor/flit.nvim",
         lazy = false,
@@ -585,11 +594,11 @@ require('lazy').setup({
     --         return require("configs.null-ls")
     --     end,
     -- },
-    -- {
-    --     "pmizio/typescript-tools.nvim",
-    --     dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
-    --     opts = {},
-    -- },
+    {
+        "pmizio/typescript-tools.nvim",
+        dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+        opts = {},
+    },
     {
         'windwp/nvim-ts-autotag',
         ft = { "html", "javascript", "javascriptreact", "typescript", "typescriptreact", "svelte", "vue" },
@@ -659,27 +668,27 @@ require('lazy').setup({
     --         vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
     --     end
     -- },
-    {
-        'rcarriga/nvim-dap-ui',
-        lazy = false,
-        dependencies = { 'mfussenegger/nvim-dap', 'nvim-neotest/nvim-nio' },
-        config = function()
-            require('dapui').setup()
-            local dap, dapui = require("dap"), require("dapui")
-            dap.listeners.before.attach.dapui_config = function()
-                dapui.open()
-            end
-            dap.listeners.before.launch.dapui_config = function()
-                dapui.open()
-            end
-            dap.listeners.before.event_terminated.dapui_config = function()
-                dapui.close()
-            end
-            dap.listeners.before.event_exited.dapui_config = function()
-                dapui.close()
-            end
-        end
-    },
+    -- {
+    --     'rcarriga/nvim-dap-ui',
+    --     lazy = false,
+    --     dependencies = { 'mfussenegger/nvim-dap', 'nvim-neotest/nvim-nio' },
+    --     config = function()
+    --         require('dapui').setup()
+    --         local dap, dapui = require("dap"), require("dapui")
+    --         dap.listeners.before.attach.dapui_config = function()
+    --             dapui.open()
+    --         end
+    --         dap.listeners.before.launch.dapui_config = function()
+    --             dapui.open()
+    --         end
+    --         dap.listeners.before.event_terminated.dapui_config = function()
+    --             dapui.close()
+    --         end
+    --         dap.listeners.before.event_exited.dapui_config = function()
+    --             dapui.close()
+    --         end
+    --     end
+    -- },
     -- {
     --     'b0o/incline.nvim',
     --     config = function()
@@ -688,15 +697,22 @@ require('lazy').setup({
     --     -- Optional: Lazy load Incline
     --     event = 'VeryLazy',
     -- },
+    -- {
+    --     "NeogitOrg/neogit",
+    --     dependencies = {
+    --         "nvim-lua/plenary.nvim",  -- required
+    --         "sindrets/diffview.nvim", -- optional - Diff integration
+    --
+    --         -- Only one of these is needed, not both.
+    --         "nvim-telescope/telescope.nvim", -- optional
+    --     },
+    --     config = true
+    -- },
     {
-        "NeogitOrg/neogit",
-        dependencies = {
-            "nvim-lua/plenary.nvim",  -- required
-            "sindrets/diffview.nvim", -- optional - Diff integration
-
-            -- Only one of these is needed, not both.
-            "nvim-telescope/telescope.nvim", -- optional
-        },
-        config = true
-    },
+        "johmsalas/text-case.nvim",
+        lazy = false,
+        config = function()
+            require('textcase').setup {}
+        end
+    }
 })

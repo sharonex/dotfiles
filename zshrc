@@ -23,8 +23,8 @@ export WORDCHARS=$WORDCHARS-
 export DOTFILES="$HOME/.dotfiles"
 export TMUX_CONF_LOCAL="$DOTFILES/tmux.conf.local"
 export PATH="/opt/homebrew/bin:$HOME/bin:$HOME/.local/bin:$GOPATH/bin:$GOROOT/bin:$HOME/go/bin:$HOME/.cargo/bin:$PATH:$HOME/Library/Python/3.11/bin:$HOME/bin/nnvim/bin"
-export RUST_BACKTRACE=0
 export OPENAI_API_KEY="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"
+unset RUST_BACKTRACE
 
 # Alias
 alias vim="nvim"
@@ -52,13 +52,7 @@ alias b="git branch --show-current"
 alias gpr="git pull origin main --rebase && git push origin `b` -f"
 
 # Pelanor aliases
-
-set_customer() {
-    rm  ~/work/customers/current/* -f
-    ln -s ~/work/customers/current/customer1/ ~/work/customers/$1/
-}
-alias customer="set_customer"
-
+alias kc="killall cargo"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND="rg --files"
@@ -188,7 +182,7 @@ zle -N fzf-helpers-widget
 bindkey '^o' fzf-branch-widget
 bindkey "\e[1;3D" backward-word # ⌥←
 bindkey "\e[1;3C" forward-word # ⌥→
-bindkey \^U backward-kill-line 
+bindkey \^U backward-kill-line
 
 zi ice wait'3' lucid
 #zi snippet ~/utils/pyenv.zsh
@@ -262,3 +256,15 @@ function sync_customers() {
     mkdir -p $artifacts_dir
     aws s3 sync s3://pelanor-production-customer-data-archive/$selected_customer $artifacts_dir
 }
+
+# pnpm
+export PNPM_HOME="/Users/sharonavni/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
