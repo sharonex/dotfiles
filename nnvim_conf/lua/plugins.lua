@@ -261,11 +261,83 @@ require('lazy').setup({
         version = "*", -- Use for stability; omit to use `main` branch for the latest features
         event = "VeryLazy",
         config = function()
+            local build_rust_surround = function(object_name)
+                return {
+                    add = function()
+                        return { { object_name .. "<" }, { ">" } }
+                    end,
+                    find = function()
+                        local config = require("nvim-surround.config")
+                        return config.get_selection({ pattern = object_name .. "<.->?" })
+                    end,
+                    delete = "^(" .. object_name .. "<)().-(>)()$",
+                    change = {
+                        target = "^(" .. object_name .. "<)().-(>)()$",
+                        replacement = function()
+                            print("hello!")
+
+                            local config = require("nvim-surround.config")
+                            local result = config.get_input("Enter the new type: ")
+                            if result then
+                                return { { result .. "<" }, { ">" } }
+                            end
+                        end,
+                    }
+                }
+            end
             require("nvim-surround").setup({
                 surrounds = {
-                    ["R"] = {
+                    -- ["R"] = {
+                    --     add = function()
+                    --         return { { "anyhow::Result<" }, { ">" } }
+                    --     end,
+                    --     find = function()
+                    --         local config = require("nvim-surround.config")
+                    --         return config.get_selection({ node = "generic_type" })
+                    --     end,
+                    --     delete = "^(anyhow::Result<)().-(>)()$",
+                    --     change = {
+                    --         target = "^(anyhow::Result<)().-(>)()$",
+                    --         replacement = function()
+                    --             print("hello!")
+                    --
+                    --             local config = require("nvim-surround.config")
+                    --             local result = config.get_input("Enter the new type: ")
+                    --             if result then
+                    --                 return { { result .. "<" }, { ">" } }
+                    --             end
+                    --         end,
+                    --     }
+                    -- },
+                    ["R"] = build_rust_surround("anyhow::Result"),
+                    -- "generic"
+                    ["g"] = {
                         add = function()
-                            return { { "anyhow::Result<" }, { ">" } }
+                            local config = require("nvim-surround.config")
+                            local result = config.get_input("Enter the generic name: ")
+                            if result then
+                                return { { result .. "<" }, { ">" } }
+                            end
+                        end,
+                        find = function()
+                            local config = require("nvim-surround.config")
+                            return config.get_selection({ node = "generic_type" })
+                        end,
+                        delete = "^(.-<)().-(>)()$",
+                        change = {
+                            target = "^(.-<)().-(>)()$",
+                            replacement = function()
+                                local config = require("nvim-surround.config")
+                                local result = config.get_input("Enter the generic name: ")
+                                if result then
+                                    return { { result .. "<" }, { ">" } }
+                                end
+                            end,
+                        }
+                    },
+                    ["V"] = {
+                        add = function()
+                            return { { "Vec<" }, { ">" } }
                         end,
                     },
                     ["O"] = {
