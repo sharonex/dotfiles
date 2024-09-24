@@ -29,6 +29,14 @@ require('lazy').setup({
     {
         'williamboman/mason.nvim',
         dependencies = { 'williamboman/mason-lspconfig.nvim' },
+        opts = {
+            ensure_installed = {
+                'typescript-language-server',
+                'tailwindcss-language-server',
+                'eslint-lsp',
+                'prettierd',
+            }
+        },
         config = function()
             require('mason').setup()
             require('mason-lspconfig').setup()
@@ -261,55 +269,44 @@ require('lazy').setup({
         version = "*", -- Use for stability; omit to use `main` branch for the latest features
         event = "VeryLazy",
         config = function()
-            local build_rust_surround = function(object_name)
+            local build_common_surround = function(object_name, opener, closer)
                 return {
                     add = function()
-                        return { { object_name .. "<" }, { ">" } }
+                        return { { object_name .. opener }, { closer } }
                     end,
                     find = function()
                         local config = require("nvim-surround.config")
-                        return config.get_selection({ pattern = object_name .. "<.->?" })
+                        return config.get_selection({ node = "generic_type" })
                     end,
-                    delete = "^(" .. object_name .. "<)().-(>)()$",
+                    delete = "^(" .. object_name .. opener .. ")().-(" .. closer .. ")()$",
                     change = {
-                        target = "^(" .. object_name .. "<)().-(>)()$",
-                        replacement = function()
-                            print("hello!")
-
-                            local config = require("nvim-surround.config")
-                            local result = config.get_input("Enter the new type: ")
-                            if result then
-                                return { { result .. "<" }, { ">" } }
-                            end
-                        end,
+                        target = "^(" .. object_name .. opener .. ")().-(" .. closer .. ")()$"
+                        -- replacement = function()
+                        --     local config = require("nvim-surround.config")
+                        --     local result = config.get_input("Enter the new type: ")
+                        --     if result then
+                        --         return { { result .. opener }, { closer } }
+                        --     end
+                        -- end,
                     }
                 }
             end
             require("nvim-surround").setup({
                 surrounds = {
-                    -- ["R"] = {
+                    ["R"] = build_common_surround("anyhow::Result", "<", ">"),
+                    ["V"] = build_common_surround("Vec", "<", ">"),
+                    ["O"] = build_common_surround("Option", "<", ">"),
+                    ["S"] = build_common_surround("Some", "(", ")"),
+                    -- ["S"] = {
                     --     add = function()
-                    --         return { { "anyhow::Result<" }, { ">" } }
+                    --         return { { "Some(" }, { ")" } }
                     --     end,
-                    --     find = function()
-                    --         local config = require("nvim-surround.config")
-                    --         return config.get_selection({ node = "generic_type" })
-                    --     end,
-                    --     delete = "^(anyhow::Result<)().-(>)()$",
-                    --     change = {
-                    --         target = "^(anyhow::Result<)().-(>)()$",
-                    --         replacement = function()
-                    --             print("hello!")
-                    --
-                    --             local config = require("nvim-surround.config")
-                    --             local result = config.get_input("Enter the new type: ")
-                    --             if result then
-                    --                 return { { result .. "<" }, { ">" } }
-                    --             end
-                    --         end,
-                    --     }
                     -- },
-                    ["R"] = build_rust_surround("anyhow::Result"),
+                    ["K"] = {
+                        add = function()
+                            return { { "Ok(" }, { ")" } }
+                        end,
+                    },
                     -- "generic"
                     ["g"] = {
                         add = function()
@@ -334,29 +331,7 @@ require('lazy').setup({
                                 end
                             end,
                         }
-                    },
-                    ["V"] = {
-                        add = function()
-                            return { { "Vec<" }, { ">" } }
-                        end,
-                    },
-                    ["O"] = {
-                        add = function()
-                            return { { "Option<" }, { ">" } }
-                        end,
-                    },
-                    ["S"] = {
-                        add = function()
-                            return { { "Some(" }, { ")" } }
-                        end,
-                    },
-                    ["K"] = {
-                        add = function()
-                            return { { "Ok(" }, { ")" } }
-                        end,
                     }
-
-
                 }
             })
         end
@@ -418,8 +393,8 @@ require('lazy').setup({
                         -- rust-analyzer language server configuration
                         ['rust-analyzer'] = {
                             checkOnSave = {
-                                command = "check",
                                 -- command = "clippy",
+                                command = "check",
                                 -- extraArgs = { "--no-deps" },
                             },
                             check = {
@@ -659,17 +634,24 @@ require('lazy').setup({
             ]]
         end,
     },
-    -- {
-    --     'nvimtools/none-ls.nvim',
-    --     event = "VeryLazy",
-    --     opts = function()
-    --         return require("configs.null-ls")
-    --     end,
-    -- },
     {
-        "pmizio/typescript-tools.nvim",
-        dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
-        opts = {},
+        'nvimtools/none-ls.nvim',
+        event = "VeryLazy",
+        opts = function()
+            return require("configs.null-ls")
+        end,
+    },
+    {
+        "utilyre/sentiment.nvim",
+        version = "*",
+        event = "VeryLazy", -- keep for lazy loading
+        opts = {
+            -- config
+        },
+        init = function()
+            -- `matchparen.vim` needs to be disabled manually in case of lazy loading
+            vim.g.loaded_matchparen = 1
+        end,
     },
     {
         'windwp/nvim-ts-autotag',

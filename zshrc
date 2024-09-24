@@ -43,6 +43,7 @@ alias qqqqq="cd ../../../../../"               # Go back 5 directory levels
 alias p="cd ~/work/pelanor/"
 alias p2="cd ~/work/pelanor2/"
 
+alias pp="git push origin `git branch --show-current` -f; echo 'Checking formatting'; cargo +nightly fmt --check; echo 'Running clippy'; cargo clippy --all-targets"
 alias s="source ~/.zshrc"
 
 alias h="cat $DOTFILES/helpers.txt| fzf | pbcopy"
