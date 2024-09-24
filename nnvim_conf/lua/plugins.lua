@@ -146,34 +146,34 @@ require('lazy').setup({
     { 'numToStr/Comment.nvim', opts = {} },
 
     -- Fuzzy Finder (files, lsp, etc)
-    {
-        'nvim-telescope/telescope.nvim',
-        branch = '0.1.x',
-        dependencies = {
-            'nvim-lua/plenary.nvim',
-            -- Fuzzy Finder Algorithm which requires local dependencies to be built.
-            -- Only load if `make` is available. Make sure you have the system
-            -- requirements installed.
-            {
-                'nvim-telescope/telescope-fzf-native.nvim',
-                -- NOTE: If you are having trouble with this installation,
-                --       refer to the README for telescope-fzf-native for more instructions.
-                build = 'make',
-                cond = function()
-                    return vim.fn.executable 'make' == 1
-                end,
-            },
-        },
-        config = function()
-            -- Enable telescope fzf native, if installed
-            pcall(require('telescope').load_extension, 'fzf')
-            require('telescope').setup {
-                defaults = {
-                    path_display = { "full" }
-                },
-            }
-        end
-    },
+    -- {
+    --     'nvim-telescope/telescope.nvim',
+    --     branch = '0.1.x',
+    --     dependencies = {
+    --         'nvim-lua/plenary.nvim',
+    --         -- Fuzzy Finder Algorithm which requires local dependencies to be built.
+    --         -- Only load if `make` is available. Make sure you have the system
+    --         -- requirements installed.
+    --         {
+    --             'nvim-telescope/telescope-fzf-native.nvim',
+    --             -- NOTE: If you are having trouble with this installation,
+    --             --       refer to the README for telescope-fzf-native for more instructions.
+    --             build = 'make',
+    --             cond = function()
+    --                 return vim.fn.executable 'make' == 1
+    --             end,
+    --         },
+    --     },
+    --     config = function()
+    --         -- Enable telescope fzf native, if installed
+    --         pcall(require('telescope').load_extension, 'fzf')
+    --         require('telescope').setup {
+    --             defaults = {
+    --                 path_display = { "full" }
+    --             },
+    --         }
+    --     end
+    -- },
     {
         'nvim-tree/nvim-tree.lua',
         lazy = false,
@@ -413,14 +413,28 @@ require('lazy').setup({
         'ibhagwan/fzf-lua',
         lazy = false,
         config = function()
-            -- require 'fzf-lua'.setup {
-            --     winopts = {
-            --         split = "belowright new",
-            --         height = 0.4
-            --     }
-            -- }
+            require('fzf-lua').setup({
+                formatter = "path.filename_first",
+                lsp       = {
+                    jump_to_single_result = true,
+                    async_or_timeout = true,
+                },
+                winopts   = {
+                    split = 'botright new',
+                    height = 0.3,
+                    width = 1.0,
+                    preview = {
+                        vertical = 'up:70%',
+                        horizontal = 'right:50%',
+                    },
+                },
+                files     = {
+                    file_icons   = true,
+                    color_icons  = true,
+                    path_shorten = true,
+                },
+            })
         end
-
     },
     {
         'mrjones2014/smart-splits.nvim',
@@ -569,33 +583,33 @@ require('lazy').setup({
             ]]
         end
     },
-    {
-        "fdschmidt93/telescope-egrepify.nvim",
-        lazy = false,
-        config = function()
-            local egrep_actions = require "telescope._extensions.egrepify.actions"
-            require("telescope").setup {
-                extensions = {
-                    egrepify = {
-                        attach_mappings = false,
-                        -- default mappings
-                        mappings = {
-                            i = {
-                                -- toggle prefixes, prefixes is default
-                                ["<C-z>"] = egrep_actions.toggle_prefixes,
-                                -- toggle AND, AND is default, AND matches tokens and any chars in between
-                                ["<C-&>"] = egrep_actions.toggle_and,
-                                -- toggle permutations, permutations of tokens is opt-in
-                                ["<C-r>"] = egrep_actions.toggle_permutations,
-                            },
-                        },
-                    },
-                },
-            }
-
-            require "telescope".load_extension("egrepify")
-        end
-    },
+    -- {
+    --     "fdschmidt93/telescope-egrepify.nvim",
+    --     lazy = false,
+    --     config = function()
+    --         local egrep_actions = require "telescope._extensions.egrepify.actions"
+    --         require("telescope").setup {
+    --             extensions = {
+    --                 egrepify = {
+    --                     attach_mappings = false,
+    --                     -- default mappings
+    --                     mappings = {
+    --                         i = {
+    --                             -- toggle prefixes, prefixes is default
+    --                             ["<C-z>"] = egrep_actions.toggle_prefixes,
+    --                             -- toggle AND, AND is default, AND matches tokens and any chars in between
+    --                             ["<C-&>"] = egrep_actions.toggle_and,
+    --                             -- toggle permutations, permutations of tokens is opt-in
+    --                             ["<C-r>"] = egrep_actions.toggle_permutations,
+    --                         },
+    --                     },
+    --                 },
+    --             },
+    --         }
+    --
+    --         require "telescope".load_extension("egrepify")
+    --     end
+    -- },
     {
         'aznhe21/actions-preview.nvim',
         lazy = false,
