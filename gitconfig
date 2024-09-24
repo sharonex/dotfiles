@@ -30,7 +30,7 @@
     recent = "!f() { git branch --sort=committerdate \"$@\" | grep -v throwaway/;  }; f"
 
 [core]
-	hooksPath = /Users/sharonavni/.dotfiles/nnvim_hooks/my_hooks/
+    hooksPath = /Users/sharonavni/.dotfiles/nnvim_hooks/my_hooks/
     #pager = delta
 
 [interactive]
@@ -62,3 +62,15 @@
 	required = true
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
+
+[core]
+    pager = delta
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true    # use n and N to move between diff sections
+
+[diff]
+    colorMoved = default
