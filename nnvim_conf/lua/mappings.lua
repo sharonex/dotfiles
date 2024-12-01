@@ -30,62 +30,58 @@ vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous dia
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next diagnostic message" })
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
 
+-- See `:help telescope.builtin`
+vim.keymap.set("n", "<leader>?", require("telescope.builtin").oldfiles, { desc = "[?] Find recently opened files" })
+-- vim.keymap.set("n", "<leader><space>", require("telescope.builtin").buffers, { desc = "[ ] Find existing buffers" })
+vim.keymap.set(
+    "n",
+    "<leader>/",
+    function()
+        -- You can pass additional configuration to telescope to change theme, layout, etc.
+        require("telescope.builtin").current_buffer_fuzzy_find(
+            require("telescope.themes").get_dropdown {
+                winblend = 10,
+                previewer = false
+            }
+        )
+    end,
+    { desc = "[/] Fuzzily search in current buffer" }
+)
+
+local egrepify_with_text = function()
+    -- if in visual mode
+    if vim.fn.mode() == "v" then
+        -- yank the highlighted text into register z
+        vim.cmd('normal! "zy')
+
+        -- get the content of register z
+        local search_term = vim.fn.getreg("z")
+        require("telescope").extensions.egrepify.egrepify({ default_text = search_term })
+    else
+        -- yank current word under cursor
+        local current_word =
+            require("telescope").extensions.egrepify.egrepify({ default_text = vim.fn.expand("<cword>") })
+    end
+end
 
 -------------- Telescope ----------------------------------
--- See `:help telescope.builtin`
--- vim.keymap.set("n", "<leader>?", require("telescope.builtin").oldfiles, { desc = "[?] Find recently opened files" })
--- -- vim.keymap.set("n", "<leader><space>", require("telescope.builtin").buffers, { desc = "[ ] Find existing buffers" })
--- vim.keymap.set(
---     "n",
---     "<leader>/",
---     function()
---         -- You can pass additional configuration to telescope to change theme, layout, etc.
---         require("telescope.builtin").current_buffer_fuzzy_find(
---             require("telescope.themes").get_dropdown {
---                 winblend = 10,
---                 previewer = false
---             }
---         )
---     end,
---     { desc = "[/] Fuzzily search in current buffer" }
--- )
---
--- local egrepify_with_text = function()
---     -- if in visual mode
---     if vim.fn.mode() == "v" then
---         -- yank the highlighted text into register z
---         vim.cmd('normal! "zy')
---
---         -- get the content of register z
---         local search_term = vim.fn.getreg("z")
---         require("telescope").extensions.egrepify.egrepify({ default_text = search_term })
---     else
---         -- yank current word under cursor
---         local current_word =
---             require("telescope").extensions.egrepify.egrepify({ default_text = vim.fn.expand("<cword>") })
---     end
--- end
-vim.keymap.set("n", "<leader>f", require("fzf-lua").git_files, { desc = "[F]ind (Git) Files" })
-vim.keymap.set("n", "<leader>sf", require("fzf-lua").files, { desc = "[S]earch [F]iles" })
-vim.keymap.set("n", "<leader>sh", require("fzf-lua").help_tags, { desc = "[S]earch [H]elp" })
-vim.keymap.set("n", "<leader>sl", require("fzf-lua").resume, { desc = "[S]earch [L]ast again" })
-vim.keymap.set("n", "<leader>sc", "<cmd> FzfLua commands <CR>", { desc = "Find vim commands" })
-vim.keymap.set("n", "<leader>sk", "<cmd> FzfLua keymaps <CR>", { desc = "Look up key mappings" })
-vim.keymap.set("n", "gd", require("fzf-lua").lsp_definitions, { desc = '[G]oto [D]efinition' })
-vim.keymap.set("n", "gr", require("fzf-lua").lsp_references, { desc = '[G]oto [R]eferences' })
-vim.keymap.set("n", "gI", require("fzf-lua").lsp_implementations, { desc = '[G]oto [I]mplementation' })
-vim.keymap.set("n", "<leader>D", require("fzf-lua").lsp_typedefs, { desc = 'Type [D]efinition' })
-vim.keymap.set("n", "<leader>sd", require("fzf-lua").lsp_document_symbols, { desc = '[S]earch [D]ocument' })
-vim.keymap.set("n", "<leader>ss", require("fzf-lua").lsp_live_workspace_symbols, { desc = '[S]earch [S]ymbols' })
-vim.keymap.set("n", "<leader>b", require("fzf-lua").buffers, { desc = '[S]earch [S]ymbols' })
+vim.keymap.set("n", "<leader>f", require("telescope.builtin").git_files, { desc = "[F]ind (Git) Files" })
+vim.keymap.set("n", "<leader>sf", require("telescope.builtin").find_files, { desc = "[S]earch [F]iles" })
+vim.keymap.set("n", "<leader>sh", require("telescope.builtin").help_tags, { desc = "[S]earch [H]elp" })
+-- vim.keymap.set("n", "<leader>sr", require("telescope").extensions.project.project, { desc = "[S]earch [R]epo" })
+vim.keymap.set("n", "<leader>sl", require("telescope.builtin").resume, { desc = "[S]earch [L]ast again" })
+vim.keymap.set("n", "<leader>sp", "<cmd> Telescope egrepify<CR>", { desc = "Find in files" })
+vim.keymap.set({ "n", "v" }, "<leader>sP", egrepify_with_text, { desc = "Find current word in files" })
+vim.keymap.set("v", "<leader>sp", egrepify_with_text, { desc = "Find selection in files" })
+vim.keymap.set({ "n", "v" }, "<leader>sT", require("telescope.builtin").live_grep,
+    { desc = "Find current word in files" })
+vim.keymap.set("v", "<leader>sp", egrepify_with_text, { desc = "Find selection in files" })
+-- vim.keymap.set("n", "<leader>ss", "<cmd> Telescope current_buffer_fuzzy_find <CR>", { desc = "Find in current file" })
+vim.keymap.set("n", "<leader>sc", "<cmd> Telescope commands <CR>", { desc = "Find vim commands" })
+vim.keymap.set("n", "<leader>sk", "<cmd> Telescope keymaps <CR>", { desc = "Look up key mappings" })
+vim.keymap.set({ "n", "v" }, "<leader>p", function() require("telescope").extensions.yank_history.yank_history({}) end,
+    { desc = "Open yank History" })
 
--- vim.keymap.set("v", "<leader>sp", egrepify_with_text, { desc = "Find selection in files" })
--- vim.keymap.set({ "n", "v" }, "<leader>sP", egrepify_with_text, { desc = "Find current word in files" })
-
-vim.keymap.set("n", "<leader>sp", require("fzf-lua").live_grep, { desc = "Find in files" })
-vim.keymap.set("n", "<leader>sP", require("fzf-lua").grep_cword, { desc = "Find current word in files" })
-vim.keymap.set("v", "<leader>sp", require("fzf-lua").grep_visual, { desc = "Find selection in files" })
-vim.keymap.set("v", "<leader>sP", require("fzf-lua").grep_visual, { desc = "Find selection in files" })
 -- vim.keymap.set(
 --     "",
 --     "<Leader>lq",
@@ -122,7 +118,8 @@ vim.keymap.set("n", "<C-t>", ":ToggleTerm<CR>", { desc = "Toggle terminal" })
 
 -------------- Editing -------------------------------
 -- Gnu line shortcuts in insert mode
-vim.keymap.set({ "n", "x" }, "y", "<Plug>(YankyYank)")
+vim.keymap.set({ "n", "x" }, "<leader>y", function() require("telescope").extensions.yank_history.yank_history({}) end,
+    { desc = "Open Yank History" })
 
 vim.keymap.set("i", "<C-c>", "<ESC>", { desc = "" })
 
@@ -260,9 +257,16 @@ local lsp_mappings = function(_)
     end
 
     nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-    nmap("<leader>ca", require("fzf-lua").lsp_code_actions, '[C]ode [A]ction')
-    vmap("<leader>ca", require("fzf-lua").lsp_code_actions, '[C]ode [A]ction')
+    nmap("<leader>ca", require("actions-preview").code_actions, '[C]ode [A]ction')
+    vmap("<leader>ca", require("actions-preview").code_actions, '[C]ode [A]ction')
 
+    nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+    nmap('gr', "<cmd> FzfLua lsp_references<CR>", '[G]oto [R]eferences')
+    nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+    nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
+    nmap('<leader>sd', require('telescope.builtin').lsp_document_symbols, '[S]earch [D]ocument')
+    nmap('<leader>ss', '<cmd> FzfLua lsp_live_workspace_symbols<CR>', '[S]earch [S]ymbols')
+    nmap('<leader>st', "<cmd> FzfLua tags_live_grep<CR>", '[S]earch [T]ags')
 
     -- See `:help K` for why this keymap
     nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
