@@ -40,6 +40,13 @@ require('lazy').setup({
         config = function()
             require('mason').setup()
             require('mason-lspconfig').setup()
+            -- Never format with tsserver
+            vim.lsp.buf.format {
+                filter = function(client)
+                    print(client.name)
+                    return client.name ~= "tsserver" or client.name ~= "ts_ls"
+                end
+            }
         end
     },
 
@@ -393,8 +400,8 @@ require('lazy').setup({
                         -- rust-analyzer language server configuration
                         ['rust-analyzer'] = {
                             checkOnSave = {
-                                -- command = "clippy",
-                                command = "check",
+                                command = "clippy",
+                                -- command = "check",
                                 -- extraArgs = { "--no-deps" },
                             },
                             check = {
@@ -414,13 +421,14 @@ require('lazy').setup({
         lazy = false,
         config = function()
             require('fzf-lua').setup({
-                formatter = "path.filename_first",
-                lsp       = {
+                lsp              = {
                     jump_to_single_result = true,
-                    async_or_timeout = true,
+                    async_or_timeout      = 2000,
+                    formatter             = "path.filename_first",
                 },
-                winopts   = {
+                winopts          = {
                     split = 'botright new',
+                    row = 1.0,
                     height = 0.3,
                     width = 1.0,
                     preview = {
@@ -428,13 +436,80 @@ require('lazy').setup({
                         horizontal = 'right:50%',
                     },
                 },
-                files     = {
-                    file_icons   = true,
-                    color_icons  = true,
-                    path_shorten = true,
+                lsp_code_actions = {
+                    winopts = {
+                        -- Set the window to float
+                        relative = "editor",
+                        -- Position it at the center of the screen
+                        row = 0.5,
+                        col = 0.5,
+                        -- Set the size (adjust as needed)
+                        width = 0.6,
+                        height = 0.8,
+                        -- Add a border
+                        border = "rounded",
+                    },
                 },
+                git              = {
+                    files = {
+                        file_icons   = true,
+                        color_icons  = true,
+                        path_shorten = false,
+                    }
+                },
+                grep             = {
+                    formatter = "path.filename_first",
+                }
             })
         end
+    },
+    {
+        'stevearc/conform.nvim',
+        opts = {},
+        config = function()
+            return {
+                "stevearc/conform.nvim",
+                event = { "BufReadPre", "BufNewFile" },
+                config = function()
+                    local conf = require("conform")
+
+                    conf.setup({
+                        log_level = vim.log.levels.DEBUG,
+                        formatters_by_ft = {
+                            lua = { "stylua" },
+                            rust = { "rustfmt" },
+                            typescript = { { "prettierd", "prettier", stop_after_first = true } },
+                            typescriptreact = { { "prettierd", "prettier", stop_after_first = true } },
+                            javascript = { { "prettierd", "prettier", stop_after_first = true } },
+                            javascriptreact = { { "prettierd", "prettier", stop_after_first = true } },
+
+                            ["*"] = { "codespell", "trim_whitespace" },
+                            -- Use the "_" filetype to run formatters on filetypes that don't
+                            -- have other formatters configured.
+                            ["_"] = { "trim_whitespace" },
+                        },
+                    })
+
+                    vim.api.nvim_create_autocmd('FileType', {
+                        pattern = vim.tbl_keys(require('conform').formatters_by_ft),
+                        group = vim.api.nvim_create_augroup('conform_formatexpr', { clear = true }),
+                        callback = function() vim.opt_local.formatexpr = 'v:lua.require("conform").formatexpr()' end,
+                    })
+                    vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+                    vim.g.auto_conform_on_save = true
+                    vim.api.nvim_create_autocmd('BufWritePre', {
+                        pattern = '*',
+                        callback = function(args)
+                            if vim.g.auto_conform_on_save then require('conform').format({ bufnr = args.buf, timeout_ms = nil }) end
+                        end,
+                    })
+                    vim.api.nvim_create_user_command('ConformToggleOnSave', function()
+                        vim.g.auto_conform_on_save = not vim.g.auto_conform_on_save
+                        vim.notify('Auto-Conform on save: ' .. (vim.g.auto_conform_on_save and 'Enabled' or 'Disabled'))
+                    end, {})
+                end,
+            }
+        end,
     },
     {
         'mrjones2014/smart-splits.nvim',
@@ -442,16 +517,16 @@ require('lazy').setup({
             require('smart-splits').setup()
         end,
     },
-    -- {
-    --     "gbprod/yanky.nvim",
-    --     dependencies = {
-    --         { "kkharji/sqlite.lua" }
-    --     },
-    --     opts = {
-    --         ring = { storage = "sqlite" },
-    --     },
-    --     lazy = false,
-    -- },
+    {
+        "gbprod/yanky.nvim",
+        dependencies = {
+            { "kkharji/sqlite.lua" }
+        },
+        opts = {
+            ring = { storage = "sqlite" },
+        },
+        lazy = false,
+    },
     {
         'ThePrimeagen/harpoon',
         branch = "master",
@@ -610,10 +685,6 @@ require('lazy').setup({
     --         require "telescope".load_extension("egrepify")
     --     end
     -- },
-    {
-        'aznhe21/actions-preview.nvim',
-        lazy = false,
-    },
     -- {
     --     'jinh0/eyeliner.nvim',
     --     lazy = false,
@@ -648,13 +719,13 @@ require('lazy').setup({
             ]]
         end,
     },
-    {
-        'nvimtools/none-ls.nvim',
-        event = "VeryLazy",
-        opts = function()
-            return require("configs.null-ls")
-        end,
-    },
+    -- {
+    --     'nvimtools/none-ls.nvim',
+    --     event = "VeryLazy",
+    --     opts = function()
+    --         return require("configs.null-ls")
+    --     end,
+    -- },
     {
         "utilyre/sentiment.nvim",
         version = "*",
@@ -736,27 +807,27 @@ require('lazy').setup({
     --         vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
     --     end
     -- },
-    -- {
-    --     'rcarriga/nvim-dap-ui',
-    --     lazy = false,
-    --     dependencies = { 'mfussenegger/nvim-dap', 'nvim-neotest/nvim-nio' },
-    --     config = function()
-    --         require('dapui').setup()
-    --         local dap, dapui = require("dap"), require("dapui")
-    --         dap.listeners.before.attach.dapui_config = function()
-    --             dapui.open()
-    --         end
-    --         dap.listeners.before.launch.dapui_config = function()
-    --             dapui.open()
-    --         end
-    --         dap.listeners.before.event_terminated.dapui_config = function()
-    --             dapui.close()
-    --         end
-    --         dap.listeners.before.event_exited.dapui_config = function()
-    --             dapui.close()
-    --         end
-    --     end
-    -- },
+    {
+        'rcarriga/nvim-dap-ui',
+        lazy = false,
+        dependencies = { 'mfussenegger/nvim-dap', 'nvim-neotest/nvim-nio' },
+        config = function()
+            require('dapui').setup()
+            local dap, dapui = require("dap"), require("dapui")
+            dap.listeners.before.attach.dapui_config = function()
+                dapui.open()
+            end
+            dap.listeners.before.launch.dapui_config = function()
+                dapui.open()
+            end
+            dap.listeners.before.event_terminated.dapui_config = function()
+                dapui.close()
+            end
+            dap.listeners.before.event_exited.dapui_config = function()
+                dapui.close()
+            end
+        end
+    },
     -- {
     --     'b0o/incline.nvim',
     --     config = function()

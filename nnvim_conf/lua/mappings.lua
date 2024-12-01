@@ -69,7 +69,6 @@ vim.keymap.set("n", "<leader>f", require("fzf-lua").git_files, { desc = "[F]ind 
 vim.keymap.set("n", "<leader>sf", require("fzf-lua").files, { desc = "[S]earch [F]iles" })
 vim.keymap.set("n", "<leader>sh", require("fzf-lua").help_tags, { desc = "[S]earch [H]elp" })
 vim.keymap.set("n", "<leader>sl", require("fzf-lua").resume, { desc = "[S]earch [L]ast again" })
-vim.keymap.set("n", "<leader>sp", require("fzf-lua").live_grep, { desc = "Find in files" })
 vim.keymap.set("n", "<leader>sc", "<cmd> FzfLua commands <CR>", { desc = "Find vim commands" })
 vim.keymap.set("n", "<leader>sk", "<cmd> FzfLua keymaps <CR>", { desc = "Look up key mappings" })
 vim.keymap.set("n", "gd", require("fzf-lua").lsp_definitions, { desc = '[G]oto [D]efinition' })
@@ -78,11 +77,12 @@ vim.keymap.set("n", "gI", require("fzf-lua").lsp_implementations, { desc = '[G]o
 vim.keymap.set("n", "<leader>D", require("fzf-lua").lsp_typedefs, { desc = 'Type [D]efinition' })
 vim.keymap.set("n", "<leader>sd", require("fzf-lua").lsp_document_symbols, { desc = '[S]earch [D]ocument' })
 vim.keymap.set("n", "<leader>ss", require("fzf-lua").lsp_live_workspace_symbols, { desc = '[S]earch [S]ymbols' })
+vim.keymap.set("n", "<leader>b", require("fzf-lua").buffers, { desc = '[S]earch [S]ymbols' })
 
 -- vim.keymap.set("v", "<leader>sp", egrepify_with_text, { desc = "Find selection in files" })
 -- vim.keymap.set({ "n", "v" }, "<leader>sP", egrepify_with_text, { desc = "Find current word in files" })
 
-vim.keymap.set("n", "<leader>sp", require("fzf-lua").grep, { desc = "Find in files" })
+vim.keymap.set("n", "<leader>sp", require("fzf-lua").live_grep, { desc = "Find in files" })
 vim.keymap.set("n", "<leader>sP", require("fzf-lua").grep_cword, { desc = "Find current word in files" })
 vim.keymap.set("v", "<leader>sp", require("fzf-lua").grep_visual, { desc = "Find selection in files" })
 vim.keymap.set("v", "<leader>sP", require("fzf-lua").grep_visual, { desc = "Find selection in files" })
@@ -122,14 +122,12 @@ vim.keymap.set("n", "<C-t>", ":ToggleTerm<CR>", { desc = "Toggle terminal" })
 
 -------------- Editing -------------------------------
 -- Gnu line shortcuts in insert mode
--- vim.keymap.set({ "n", "x" }, "y", "<Plug>(YankyYank)")
+vim.keymap.set({ "n", "x" }, "y", "<Plug>(YankyYank)")
 
 vim.keymap.set("i", "<C-c>", "<ESC>", { desc = "" })
 
 vim.keymap.set("n", "<C-o>", "<C-o>zz", { desc = "" })
 vim.keymap.set("n", "<C-i>", "<C-i>zz", { desc = "" })
-
--- vim.keymap.set("v", "p", '"_dP', { desc = "Paste without yanking" })
 
 vim.keymap.set("n", "L", "$", { desc = "End of line" })
 vim.keymap.set("n", "H", "^", { desc = "Start of line" })
@@ -230,7 +228,7 @@ vim.keymap.set("n", "<leader>gp", ":Gitsigns preview_hunk<CR>", { desc = "[G]it 
 vim.keymap.set("n", "<leader>g[", ":GitMediate<CR>", { desc = "Run git mediate conflict resolver" })
 vim.keymap.set("n", "<leader>g]", ":GitMediateTerm<CR>",
     { desc = "Run git mediate conflict resolver in terminal mode(with colors)" })
-vim.keymap.set("n", "<leader>gf", ":Git<CR>/taged<CR>:noh<CR>j", { desc = "[G]it [F]ugitive" })
+vim.keymap.set("n", "<leader>gf", ":vertical Git<CR>/taged<CR>:noh<CR>j", { desc = "[G]it [F]ugitive" })
 vim.keymap.set("n", "<leader>gl", ":Git log <CR>", { desc = "[G]it fugitive [L]og" })
 vim.keymap.set("n", "<leader>grc", ":Git rebase --continue<CR>", { desc = "[G]it [R]ebase [C]ontinue" })
 vim.keymap.set("n", "<leader>gra", ":Git rebase --abort<CR>", { desc = "[G]it [R]ebase [A]ontinue" })
@@ -262,7 +260,8 @@ local lsp_mappings = function(_)
     end
 
     nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-    vmap("<leader>ca", require("actions-preview").code_actions, '[C]ode [A]ction')
+    nmap("<leader>ca", require("fzf-lua").lsp_code_actions, '[C]ode [A]ction')
+    vmap("<leader>ca", require("fzf-lua").lsp_code_actions, '[C]ode [A]ction')
 
 
     -- See `:help K` for why this keymap
@@ -310,8 +309,10 @@ vim.keymap.set("n", "<leader>ll", "<cmd> lua vim.diagnostic.open_float({scope=\"
     { desc = "Show line diagnostics" })
 vim.keymap.set("n", "<leader>lc", "<cmd> lua vim.diagnostic.open_float({scope=\"cursor\"}) <cr>",
     { desc = "Show line diagnostics" })
-vim.keymap.set("n", "<leader>ld", "<cmd> Trouble diagnostics toggle filter.buf=0<cr>", { desc = "Document diagnostics" })
-vim.keymap.set("n", "<leader>lw", "<cmd> Trouble diagnostics toggle<cr>", { desc = "Workspace diagnostics" })
+vim.keymap.set("n", "<leader>ld", "<cmd> Trouble diagnostics toggle pinned=false filter.buf=0<cr>",
+    { desc = "Document diagnostics" })
+vim.keymap.set("n", "<leader>lw", "<cmd> Trouble diagnostics toggle pinned=false<cr>", { desc = "Workspace diagnostics" })
+vim.keymap.set("n", "<leader>ls", "<cmd> Trouble symbols toggle<cr>", { desc = "Document [S]ymbols" })
 vim.keymap.set("n", "<leader>qf", "<cmd> Trouble qflist toggle<cr>", { desc = " open [Q]uick[f]ix" })
 
 -- Oil
