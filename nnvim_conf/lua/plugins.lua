@@ -193,6 +193,14 @@ require('lazy').setup({
         end
     },
     {
+        "chrisgrieser/nvim-lsp-endhints",
+        event = "LspAttach",
+        opts = {}, -- required, even if empty
+        config = function()
+            require("lsp-endhints").setup()
+        end
+    },
+    {
         -- Highlight, edit, and navigate code
         'nvim-treesitter/nvim-treesitter',
         dependencies = {
@@ -400,8 +408,8 @@ require('lazy').setup({
                         -- rust-analyzer language server configuration
                         ['rust-analyzer'] = {
                             checkOnSave = {
-                                command = "clippy",
-                                -- command = "check",
+                                -- command = "clippy",
+                                command = "check",
                                 -- extraArgs = { "--no-deps" },
                             },
                             check = {
@@ -642,6 +650,7 @@ require('lazy').setup({
                                 ["<C-&>"] = egrep_actions.toggle_and,
                                 -- toggle permutations, permutations of tokens is opt-in
                                 ["<C-r>"] = egrep_actions.toggle_permutations,
+                                ["<C-a>"] = false,
                             },
                         },
                     },
