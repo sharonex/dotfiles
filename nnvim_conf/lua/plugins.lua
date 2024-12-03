@@ -441,41 +441,49 @@ require('lazy').setup({
         lazy = false,
     },
     -- Rustacenvim config from appelgriebsch/Nv
-    {
-        "mrcjkb/rustaceanvim",
-        ft = { "rust" },
-        config = function()
-            local codelldb = require('mason-registry').get_package('codelldb')
-            local extension_path = codelldb:get_install_path() .. '/extension/'
-            local codelldb_path = extension_path .. 'adapter/codelldb'
-            local liblldb_path = extension_path .. 'lldb/lib/liblldb.dylib'
-
-            local cfg = require('rustaceanvim.config')
-            vim.g.rustaceanvim = {
-                server = {
-                    on_attach = function(_, _)
-                        vim.lsp.inlay_hint.enable()
-                    end,
-                    default_settings = {
-                        -- rust-analyzer language server configuration
-                        ['rust-analyzer'] = {
-                            checkOnSave = {
-                                -- command = "clippy",
-                                command = "check",
-                                -- extraArgs = { "--no-deps" },
-                            },
-                            check = {
-                                workspace = false
-                            },
-                        },
-                    },
-                },
-                dap = {
-                    adapter = cfg.get_codelldb_adapter(codelldb_path, liblldb_path),
-                },
-            }
-        end
-    },
+    -- {
+    --     "mrcjkb/rustaceanvim",
+    --     ft = { "rust" },
+    --     config = function()
+    --         local codelldb = require('mason-registry').get_package('codelldb')
+    --         local extension_path = codelldb:get_install_path() .. '/extension/'
+    --         local codelldb_path = extension_path .. 'adapter/codelldb'
+    --         local liblldb_path = extension_path .. 'lldb/lib/liblldb.dylib'
+    --
+    --         local cfg = require('rustaceanvim.config')
+    --         vim.g.rustaceanvim = {
+    --             server = {
+    --                 on_attach = function(_, _)
+    --                     vim.lsp.inlay_hint.enable()
+    --                 end,
+    --                 default_settings = {
+    --                     -- rust-analyzer language server configuration
+    --                     ['rust-analyzer'] = {
+    --                         checkOnSave = {
+    --                             enable = true,
+    --                             command = "check",
+    --                             -- Disable running tests automatically
+    --                             allTargets = false,
+    --
+    --                             -- extraArgs = { "--no-deps" },
+    --                         },
+    --                         check = {
+    --                             workspace = false
+    --                         },
+    --                         -- Disable automatic running of tests
+    --                         cargo = {
+    --                             autoreload = false,
+    --                             runBuildScripts = false,
+    --                         },
+    --                     },
+    --                 },
+    --             },
+    --             dap = {
+    --                 adapter = cfg.get_codelldb_adapter(codelldb_path, liblldb_path),
+    --             },
+    --         }
+    --     end
+    -- },
     {
         'ibhagwan/fzf-lua',
         lazy = false,
