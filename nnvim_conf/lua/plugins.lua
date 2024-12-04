@@ -72,24 +72,6 @@ require('lazy').setup({
             require("configs.lspconfig")
         end,
     },
-    -- {
-    --     -- Autocompletion
-    --     'hrsh7th/nvim-cmp',
-    --     dependencies = {
-    --         -- Snippet Engine & its associated nvim-cmp source
-    --         'L3MON4D3/LuaSnip',
-    --         'saadparwaiz1/cmp_luasnip',
-    --
-    --         -- Adds LSP completion capabilities
-    --         'hrsh7th/cmp-nvim-lsp',
-    --
-    --         -- Adds a number of user-friendly snippets
-    --         'rafamadriz/friendly-snippets',
-    --         'onsails/lspkind.nvim',
-    --         'mlaursen/vim-react-snippets',
-    --     },
-    --     config = require('configs.cmp_config'),
-    -- },
     {
         'saghen/blink.cmp',
         lazy = false, -- lazy loading handled internally
@@ -179,6 +161,13 @@ require('lazy').setup({
                 end, { expr = true, buffer = bufnr, desc = 'Jump to previous hunk' })
             end,
         },
+        config = function()
+            vim.keymap.set({ "n", "v" }, "<leader>gs", ":Gitsigns stage_hunk<CR>", { desc = "[G]it [S]tage hunk" })
+            vim.keymap.set({ "n", "v" }, "<leader>gu", ":Gitsigns reset_hunk<CR>", { desc = "[G]it [U]ndo hunk" })
+            vim.keymap.set("n", "<leader>gp", ":Gitsigns preview_hunk<CR>", { desc = "[G]it [p]op hunk diff" })
+            vim.keymap.set("n", "]g", ": Gitsigns next_hunk<CR>", { desc = "next git hunk" })
+            vim.keymap.set("n", "[g", ": Gitsigns prev_hunk<CR>", { desc = "prev git hunk" })
+        end
     },
     {
         -- Set lualine as statusline
@@ -227,6 +216,56 @@ require('lazy').setup({
                     path_display = { "full" }
                 },
             }
+
+            local egrepify_with_text = function()
+                -- if in visual mode
+                if vim.fn.mode() == "v" then
+                    -- yank the highlighted text into register z
+                    vim.cmd('normal! "zy')
+
+                    -- get the content of register z
+                    local search_term = vim.fn.getreg("z")
+                    require("telescope").extensions.egrepify.egrepify({ default_text = search_term })
+                else
+                    -- yank current word under cursor
+                    local current_word =
+                        require("telescope").extensions.egrepify.egrepify({ default_text = vim.fn.expand("<cword>") })
+                end
+            end
+
+            vim.keymap.set(
+                "n",
+                "<leader>/",
+                function()
+                    -- You can pass additional configuration to telescope to change theme, layout, etc.
+                    require("telescope.builtin").current_buffer_fuzzy_find(
+                        require("telescope.themes").get_dropdown {
+                            winblend = 10,
+                            previewer = false
+                        }
+                    )
+                end,
+                { desc = "[/] Fuzzily search in current buffer" }
+            )
+            vim.keymap.set("n", "<leader>?", require("telescope.builtin").oldfiles,
+                { desc = "[?] Find recently opened files" })
+            vim.keymap.set("n", "<leader>f", require("telescope.builtin").git_files, { desc = "[F]ind (Git) Files" })
+            vim.keymap.set("n", "<leader>sf", require("telescope.builtin").find_files, { desc = "[S]earch [F]iles" })
+            vim.keymap.set("n", "<leader>sh", require("telescope.builtin").help_tags, { desc = "[S]earch [H]elp" })
+            -- vim.keymap.set("n", "<leader>sr", require("telescope").extensions.project.project, { desc = "[S]earch [R]epo" })
+            vim.keymap.set("n", "<leader>sl", require("telescope.builtin").resume, { desc = "[S]earch [L]ast again" })
+            vim.keymap.set("n", "<leader>sp", "<cmd> Telescope egrepify<CR>", { desc = "Find in files" })
+            vim.keymap.set({ "n", "v" }, "<leader>sP", egrepify_with_text, { desc = "Find current word in files" })
+            vim.keymap.set("v", "<leader>sp", egrepify_with_text, { desc = "Find selection in files" })
+            vim.keymap.set({ "n", "v" }, "<leader>sT", require("telescope.builtin").live_grep,
+                { desc = "Find current word in files" })
+            vim.keymap.set("v", "<leader>sp", egrepify_with_text, { desc = "Find selection in files" })
+            -- vim.keymap.set("n", "<leader>ss", "<cmd> Telescope current_buffer_fuzzy_find <CR>", { desc = "Find in current file" })
+            vim.keymap.set("n", "<leader>sc", "<cmd> Telescope commands <CR>", { desc = "Find vim commands" })
+            vim.keymap.set("n", "<leader>sk", "<cmd> Telescope keymaps <CR>", { desc = "Look up key mappings" })
+            vim.keymap.set({ "n", "v" }, "<leader>p",
+                function() require("telescope").extensions.yank_history.yank_history({}) end,
+                { desc = "Open yank History" })
         end
     },
     {
@@ -238,6 +277,8 @@ require('lazy').setup({
                     width = 50,
                 },
             })
+
+            vim.keymap.set("n", "<C-q>", ":NvimTreeFindFileToggle<CR>", { desc = "Toggle nvim tree" })
         end
     },
     {
@@ -403,19 +444,8 @@ require('lazy').setup({
         'tpope/vim-fugitive',
         lazy = false,
         config = function()
-            -- doesn't work :(
-            -- TODO: This is meant to be a fugitive mapping region. But it doesn't work.
-            -- I think ThePrimeagen's config has a working example of this.
-            local fugitiveMappings = vim.api.nvim_create_augroup('FugitiveMappings', { clear = true })
-            -- Create an autocommand within that group
-            vim.api.nvim_create_autocmd('FileType', {
-                group = fugitiveMappings,
-                pattern = 'fugitive',
-                callback = function()
-                    -- Your mappings or commands go here
-                    vim.api.nvim_buf_set_keymap(0, 'n', 'o', '<CR>:Gedit', { noremap = true, silent = true })
-                end,
-            })
+            vim.keymap.set("n", "<leader>gB", "<cmd> Git blame<CR>", { desc = "Run [G]it [B]lame on file" })
+            vim.keymap.set("n", "<leader>gf", ":Git<CR>/taged<CR>:noh<CR>j", { desc = "[G]it [F]ugitive" })
         end
     },
     {
@@ -431,7 +461,345 @@ require('lazy').setup({
     {
         "mbbill/undotree",
         lazy = false,
+        config = function()
+            vim.keymap.set("n", "<leader>u", "<cmd>UndotreeToggle<CR><cmd>UndotreeFocus<CR>",
+                { desc = "Toggle UndoTree" })
+        end
     },
+    {
+        'mrjones2014/smart-splits.nvim',
+        config = function()
+            require('smart-splits').setup()
+            -- Tmux window navigation
+            vim.keymap.set('n', '<A-h>', require('smart-splits').resize_left)
+            vim.keymap.set('n', '<A-j>', require('smart-splits').resize_down)
+            vim.keymap.set('n', '<A-k>', require('smart-splits').resize_up)
+            vim.keymap.set('n', '<A-l>', require('smart-splits').resize_right)
+            -- moving between splits
+            vim.keymap.set('n', '<C-h>', require('smart-splits').move_cursor_left)
+            vim.keymap.set('n', '<C-j>', require('smart-splits').move_cursor_down)
+            vim.keymap.set('n', '<C-k>', require('smart-splits').move_cursor_up)
+            vim.keymap.set('n', '<C-l>', require('smart-splits').move_cursor_right)
+            -- swapping buffers between windows
+            vim.keymap.set('n', '<leader><leader>h', require('smart-splits').swap_buf_left)
+            vim.keymap.set('n', '<leader><leader>j', require('smart-splits').swap_buf_down)
+            vim.keymap.set('n', '<leader><leader>k', require('smart-splits').swap_buf_up)
+            vim.keymap.set('n', '<leader><leader>l', require('smart-splits').swap_buf_right)
+        end,
+    },
+    {
+        "gbprod/yanky.nvim",
+        dependencies = {
+            { "kkharji/sqlite.lua" }
+        },
+        opts = {
+            ring = { storage = "sqlite" },
+        },
+        config = function()
+            vim.keymap.set({ "n", "x" }, "<leader>y",
+                function() require("telescope").extensions.yank_history.yank_history({}) end,
+                { desc = "Open Yank History" })
+        end,
+        lazy = false,
+    },
+    {
+        'ThePrimeagen/harpoon',
+        branch = "master",
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+        },
+        config = function()
+            -- Harpoon 2
+            -- local harpoon = require("harpoon")
+            -- vim.keymap.set("n", "<leader>ha", function() harpoon:list():append() end)
+            -- vim.keymap.set("n", "<leader>hm", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+            --
+            -- vim.keymap.set("n", "<leader>1", function() harpoon:list():select(1) end)
+            -- vim.keymap.set("n", "<leader>2", function() harpoon:list():select(2) end)
+            -- vim.keymap.set("n", "<leader>3", function() harpoon:list():select(3) end)
+            -- vim.keymap.set("n", "<leader>4", function() harpoon:list():select(4) end)
+
+            vim.keymap.set("n", "<leader>ha", function() require("harpoon.mark").add_file() end)
+            vim.keymap.set("n", "<leader>hm", function() require("harpoon.ui").toggle_quick_menu() end)
+
+            vim.keymap.set("n", "<leader>1", function() require("harpoon.ui").nav_file(1) end)
+            vim.keymap.set("n", "<leader>2", function() require("harpoon.ui").nav_file(2) end)
+            vim.keymap.set("n", "<leader>3", function() require("harpoon.ui").nav_file(3) end)
+            vim.keymap.set("n", "<leader>4", function() require("harpoon.ui").nav_file(4) end)
+            vim.keymap.set("n", "<leader>5", function() require("harpoon.ui").nav_file(5) end)
+            vim.keymap.set("n", "<leader>6", function() require("harpoon.ui").nav_file(6) end)
+        end
+    },
+    {
+        dir = "/Users/sharonavni/personal/git-mediate.nvim",
+        dependencies = { "skywind3000/asyncrun.vim" },
+        config = function()
+            require("git-mediate").setup()
+            vim.keymap.set("n", "<leader>g[", ":GitMediate<CR>", { desc = "Run git mediate conflict resolver" })
+        end,
+        lazy = false,
+    },
+    {
+        "zbirenbaum/copilot.lua",
+        cmd = "Copilot",
+        event = "InsertEnter",
+        config = function()
+            require("copilot").setup({
+                panel = {
+                    enabled = true,
+                    auto_refresh = true,
+                },
+                suggestion = {
+                    enabled = true,
+                    auto_trigger = true,
+                    accept = false, -- disable built-in keymapping
+                },
+            })
+        end
+    },
+    {
+        "ggandor/leap.nvim",
+        lazy = false,
+        config = function()
+            require("leap").add_default_mappings()
+            require('leap').add_repeat_mappings(';', ',', {
+                relative_directions = true,
+            })
+        end
+    },
+    {
+        "folke/trouble.nvim",
+        lazy = false,
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        opts = {
+            -- your configuration comes here
+            -- or leave it empty to use the default settings
+            -- refer to the configuration section below
+            use_diagnostic_signs = false -- enabling this will use the signs defined in your lsp client
+        },
+        config = function()
+            vim.keymap.set("n", "<leader>ll", "<cmd> lua vim.diagnostic.open_float({scope=\"line\"}) <cr>",
+                { desc = "Show line diagnostics" })
+            vim.keymap.set("n", "<leader>lc", "<cmd> lua vim.diagnostic.open_float({scope=\"cursor\"}) <cr>",
+                { desc = "Show line diagnostics" })
+            vim.keymap.set("n", "<leader>ld", "<cmd> Trouble diagnostics toggle pinned=false filter.buf=0<cr>",
+                { desc = "Document diagnostics" })
+            vim.keymap.set("n", "<leader>lw", "<cmd> Trouble diagnostics toggle pinned=false<cr>",
+                { desc = "Workspace diagnostics" })
+            vim.keymap.set("n", "<leader>ls", "<cmd> Trouble symbols toggle<cr>", { desc = "Document [S]ymbols" })
+            vim.keymap.set("n", "<leader>qf", "<cmd> Trouble qflist toggle<cr>", { desc = " open [Q]uick[f]ix" })
+        end
+    },
+    {
+        "windwp/nvim-autopairs",
+        opts = {
+            fast_wrap = {},
+            disable_filetype = { "TelescopePrompt", "vim" },
+        },
+        config = function(_, opts)
+            require("nvim-autopairs").setup(opts)
+            --
+            -- -- setup cmp for autopairs
+            -- local cmp_autopairs = require "nvim-autopairs.completion.cmp"
+            -- require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
+        end,
+    },
+    {
+        'lewis6991/spaceless.nvim',
+        config = function()
+            require 'spaceless'.setup()
+        end,
+        lazy = false
+    },
+    {
+        "gbprod/substitute.nvim",
+        config = function()
+            require("substitute").setup({
+                range = {
+                    prefix = "g",
+                }
+            })
+            -- Exchange
+            vim.keymap.set("n", "gx", "<cmd>lua require('substitute.exchange').operator()<cr>", { desc = "" })
+            vim.keymap.set("v", "gx", "<cmd>lua require('substitute.exchange').visual()<cr>", { desc = "" })
+            vim.keymap.set("n", "gp", "<cmd>lua require('substitute').operator()<cr>", { desc = "" })
+            vim.keymap.set("n", "gP", "<cmd>lua require('substitute').eol()<cr>", { desc = "" })
+        end
+    },
+    {
+        "tpope/vim-rsi",
+        lazy = false,
+    },
+    {
+        "fdschmidt93/telescope-egrepify.nvim",
+        lazy = false,
+        config = function()
+            local egrep_actions = require "telescope._extensions.egrepify.actions"
+            require("telescope").setup {
+                extensions = {
+                    egrepify = {
+                        attach_mappings = false,
+                        -- default mappings
+                        mappings = {
+                            i = {
+                                -- toggle prefixes, prefixes is default
+                                ["<C-z>"] = egrep_actions.toggle_prefixes,
+                                -- toggle AND, AND is default, AND matches tokens and any chars in between
+                                ["<C-&>"] = egrep_actions.toggle_and,
+                                -- toggle permutations, permutations of tokens is opt-in
+                                ["<C-r>"] = egrep_actions.toggle_permutations,
+                                ["<C-a>"] = false,
+                            },
+                        },
+                    },
+                },
+            }
+
+            require "telescope".load_extension("egrepify")
+        end
+    },
+    {
+        'aznhe21/actions-preview.nvim',
+        lazy = false,
+    },
+    {
+        'windwp/nvim-ts-autotag',
+        ft = { "html", "javascript", "javascriptreact", "typescript", "typescriptreact", "svelte", "vue" },
+        config = function()
+            require('nvim-ts-autotag').setup()
+        end
+    },
+    {
+        "stevearc/oil.nvim",
+        lazy = false,
+        config = function()
+            require("oil").setup()
+            vim.keymap.set("n", "|", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+        end,
+    },
+    {
+        'sindrets/diffview.nvim',
+        event = "VeryLazy",
+        config = function()
+            vim.keymap.set("n", "<leader>gd", ":DiffviewOpen<CR>", { desc = "[G]it [D]iff" })
+        end
+    },
+    {
+        'navarasu/onedark.nvim',
+        lazy = false,
+        config = function()
+            require('onedark').setup {
+                -- Main options --
+                style = 'deep',               -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
+                transparent = false,          -- Show/hide background
+                term_colors = true,           -- Change terminal color as per the selected theme style
+                ending_tildes = false,        -- Show the end-of-buffer tildes. By default they are hidden
+                cmp_itemkind_reverse = false, -- reverse item kind highlights in cmp menu
+
+                -- toggle theme style ---
+                toggle_style_key = "<leader>tx",
+            }
+            vim.cmd("colorscheme onedark")
+        end
+    },
+    {
+        "folke/snacks.nvim",
+        priority = 1000,
+        lazy = false,
+        opts = require("configs.snacks"),
+        keys = {
+            { "<leader>.",  function() Snacks.scratch() end,               desc = "Toggle Scratch Buffer" },
+            { "<leader>S",  function() Snacks.scratch.select() end,        desc = "Select Scratch Buffer" },
+            { "<leader>n",  function() Snacks.notifier.show_history() end, desc = "Notification History" },
+            { "<leader>bd", function() Snacks.bufdelete() end,             desc = "Delete Buffer" },
+            { "<leader>gh", function() Snacks.lazygit.log_file() end,      desc = "Lazygit Current File History" },
+            { "<leader>gg", function() Snacks.lazygit() end,               desc = "Lazygit" },
+            { "<leader>gl", function() Snacks.lazygit.log() end,           desc = "Lazygit Log (cwd)" },
+            { "<leader>un", function() Snacks.notifier.hide() end,         desc = "Dismiss All Notifications" },
+        },
+    },
+    -- {
+    --     'rcarriga/nvim-dap-ui',
+    --     lazy = false,
+    --     dependencies = { 'mfussenegger/nvim-dap', 'nvim-neotest/nvim-nio' },
+    --     config = function()
+    --         require('dapui').setup()
+    --         local dap, dapui = require("dap"), require("dapui")
+    --         dap.listeners.before.attach.dapui_config = function()
+    --             dapui.open()
+    --         end
+    --         dap.listeners.before.launch.dapui_config = function()
+    --             dapui.open()
+    --         end
+    --         dap.listeners.before.event_terminated.dapui_config = function()
+    --             dapui.close()
+    --         end
+    --         dap.listeners.before.event_exited.dapui_config = function()
+    --             dapui.close()
+    --         end
+    --
+    --         vim.keymap.set("n", "<leader>dt", "<cmd>DapToggleBreakpoint<CR>", { desc = "[D]ebug [T]oggle Breakpoint" })
+    --         vim.keymap.set("n", "<leader>do", "<cmd>DapStepOver<CR>", { desc = "[D]ebug [O]ver" })
+    --         vim.keymap.set("n", "<leader>di", "<cmd>DapStepInto<CR>", { desc = "[D]ebug [I]nto" })
+    --         vim.keymap.set("n", "<leader>dc", "<cmd>DapContinue<CR>", { desc = "[D]ebug [C]ontinue" })
+    --         vim.keymap.set("n", "<leader>dx", "<cmd>DapTerminate<CR>", { desc = "[D]ebug [X]it" })
+    --         vim.keymap.set("n", "<leader>dx", "<cmd>DapTerminate<CR>", { desc = "[D]ebug [X]it" })
+    --     end
+    -- },
+    -- {
+    --     "johmsalas/text-case.nvim",
+    --     lazy = false,
+    --     config = function()
+    --         require('textcase').setup {}
+    --     end
+    -- },
+    -- {
+    --     'unblevable/quick-scope',
+    --     config = function()
+    --         vim.cmd [[
+    --           highlight QuickScopePrimary guifg='#af0f5f' gui=underline ctermfg=155 cterm=underline
+    --           highlight QuickScopeSecondary guifg='#5000ff' gui=underline ctermfg=81 cterm=underline
+    --           ]]
+    --     end,
+    -- },
+    -- {
+    --     "kevinhwang91/nvim-bqf",
+    --     lazy = false,
+    -- },
+    -- {
+    --     "mg979/vim-visual-multi",
+    --     branch = "master",
+    --     config = function()
+    --         vim.cmd [[
+    --             VMTheme codedark
+    --         ]]
+    --     end,
+    -- },
+    -- {
+    --     "ggandor/leap-spooky.nvim",
+    --     lazy = false,
+    --     config = function()
+    --         require('leap-spooky').setup {
+    --         }
+    --     end
+    -- },
+    -- {
+    --     "ggandor/flit.nvim",
+    --     lazy = false,
+    --     config = function()
+    --         require('flit').setup {
+    --             keys = { f = 'f', F = 'F', t = 't', T = 'T' },
+    --             -- A string like "nv", "nvo", "o", etc.
+    --             labeled_modes = "v",
+    --             -- Repeat with the trigger key itself.
+    --             clever_repeat = true,
+    --             multiline = true,
+    --             -- Like `leap`s similar argument (call-specific overrides).
+    --             -- E.g.: opts = { equivalence_classes = {} }
+    --             opts = {}
+    --         }
+    --     end
+    -- },
     -- Rustacenvim config from appelgriebsch/Nv
     -- {
     --     "mrcjkb/rustaceanvim",
@@ -474,6 +842,11 @@ require('lazy').setup({
     --                 adapter = cfg.get_codelldb_adapter(codelldb_path, liblldb_path),
     --             },
     --         }
+    --         vim.keymap.set("n", "<leader>re", "<cmd>RustLsp expandMacro<CR>", { desc = "[R]ust expand macro" })
+    --         vim.keymap.set("n", "<leader>rc", "<cmd>RustLsp openCargo<CR>", { desc = "[R]ust open cargo" })
+    --         vim.keymap.set("n", "<leader>rp", "<cmd>RustLsp parentModule<CR>", { desc = "[R]ust open parent module" })
+    --         vim.keymap.set("n", "<leader>rr", "<cmd>RustLsp reloadWorkspace<CR>", { desc = "[R]ust [R]estart" })
+    --         vim.keymap.set("n", "<leader>rd", "<cmd>RustLsp renderDiagnostic <CR>", { desc = "[R]ust [D]iagnostics" })
     --     end
     -- },
     -- {
@@ -537,271 +910,23 @@ require('lazy').setup({
     --         }
     --     end,
     -- },
-    {
-        'mrjones2014/smart-splits.nvim',
-        config = function()
-            require('smart-splits').setup()
-        end,
-    },
-    {
-        "gbprod/yanky.nvim",
-        dependencies = {
-            { "kkharji/sqlite.lua" }
-        },
-        opts = {
-            ring = { storage = "sqlite" },
-        },
-        lazy = false,
-    },
-    {
-        'ThePrimeagen/harpoon',
-        branch = "master",
-        dependencies = {
-            'nvim-lua/plenary.nvim',
-        },
-        -- config = function()
-        --     require("harpoon"):setup({})
-        -- end
-    },
-    {
-        dir = "/Users/sharonavni/personal/git-mediate.nvim",
-        dependencies = { "skywind3000/asyncrun.vim" },
-        config = function()
-            require("git-mediate").setup()
-        end,
-        lazy = false,
-    },
-    {
-        "zbirenbaum/copilot.lua",
-        cmd = "Copilot",
-        event = "InsertEnter",
-        config = function()
-            require("copilot").setup({
-                panel = {
-                    enabled = true,
-                    auto_refresh = true,
-                },
-                suggestion = {
-                    enabled = true,
-                    auto_trigger = true,
-                    accept = false, -- disable built-in keymapping
-                },
-            })
-        end
-    },
-    {
-        "ggandor/leap.nvim",
-        lazy = false,
-        config = function()
-            require("leap").add_default_mappings()
-            require('leap').add_repeat_mappings(';', ',', {
-                relative_directions = true,
-            })
-        end
-    },
     -- {
-    --     "ggandor/leap-spooky.nvim",
-    --     lazy = false,
-    --     config = function()
-    --         require('leap-spooky').setup {
-    --         }
-    --     end
+    --     -- Autocompletion
+    --     'hrsh7th/nvim-cmp',
+    --     dependencies = {
+    --         -- Snippet Engine & its associated nvim-cmp source
+    --         'L3MON4D3/LuaSnip',
+    --         'saadparwaiz1/cmp_luasnip',
+    --
+    --         -- Adds LSP completion capabilities
+    --         'hrsh7th/cmp-nvim-lsp',
+    --
+    --         -- Adds a number of user-friendly snippets
+    --         'rafamadriz/friendly-snippets',
+    --         'onsails/lspkind.nvim',
+    --         'mlaursen/vim-react-snippets',
+    --     },
+    --     config = require('configs.cmp_config'),
     -- },
-    -- {
-    --     "ggandor/flit.nvim",
-    --     lazy = false,
-    --     config = function()
-    --         require('flit').setup {
-    --             keys = { f = 'f', F = 'F', t = 't', T = 'T' },
-    --             -- A string like "nv", "nvo", "o", etc.
-    --             labeled_modes = "v",
-    --             -- Repeat with the trigger key itself.
-    --             clever_repeat = true,
-    --             multiline = true,
-    --             -- Like `leap`s similar argument (call-specific overrides).
-    --             -- E.g.: opts = { equivalence_classes = {} }
-    --             opts = {}
-    --         }
-    --     end
-    -- },
-    {
-        "folke/trouble.nvim",
-        lazy = false,
-        dependencies = { "nvim-tree/nvim-web-devicons" },
-        opts = {
-            -- your configuration comes here
-            -- or leave it empty to use the default settings
-            -- refer to the configuration section below
-            use_diagnostic_signs = false -- enabling this will use the signs defined in your lsp client
-        },
-    },
-    {
-        "windwp/nvim-autopairs",
-        opts = {
-            fast_wrap = {},
-            disable_filetype = { "TelescopePrompt", "vim" },
-        },
-        config = function(_, opts)
-            require("nvim-autopairs").setup(opts)
-            --
-            -- -- setup cmp for autopairs
-            -- local cmp_autopairs = require "nvim-autopairs.completion.cmp"
-            -- require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
-        end,
-    },
-    {
-        'lewis6991/spaceless.nvim',
-        config = function()
-            require 'spaceless'.setup()
-        end,
-        lazy = false
-    },
-    {
-        "gbprod/substitute.nvim",
-        config = function()
-            require("substitute").setup({
-                range = {
-                    prefix = "g",
-                }
-            })
-        end
-    },
-    {
-        "tpope/vim-rsi",
-        lazy = false,
-    },
-    {
-        "fdschmidt93/telescope-egrepify.nvim",
-        lazy = false,
-        config = function()
-            local egrep_actions = require "telescope._extensions.egrepify.actions"
-            require("telescope").setup {
-                extensions = {
-                    egrepify = {
-                        attach_mappings = false,
-                        -- default mappings
-                        mappings = {
-                            i = {
-                                -- toggle prefixes, prefixes is default
-                                ["<C-z>"] = egrep_actions.toggle_prefixes,
-                                -- toggle AND, AND is default, AND matches tokens and any chars in between
-                                ["<C-&>"] = egrep_actions.toggle_and,
-                                -- toggle permutations, permutations of tokens is opt-in
-                                ["<C-r>"] = egrep_actions.toggle_permutations,
-                                ["<C-a>"] = false,
-                            },
-                        },
-                    },
-                },
-            }
-
-            require "telescope".load_extension("egrepify")
-        end
-    },
-    {
-        'aznhe21/actions-preview.nvim',
-        lazy = false,
-    },
-    -- {
-    --     'unblevable/quick-scope',
-    --     config = function()
-    --         vim.cmd [[
-    --           highlight QuickScopePrimary guifg='#af0f5f' gui=underline ctermfg=155 cterm=underline
-    --           highlight QuickScopeSecondary guifg='#5000ff' gui=underline ctermfg=81 cterm=underline
-    --           ]]
-    --     end,
-    -- },
-    -- {
-    --     "kevinhwang91/nvim-bqf",
-    --     lazy = false,
-    -- },
-    -- {
-    --     "mg979/vim-visual-multi",
-    --     branch = "master",
-    --     config = function()
-    --         vim.cmd [[
-    --             VMTheme codedark
-    --         ]]
-    --     end,
-    -- },
-    {
-        'windwp/nvim-ts-autotag',
-        ft = { "html", "javascript", "javascriptreact", "typescript", "typescriptreact", "svelte", "vue" },
-        config = function()
-            require('nvim-ts-autotag').setup()
-        end
-    },
-    {
-        "stevearc/oil.nvim",
-        lazy = false,
-        config = function()
-            require("oil").setup()
-        end,
-    },
-    {
-        'sindrets/diffview.nvim',
-        event = "VeryLazy",
-    },
-    {
-        'navarasu/onedark.nvim',
-        lazy = false,
-        config = function()
-            require('onedark').setup {
-                -- Main options --
-                style = 'deep',               -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
-                transparent = false,          -- Show/hide background
-                term_colors = true,           -- Change terminal color as per the selected theme style
-                ending_tildes = false,        -- Show the end-of-buffer tildes. By default they are hidden
-                cmp_itemkind_reverse = false, -- reverse item kind highlights in cmp menu
-
-                -- toggle theme style ---
-                toggle_style_key = "<leader>tx",
-            }
-            vim.cmd("colorscheme onedark")
-        end
-    },
-    -- {
-    --     'rcarriga/nvim-dap-ui',
-    --     lazy = false,
-    --     dependencies = { 'mfussenegger/nvim-dap', 'nvim-neotest/nvim-nio' },
-    --     config = function()
-    --         require('dapui').setup()
-    --         local dap, dapui = require("dap"), require("dapui")
-    --         dap.listeners.before.attach.dapui_config = function()
-    --             dapui.open()
-    --         end
-    --         dap.listeners.before.launch.dapui_config = function()
-    --             dapui.open()
-    --         end
-    --         dap.listeners.before.event_terminated.dapui_config = function()
-    --             dapui.close()
-    --         end
-    --         dap.listeners.before.event_exited.dapui_config = function()
-    --             dapui.close()
-    --         end
-    --     end
-    -- },
-    -- {
-    --     "johmsalas/text-case.nvim",
-    --     lazy = false,
-    --     config = function()
-    --         require('textcase').setup {}
-    --     end
-    -- },
-    {
-        "folke/snacks.nvim",
-        priority = 1000,
-        lazy = false,
-        opts = require("configs.snacks"),
-        keys = {
-            { "<leader>.",  function() Snacks.scratch() end,               desc = "Toggle Scratch Buffer" },
-            { "<leader>S",  function() Snacks.scratch.select() end,        desc = "Select Scratch Buffer" },
-            { "<leader>n",  function() Snacks.notifier.show_history() end, desc = "Notification History" },
-            { "<leader>bd", function() Snacks.bufdelete() end,             desc = "Delete Buffer" },
-            { "<leader>gh", function() Snacks.lazygit.log_file() end,      desc = "Lazygit Current File History" },
-            { "<leader>gg", function() Snacks.lazygit() end,               desc = "Lazygit" },
-            { "<leader>gl", function() Snacks.lazygit.log() end,           desc = "Lazygit Log (cwd)" },
-            { "<leader>un", function() Snacks.notifier.hide() end,         desc = "Dismiss All Notifications" },
-        },
-    }
 })
+

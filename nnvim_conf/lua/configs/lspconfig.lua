@@ -34,27 +34,61 @@ M.servers = {
     },
 }
 
+local lsp_mappings = function(_)
+    local nmap = function(keys, func, desc)
+        if desc then
+            desc = 'LSP: ' .. desc
+        end
 
--- local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+        vim.keymap.set('n', keys, func, { desc = desc })
+    end
+
+    local vmap = function(keys, func, desc)
+        if desc then
+            desc = 'LSP: ' .. desc
+        end
+
+        vim.keymap.set('v', keys, func, { desc = desc })
+    end
+
+    nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+    nmap("<leader>ca", require("actions-preview").code_actions, '[C]ode [A]ction')
+    vmap("<leader>ca", require("actions-preview").code_actions, '[C]ode [A]ction')
+
+    nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+    nmap('gr', "<cmd> FzfLua lsp_references<CR>", '[G]oto [R]eferences')
+    nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+    nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
+    nmap('<leader>sd', require('telescope.builtin').lsp_document_symbols, '[S]earch [D]ocument')
+    nmap('<leader>ss', '<cmd> FzfLua lsp_live_workspace_symbols<CR>', '[S]earch [S]ymbols')
+    nmap('<leader>st', "<cmd> FzfLua tags_live_grep<CR>", '[S]earch [T]ags')
+
+    -- See `:help K` for why this keymap
+    nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
+    -- nmap('<A-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+
+    -- Lesser used LSP functionality
+    nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+    nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
+    nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
+    nmap('<leader>wl', function()
+        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, '[W]orkspace [L]ist Folders')
+
+    -- Create a command `:Format` local to the LSP buffer
+    vim.api.nvim_buf_create_user_command(0, 'Format', function(_)
+        vim.lsp.buf.format()
+    end, { desc = 'Format current buffer with LSP' })
+end
+
 M.on_attach = function(client, bufnr)
-        -- if client.supports_method("textDocument/formatting") then
-        --     vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-        --     vim.api.nvim_create_autocmd("BufWritePre", {
-        --         group = augroup,
-        --         buffer = bufnr,
-        --         callback = function()
-        --             vim.lsp.buf.format({ bufnr = bufnr })
-        --         end,
-        --     })
-        -- end
-    end,
+    lsp_mappings()
 
-
-    vim.diagnostic.config({
-        severity_sort = true,
-        virtual_text = true,
-    })
-
+    -- vim.diagnostic.config({
+    --     severity_sort = true,
+    --     virtual_text = true,
+    -- })
+end
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 -- capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
