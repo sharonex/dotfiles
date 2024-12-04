@@ -9,21 +9,13 @@ vim.cmd [[
     let g:neovide_input_macos_option_key_is_meta = 'only_left'
     " Allow copy paste in neovim
     let g:neovide_input_use_logo = 1
+    set statusline=%f
 ]]
 require("plugins")
 
 -- Disable automatic commenting on newline
 vim.cmd("autocmd BufEnter * set formatoptions-=cro")
 vim.cmd("autocmd BufEnter * setlocal formatoptions-=cro")
-
--- Setup rust ctags support
--- vim.cmd("autocmd BufRead *.rs :setlocal tags=./rusty-tags.vi;/")
--- vim.cmd(
---     'autocmd BufWritePost *.rs :silent! exec "!rusty-tags vi --quiet --start-dir=" . expand("%:p:h") . "&" | redraw!')
-
--- [[ Setting options ]]
--- See `:help vim.o`
--- NOTE: You can change these options as you wish!
 
 -- Set highlight on search
 vim.o.hlsearch = false
@@ -85,19 +77,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 -- Enable format on save
 vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.format()]]
-
-vim.cmd [[
-  hi QuickScopePrimary guifg='#af0f5f' gui=underline ctermfg=155 cterm=underline
-  hi QuickScopeSecondary guifg='#5000ff' gui=underline ctermfg=81 cterm=underline
-  " highlight EyelinerPrimary gui=underline,bold
-  " highlight EyelinerSecondary gui=underline
-  " hi DiffAdd    ctermfg=NONE ctermbg=Green guifg=NONE guibg=#003800
-  " hi DiffChange ctermfg=NONE ctermbg=Blue guifg=NONE guibg=#0000ff
-  " hi DiffDelete ctermfg=NONE ctermbg=Red guifg=NONE guibg=#3f0000
-  " hi DiffText   ctermfg=NONE ctermbg=Yellow guifg=NONE guibg=#474700
-  " hi DiagnosticSignError guifg=#EF5350
-  " hi DiagnosticError guifg=#EF5350
-]]
 
 vim.g.rust_recommended_style = false
 

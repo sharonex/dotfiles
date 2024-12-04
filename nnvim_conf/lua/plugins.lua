@@ -170,18 +170,6 @@ require('lazy').setup({
         end
     },
     {
-        -- Set lualine as statusline
-        'nvim-lualine/lualine.nvim',
-        -- See `:help lualine.txt`
-        config = function()
-            require('lualine').setup({
-                sections = {
-                    lualine_c = { { 'filename', path = 1 } }
-                },
-            })
-        end,
-    },
-    {
         -- Add indentation guides even on blank lines
         'lukas-reineke/indent-blankline.nvim',
         -- Enable `lukas-reineke/indent-blankline.nvim`
@@ -263,9 +251,18 @@ require('lazy').setup({
             -- vim.keymap.set("n", "<leader>ss", "<cmd> Telescope current_buffer_fuzzy_find <CR>", { desc = "Find in current file" })
             vim.keymap.set("n", "<leader>sc", "<cmd> Telescope commands <CR>", { desc = "Find vim commands" })
             vim.keymap.set("n", "<leader>sk", "<cmd> Telescope keymaps <CR>", { desc = "Look up key mappings" })
-            vim.keymap.set({ "n", "v" }, "<leader>p",
-                function() require("telescope").extensions.yank_history.yank_history({}) end,
-                { desc = "Open yank History" })
+            vim.keymap.set("n", "<leader>b", function()
+                require("telescope.builtin").buffers(
+                    require('telescope.themes').get_dropdown({
+                        sort_mru = true,
+                        ignore_current_buffer = true,
+                        sort_lastused = true,
+                        only_cwd = true, -- Only show buffers in the current working directory
+                        show_all_buffers = false,
+                        winblend = 10,
+                    })
+                )
+            end, { desc = "Open buffers" })
         end
     },
     {
@@ -562,9 +559,9 @@ require('lazy').setup({
         lazy = false,
         config = function()
             require("leap").add_default_mappings()
-            require('leap').add_repeat_mappings(';', ',', {
-                relative_directions = true,
-            })
+            -- require('leap').add_repeat_mappings(';', ',', {
+            --     relative_directions = true,
+            -- })
         end
     },
     {
@@ -711,13 +708,42 @@ require('lazy').setup({
             { "<leader>.",  function() Snacks.scratch() end,               desc = "Toggle Scratch Buffer" },
             { "<leader>S",  function() Snacks.scratch.select() end,        desc = "Select Scratch Buffer" },
             { "<leader>n",  function() Snacks.notifier.show_history() end, desc = "Notification History" },
-            { "<leader>bd", function() Snacks.bufdelete() end,             desc = "Delete Buffer" },
+            { "<leader>Bd", function() Snacks.bufdelete() end,             desc = "Delete Buffer" },
             { "<leader>gh", function() Snacks.lazygit.log_file() end,      desc = "Lazygit Current File History" },
             { "<leader>gg", function() Snacks.lazygit() end,               desc = "Lazygit" },
             { "<leader>gl", function() Snacks.lazygit.log() end,           desc = "Lazygit Log (cwd)" },
             { "<leader>un", function() Snacks.notifier.hide() end,         desc = "Dismiss All Notifications" },
         },
     },
+    -- {
+    --     "ggandor/flit.nvim",
+    --     lazy = false,
+    --     config = function()
+    --         require('flit').setup {
+    --             keys = { f = 'f', F = 'F', t = 't', T = 'T' },
+    --             -- A string like "nv", "nvo", "o", etc.
+    --             labeled_modes = "v",
+    --             -- Repeat with the trigger key itself.
+    --             clever_repeat = true,
+    --             multiline = true,
+    --             -- Like `leap`s similar argument (call-specific overrides).
+    --             -- E.g.: opts = { equivalence_classes = {} }
+    --             opts = {}
+    --         }
+    --     end
+    -- },
+    -- {
+    --     -- Set lualine as statusline
+    --     'nvim-lualine/lualine.nvim',
+    --     -- See `:help lualine.txt`
+    --     config = function()
+    --         require('lualine').setup({
+    --             sections = {
+    --                 lualine_c = { { 'filename', path = 1 } }
+    --             },
+    --         })
+    --     end,
+    -- },
     -- {
     --     'rcarriga/nvim-dap-ui',
     --     lazy = false,
@@ -780,23 +806,6 @@ require('lazy').setup({
     --     lazy = false,
     --     config = function()
     --         require('leap-spooky').setup {
-    --         }
-    --     end
-    -- },
-    -- {
-    --     "ggandor/flit.nvim",
-    --     lazy = false,
-    --     config = function()
-    --         require('flit').setup {
-    --             keys = { f = 'f', F = 'F', t = 't', T = 'T' },
-    --             -- A string like "nv", "nvo", "o", etc.
-    --             labeled_modes = "v",
-    --             -- Repeat with the trigger key itself.
-    --             clever_repeat = true,
-    --             multiline = true,
-    --             -- Like `leap`s similar argument (call-specific overrides).
-    --             -- E.g.: opts = { equivalence_classes = {} }
-    --             opts = {}
     --         }
     --     end
     -- },
@@ -929,4 +938,3 @@ require('lazy').setup({
     --     config = require('configs.cmp_config'),
     -- },
 })
-
