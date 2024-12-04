@@ -1,15 +1,24 @@
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
 -- document existing key chains
-require("which-key").register {
-    ["<leader>c"] = { name = "[C]ode", _ = "which_key_ignore" },
-    ["<leader>d"] = { name = "[D]ebug", _ = "which_key_ignore" },
-    ["<leader>g"] = { name = "[G]it", _ = "which_key_ignore" },
-    ["<leader>h"] = { name = "[H]arpoon", _ = "which_key_ignore" },
-    ["<leader>r"] = { name = "[R]ename", _ = "which_key_ignore" },
-    ["<leader>f"] = { name = "[F]ind", _ = "which_key_ignore" },
-    ["<leader>w"] = { name = "[W]orkspace", _ = "which_key_ignore" }
-}
+-- require("which-key").register {
+--     {
+--         { "<leader>c",  group = "[C]ode" },
+--         { "<leader>c_", hidden = true },
+--         { "<leader>d",  group = "[D]ebug" },
+--         { "<leader>d_", hidden = true },
+--         { "<leader>f",  group = "[F]ind" },
+--         { "<leader>f_", hidden = true },
+--         { "<leader>g",  group = "[G]it" },
+--         { "<leader>g_", hidden = true },
+--         { "<leader>h",  group = "[H]arpoon" },
+--         { "<leader>h_", hidden = true },
+--         { "<leader>r",  group = "[R]ename" },
+--         { "<leader>r_", hidden = true },
+--         { "<leader>w",  group = "[W]orkspace" },
+--         { "<leader>w_", hidden = true },
+--     }
+-- }
 
 -- Allow clipboard copy paste in neovim
 vim.api.nvim_set_keymap('', '<D-v>', '+p<CR>', { noremap = true, silent = true })
@@ -187,52 +196,20 @@ vim.keymap.set("n", "gp", "<cmd>lua require('substitute').operator()<cr>", { des
 vim.keymap.set("n", "gP", "<cmd>lua require('substitute').eol()<cr>", { desc = "" })
 
 -- Rust
--- vim.keymap.set("n", "<leader>re", "<cmd>RustExpandMacro<CR>", { desc = "[R]ust expand macro" })
--- vim.keymap.set("n", "<leader>rc", "<cmd>RustOpenCargo<CR>", { desc = "[R]ust open cargo" })
--- vim.keymap.set("n", "<leader>rp", "<cmd>RustParentModule<CR>", { desc = "[R]ust open parent module" })
-
 vim.keymap.set("n", "<leader>re", "<cmd>RustLsp expandMacro<CR>", { desc = "[R]ust expand macro" })
 vim.keymap.set("n", "<leader>rc", "<cmd>RustLsp openCargo<CR>", { desc = "[R]ust open cargo" })
 vim.keymap.set("n", "<leader>rp", "<cmd>RustLsp parentModule<CR>", { desc = "[R]ust open parent module" })
 vim.keymap.set("n", "<leader>rr", "<cmd>RustLsp reloadWorkspace<CR>", { desc = "[R]ust [R]estart" })
 vim.keymap.set("n", "<leader>rd", "<cmd>RustLsp renderDiagnostic <CR>", { desc = "[R]ust [D]iagnostics" })
-vim.keymap.set("n", "<leader>rd", "<cmd>RustLsp renderDiagnostic <CR>", { desc = "[R]ust [D]iagnostics" })
-vim.keymap.set("n", "<leader>rf", "<cmd>!cargo +nightly fmt <CR>", { desc = "[R]ust [F]ormat" })
-vim.keymap.set("n", "<leader>rb", function() vim.cmd.RustLsp { 'flyCheck', 'run' } end,
-    { desc = "[R]ust [F]lycheck [B]uild" })
 
-vim.keymap.set("n", "<leader>rx", function()
-        vim.cmd.RustLsp { 'flyCheck', 'cancel' }
-        vim.cmd.RustLsp { 'flyCheck', 'clear' }
-    end,
-    { desc = "[R]ust [F]lycheck [X]remove" })
-
--- vim.keymap.set("n", "<leader>rdc", function()
---     vim.g.rustaceanvim.server.default_settings['rust-analyzer'].checkOnSave.command = "check"
--- end, { desc = "[R]ust [D]iagnostics [C]heck" })
---
--- vim.keymap.set("n", "<leader>rdp", function()
---     vim.g.rustaceanvim.server.default_settings['rust-analyzer'].checkOnSave.command = "clippy"
--- end, { desc = "[R]ust [D]iagnostics Cli[p]py" })
 -------------- Git ----------------------------------
-vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>", { desc = "Opens Lazy[G]it" })
 vim.keymap.set("n", "<leader>gB", "<cmd> Git blame<CR>", { desc = "Run [G]it [B]lame on file" })
-vim.keymap.set("n", "<leader>gb", "<cmd> Gitsigns toggle_current_line_blame<CR>", { desc = "[G]it [B]lame on each line" })
--- vim.keymap.set("n", "<leader>gas", ":AdvancedGitSearch search_log_content<CR>", { desc = "Search git log for something" })
 vim.keymap.set({ "n", "v" }, "<leader>gs", ":Gitsigns stage_hunk<CR>", { desc = "[G]it [S]tage hunk" })
 vim.keymap.set({ "n", "v" }, "<leader>gu", ":Gitsigns reset_hunk<CR>", { desc = "[G]it [U]ndo hunk" })
 vim.keymap.set("n", "<leader>gp", ":Gitsigns preview_hunk<CR>", { desc = "[G]it [p]op hunk diff" })
 vim.keymap.set("n", "<leader>g[", ":GitMediate<CR>", { desc = "Run git mediate conflict resolver" })
-vim.keymap.set("n", "<leader>g]", ":GitMediateTerm<CR>",
-    { desc = "Run git mediate conflict resolver in terminal mode(with colors)" })
-vim.keymap.set("n", "<leader>gf", ":vertical Git<CR>/taged<CR>:noh<CR>j", { desc = "[G]it [F]ugitive" })
-vim.keymap.set("n", "<leader>gl", ":Git log <CR>", { desc = "[G]it fugitive [L]og" })
-vim.keymap.set("n", "<leader>grc", ":Git rebase --continue<CR>", { desc = "[G]it [R]ebase [C]ontinue" })
-vim.keymap.set("n", "<leader>gra", ":Git rebase --abort<CR>", { desc = "[G]it [R]ebase [A]ontinue" })
-vim.keymap.set("n", "<leader>gn", ":Neogit kind=vsplit <CR>", { desc = "[G]it [N]eogit" })
+vim.keymap.set("n", "<leader>gf", ":Git<CR>/taged<CR>:noh<CR>j", { desc = "[G]it [F]ugitive" })
 vim.keymap.set("n", "<leader>gd", ":DiffviewOpen<CR>", { desc = "[G]it [D]iff" })
-
-vim.keymap.set({ "n", "v" }, "<leader>gh", ":DiffviewFileHistory %<CR>", { desc = "[G]it [H]istory" })
 
 vim.keymap.set("n", "]g", ": Gitsigns next_hunk<CR>", { desc = "next git hunk" })
 vim.keymap.set("n", "[g", ": Gitsigns prev_hunk<CR>", { desc = "prev git hunk" })

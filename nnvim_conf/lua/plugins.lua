@@ -403,10 +403,10 @@ require('lazy').setup({
             })
         end
     },
-    {
-        "kdheepak/lazygit.nvim",
-        lazy = false,
-    },
+    -- {
+    --     "kdheepak/lazygit.nvim",
+    --     lazy = false,
+    -- },
     {
         'tpope/vim-fugitive',
         lazy = false,
@@ -765,18 +765,18 @@ require('lazy').setup({
     --         return require("configs.null-ls")
     --     end,
     -- },
-    {
-        "utilyre/sentiment.nvim",
-        version = "*",
-        event = "VeryLazy", -- keep for lazy loading
-        opts = {
-            -- config
-        },
-        init = function()
-            -- `matchparen.vim` needs to be disabled manually in case of lazy loading
-            vim.g.loaded_matchparen = 1
-        end,
-    },
+    -- {
+    --     "utilyre/sentiment.nvim",
+    --     version = "*",
+    --     event = "VeryLazy", -- keep for lazy loading
+    --     opts = {
+    --         -- config
+    --     },
+    --     init = function()
+    --         -- `matchparen.vim` needs to be disabled manually in case of lazy loading
+    --         vim.g.loaded_matchparen = 1
+    --     end,
+    -- },
     {
         'windwp/nvim-ts-autotag',
         ft = { "html", "javascript", "javascriptreact", "typescript", "typescriptreact", "svelte", "vue" },
@@ -784,13 +784,6 @@ require('lazy').setup({
             require('nvim-ts-autotag').setup()
         end
     },
-    -- {
-    --     "ErichDonGubler/lsp_lines.nvim",
-    --     config = function()
-    --         require("lsp_lines").setup()
-    --     end,
-    --
-    -- },
     {
         "stevearc/oil.nvim",
         lazy = false,
@@ -867,30 +860,27 @@ require('lazy').setup({
             end
         end
     },
-    -- {
-    --     'b0o/incline.nvim',
-    --     config = function()
-    --         require('configs.incline')
-    --     end,
-    --     -- Optional: Lazy load Incline
-    --     event = 'VeryLazy',
-    -- },
-    -- {
-    --     "NeogitOrg/neogit",
-    --     dependencies = {
-    --         "nvim-lua/plenary.nvim",  -- required
-    --         "sindrets/diffview.nvim", -- optional - Diff integration
-    --
-    --         -- Only one of these is needed, not both.
-    --         "nvim-telescope/telescope.nvim", -- optional
-    --     },
-    --     config = true
-    -- },
     {
         "johmsalas/text-case.nvim",
         lazy = false,
         config = function()
             require('textcase').setup {}
         end
+    },
+    {
+        "folke/snacks.nvim",
+        priority = 1000,
+        lazy = false,
+        opts = require("configs.snacks"),
+        keys = {
+            { "<leader>.",  function() Snacks.scratch() end,               desc = "Toggle Scratch Buffer" },
+            { "<leader>S",  function() Snacks.scratch.select() end,        desc = "Select Scratch Buffer" },
+            { "<leader>n",  function() Snacks.notifier.show_history() end, desc = "Notification History" },
+            { "<leader>bd", function() Snacks.bufdelete() end,             desc = "Delete Buffer" },
+            { "<leader>gh", function() Snacks.lazygit.log_file() end,      desc = "Lazygit Current File History" },
+            { "<leader>gg", function() Snacks.lazygit() end,               desc = "Lazygit" },
+            { "<leader>gl", function() Snacks.lazygit.log() end,           desc = "Lazygit Log (cwd)" },
+            { "<leader>un", function() Snacks.notifier.hide() end,         desc = "Dismiss All Notifications" },
+        },
     }
 })
