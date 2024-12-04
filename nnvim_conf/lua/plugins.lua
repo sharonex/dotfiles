@@ -143,7 +143,7 @@ require('lazy').setup({
     },
 
     -- Useful plugin to show you pending keybinds.
-    { 'folke/which-key.nvim',  opts = {} },
+    { 'folke/which-key.nvim', opts = {} },
     {
         -- Adds git related signs to the gutter, as well as utilities for managing changes
         'lewis6991/gitsigns.nvim',
@@ -200,10 +200,6 @@ require('lazy').setup({
         main = 'ibl',
         opts = {},
     },
-
-    -- "gc" to comment visual regions/lines
-    { 'numToStr/Comment.nvim', opts = {} },
-
     -- Fuzzy Finder (files, lsp, etc)
     {
         'nvim-telescope/telescope.nvim',
@@ -403,10 +399,6 @@ require('lazy').setup({
             })
         end
     },
-    -- {
-    --     "kdheepak/lazygit.nvim",
-    --     lazy = false,
-    -- },
     {
         'tpope/vim-fugitive',
         lazy = false,
@@ -484,67 +476,67 @@ require('lazy').setup({
     --         }
     --     end
     -- },
-    {
-        'ibhagwan/fzf-lua',
-        lazy = false,
-        config = function()
-            -- require 'fzf-lua'.setup {
-            --     winopts = {
-            --         split = "belowright new",
-            --         height = 0.4
-            --     }
-            -- }
-        end
-
-    },
-    {
-        'stevearc/conform.nvim',
-        opts = {},
-        config = function()
-            return {
-                "stevearc/conform.nvim",
-                event = { "BufReadPre", "BufNewFile" },
-                config = function()
-                    local conf = require("conform")
-
-                    conf.setup({
-                        log_level = vim.log.levels.DEBUG,
-                        formatters_by_ft = {
-                            lua = { "stylua" },
-                            rust = { "rustfmt" },
-                            typescript = { { "prettierd", "prettier", stop_after_first = true } },
-                            typescriptreact = { { "prettierd", "prettier", stop_after_first = true } },
-                            javascript = { { "prettierd", "prettier", stop_after_first = true } },
-                            javascriptreact = { { "prettierd", "prettier", stop_after_first = true } },
-
-                            ["*"] = { "codespell", "trim_whitespace" },
-                            -- Use the "_" filetype to run formatters on filetypes that don't
-                            -- have other formatters configured.
-                            ["_"] = { "trim_whitespace" },
-                        },
-                    })
-
-                    vim.api.nvim_create_autocmd('FileType', {
-                        pattern = vim.tbl_keys(require('conform').formatters_by_ft),
-                        group = vim.api.nvim_create_augroup('conform_formatexpr', { clear = true }),
-                        callback = function() vim.opt_local.formatexpr = 'v:lua.require("conform").formatexpr()' end,
-                    })
-                    vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
-                    vim.g.auto_conform_on_save = true
-                    vim.api.nvim_create_autocmd('BufWritePre', {
-                        pattern = '*',
-                        callback = function(args)
-                            if vim.g.auto_conform_on_save then require('conform').format({ bufnr = args.buf, timeout_ms = nil }) end
-                        end,
-                    })
-                    vim.api.nvim_create_user_command('ConformToggleOnSave', function()
-                        vim.g.auto_conform_on_save = not vim.g.auto_conform_on_save
-                        vim.notify('Auto-Conform on save: ' .. (vim.g.auto_conform_on_save and 'Enabled' or 'Disabled'))
-                    end, {})
-                end,
-            }
-        end,
-    },
+    -- {
+    --     'ibhagwan/fzf-lua',
+    --     lazy = false,
+    --     config = function()
+    --         -- require 'fzf-lua'.setup {
+    --         --     winopts = {
+    --         --         split = "belowright new",
+    --         --         height = 0.4
+    --         --     }
+    --         -- }
+    --     end
+    --
+    -- },
+    -- {
+    --     'stevearc/conform.nvim',
+    --     opts = {},
+    --     config = function()
+    --         return {
+    --             "stevearc/conform.nvim",
+    --             event = { "BufReadPre", "BufNewFile" },
+    --             config = function()
+    --                 local conf = require("conform")
+    --
+    --                 conf.setup({
+    --                     log_level = vim.log.levels.DEBUG,
+    --                     formatters_by_ft = {
+    --                         lua = { "stylua" },
+    --                         rust = { "rustfmt" },
+    --                         typescript = { { "prettierd", "prettier", stop_after_first = true } },
+    --                         typescriptreact = { { "prettierd", "prettier", stop_after_first = true } },
+    --                         javascript = { { "prettierd", "prettier", stop_after_first = true } },
+    --                         javascriptreact = { { "prettierd", "prettier", stop_after_first = true } },
+    --
+    --                         ["*"] = { "codespell", "trim_whitespace" },
+    --                         -- Use the "_" filetype to run formatters on filetypes that don't
+    --                         -- have other formatters configured.
+    --                         ["_"] = { "trim_whitespace" },
+    --                     },
+    --                 })
+    --
+    --                 vim.api.nvim_create_autocmd('FileType', {
+    --                     pattern = vim.tbl_keys(require('conform').formatters_by_ft),
+    --                     group = vim.api.nvim_create_augroup('conform_formatexpr', { clear = true }),
+    --                     callback = function() vim.opt_local.formatexpr = 'v:lua.require("conform").formatexpr()' end,
+    --                 })
+    --                 vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+    --                 vim.g.auto_conform_on_save = true
+    --                 vim.api.nvim_create_autocmd('BufWritePre', {
+    --                     pattern = '*',
+    --                     callback = function(args)
+    --                         if vim.g.auto_conform_on_save then require('conform').format({ bufnr = args.buf, timeout_ms = nil }) end
+    --                     end,
+    --                 })
+    --                 vim.api.nvim_create_user_command('ConformToggleOnSave', function()
+    --                     vim.g.auto_conform_on_save = not vim.g.auto_conform_on_save
+    --                     vim.notify('Auto-Conform on save: ' .. (vim.g.auto_conform_on_save and 'Enabled' or 'Disabled'))
+    --                 end, {})
+    --             end,
+    --         }
+    --     end,
+    -- },
     {
         'mrjones2014/smart-splits.nvim',
         config = function()
@@ -615,23 +607,23 @@ require('lazy').setup({
     --         }
     --     end
     -- },
-    {
-        "ggandor/flit.nvim",
-        lazy = false,
-        config = function()
-            require('flit').setup {
-                keys = { f = 'f', F = 'F', t = 't', T = 'T' },
-                -- A string like "nv", "nvo", "o", etc.
-                labeled_modes = "v",
-                -- Repeat with the trigger key itself.
-                clever_repeat = true,
-                multiline = true,
-                -- Like `leap`s similar argument (call-specific overrides).
-                -- E.g.: opts = { equivalence_classes = {} }
-                opts = {}
-            }
-        end
-    },
+    -- {
+    --     "ggandor/flit.nvim",
+    --     lazy = false,
+    --     config = function()
+    --         require('flit').setup {
+    --             keys = { f = 'f', F = 'F', t = 't', T = 'T' },
+    --             -- A string like "nv", "nvo", "o", etc.
+    --             labeled_modes = "v",
+    --             -- Repeat with the trigger key itself.
+    --             clever_repeat = true,
+    --             multiline = true,
+    --             -- Like `leap`s similar argument (call-specific overrides).
+    --             -- E.g.: opts = { equivalence_classes = {} }
+    --             opts = {}
+    --         }
+    --     end
+    -- },
     {
         "folke/trouble.nvim",
         lazy = false,
@@ -658,10 +650,6 @@ require('lazy').setup({
         end,
     },
     {
-        "nvim-tree/nvim-web-devicons",
-        lazy = false,
-    },
-    {
         'lewis6991/spaceless.nvim',
         config = function()
             require 'spaceless'.setup()
@@ -681,16 +669,6 @@ require('lazy').setup({
     {
         "tpope/vim-rsi",
         lazy = false,
-    },
-    {
-        'AndrewRadev/linediff.vim',
-        lazy = false,
-        config = function()
-            vim.cmd [[
-                let g:linediff_first_buffer_command  = 'rightbelow new'
-                let g:linediff_further_buffer_command = 'rightbelow horizontal new'
-            ]]
-        end
     },
     {
         "fdschmidt93/telescope-egrepify.nvim",
@@ -725,18 +703,6 @@ require('lazy').setup({
         lazy = false,
     },
     -- {
-    --     'jinh0/eyeliner.nvim',
-    --     lazy = false,
-    --     config = function()
-    --         -- vim.api.nvim_set_hl(0, 'EyelinerPrimary', { fg = '#FF4500', bold = true, underline = true })
-    --         -- vim.api.nvim_set_hl(0, 'EyelinerSecondary', { fg = '#00FF00', underline = true })
-    --         require 'eyeliner'.setup {
-    --             highlight_on_key = false, -- show highlights only after keypress
-    --             dim = false               -- dim all other characters if set to true (recommended!)
-    --         }
-    --     end
-    -- },
-    -- {
     --     'unblevable/quick-scope',
     --     config = function()
     --         vim.cmd [[
@@ -745,36 +711,17 @@ require('lazy').setup({
     --           ]]
     --     end,
     -- },
-    {
-        "kevinhwang91/nvim-bqf",
-        lazy = false,
-    },
-    {
-        "mg979/vim-visual-multi",
-        branch = "master",
-        config = function()
-            vim.cmd [[
-                VMTheme codedark
-            ]]
-        end,
-    },
     -- {
-    --     'nvimtools/none-ls.nvim',
-    --     event = "VeryLazy",
-    --     opts = function()
-    --         return require("configs.null-ls")
-    --     end,
+    --     "kevinhwang91/nvim-bqf",
+    --     lazy = false,
     -- },
     -- {
-    --     "utilyre/sentiment.nvim",
-    --     version = "*",
-    --     event = "VeryLazy", -- keep for lazy loading
-    --     opts = {
-    --         -- config
-    --     },
-    --     init = function()
-    --         -- `matchparen.vim` needs to be disabled manually in case of lazy loading
-    --         vim.g.loaded_matchparen = 1
+    --     "mg979/vim-visual-multi",
+    --     branch = "master",
+    --     config = function()
+    --         vim.cmd [[
+    --             VMTheme codedark
+    --         ]]
     --     end,
     -- },
     {
@@ -795,13 +742,6 @@ require('lazy').setup({
         'sindrets/diffview.nvim',
         event = "VeryLazy",
     },
-    -- {
-    --     "catppuccin/nvim",
-    --     lazy = false,
-    --     config = function()
-    --         vim.cmd("colorscheme catppuccin-mocha")
-    --     end
-    -- },
     {
         'navarasu/onedark.nvim',
         lazy = false,
@@ -821,52 +761,33 @@ require('lazy').setup({
         end
     },
     -- {
-    --     'akinsho/toggleterm.nvim',
-    --     version = "*",
+    --     'rcarriga/nvim-dap-ui',
+    --     lazy = false,
+    --     dependencies = { 'mfussenegger/nvim-dap', 'nvim-neotest/nvim-nio' },
     --     config = function()
-    --         require 'toggleterm'.setup {
-    --         }
-    --         function _G.set_terminal_keymaps()
-    --             local opts = { buffer = 0 }
-    --             vim.keymap.set('t', '<C-x>', [[<C-\><C-n>]], opts)
-    --             vim.keymap.set('t', '<C-h>', [[<Cmd>wincmd h<CR>]], opts)
-    --             vim.keymap.set('t', '<C-j>', [[<Cmd>wincmd j<CR>]], opts)
-    --             vim.keymap.set('t', '<C-k>', [[<Cmd>wincmd k<CR>]], opts)
-    --             vim.keymap.set('t', '<C-l>', [[<Cmd>wincmd l<CR>]], opts)
+    --         require('dapui').setup()
+    --         local dap, dapui = require("dap"), require("dapui")
+    --         dap.listeners.before.attach.dapui_config = function()
+    --             dapui.open()
     --         end
-    --
-    --         -- if you only want these mappings for toggle term use term://*toggleterm#* instead
-    --         vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
+    --         dap.listeners.before.launch.dapui_config = function()
+    --             dapui.open()
+    --         end
+    --         dap.listeners.before.event_terminated.dapui_config = function()
+    --             dapui.close()
+    --         end
+    --         dap.listeners.before.event_exited.dapui_config = function()
+    --             dapui.close()
+    --         end
     --     end
     -- },
-    {
-        'rcarriga/nvim-dap-ui',
-        lazy = false,
-        dependencies = { 'mfussenegger/nvim-dap', 'nvim-neotest/nvim-nio' },
-        config = function()
-            require('dapui').setup()
-            local dap, dapui = require("dap"), require("dapui")
-            dap.listeners.before.attach.dapui_config = function()
-                dapui.open()
-            end
-            dap.listeners.before.launch.dapui_config = function()
-                dapui.open()
-            end
-            dap.listeners.before.event_terminated.dapui_config = function()
-                dapui.close()
-            end
-            dap.listeners.before.event_exited.dapui_config = function()
-                dapui.close()
-            end
-        end
-    },
-    {
-        "johmsalas/text-case.nvim",
-        lazy = false,
-        config = function()
-            require('textcase').setup {}
-        end
-    },
+    -- {
+    --     "johmsalas/text-case.nvim",
+    --     lazy = false,
+    --     config = function()
+    --         require('textcase').setup {}
+    --     end
+    -- },
     {
         "folke/snacks.nvim",
         priority = 1000,
