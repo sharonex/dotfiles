@@ -131,13 +131,14 @@ require('lazy').setup({
         'lewis6991/gitsigns.nvim',
         opts = {
             -- See `:help gitsigns.txt`
-            signs = {
-                add = { text = '+' },
-                change = { text = '~' },
-                delete = { text = '_' },
-                topdelete = { text = '‾' },
-                changedelete = { text = '~' },
-            },
+            -- signs = {
+            --     add = { text = '+' },
+            --     change = { text = '~' },
+            --     delete = { text = '_' },
+            --     topdelete = { text = '‾' },
+            --     changedelete = { text = '~' },
+            -- },
+            sign_priority = 100,
             on_attach = function(bufnr)
                 -- don't override the built-in and fugitive keymaps
                 local gs = package.loaded.gitsigns
@@ -159,15 +160,14 @@ require('lazy').setup({
                     end)
                     return '<Ignore>'
                 end, { expr = true, buffer = bufnr, desc = 'Jump to previous hunk' })
+
+                vim.keymap.set({ "n", "v" }, "<leader>gs", ":Gitsigns stage_hunk<CR>", { desc = "[G]it [S]tage hunk" })
+                vim.keymap.set({ "n", "v" }, "<leader>gu", ":Gitsigns reset_hunk<CR>", { desc = "[G]it [U]ndo hunk" })
+                vim.keymap.set("n", "<leader>gp", ":Gitsigns preview_hunk<CR>", { desc = "[G]it [p]op hunk diff" })
+                vim.keymap.set("n", "]g", ": Gitsigns next_hunk<CR>", { desc = "next git hunk" })
+                vim.keymap.set("n", "[g", ": Gitsigns prev_hunk<CR>", { desc = "prev git hunk" })
             end,
         },
-        config = function()
-            vim.keymap.set({ "n", "v" }, "<leader>gs", ":Gitsigns stage_hunk<CR>", { desc = "[G]it [S]tage hunk" })
-            vim.keymap.set({ "n", "v" }, "<leader>gu", ":Gitsigns reset_hunk<CR>", { desc = "[G]it [U]ndo hunk" })
-            vim.keymap.set("n", "<leader>gp", ":Gitsigns preview_hunk<CR>", { desc = "[G]it [p]op hunk diff" })
-            vim.keymap.set("n", "]g", ": Gitsigns next_hunk<CR>", { desc = "next git hunk" })
-            vim.keymap.set("n", "[g", ": Gitsigns prev_hunk<CR>", { desc = "prev git hunk" })
-        end
     },
     {
         -- Add indentation guides even on blank lines
@@ -574,18 +574,28 @@ require('lazy').setup({
             -- refer to the configuration section below
             use_diagnostic_signs = false -- enabling this will use the signs defined in your lsp client
         },
-        config = function()
-            vim.keymap.set("n", "<leader>ll", "<cmd> lua vim.diagnostic.open_float({scope=\"line\"}) <cr>",
-                { desc = "Show line diagnostics" })
-            vim.keymap.set("n", "<leader>lc", "<cmd> lua vim.diagnostic.open_float({scope=\"cursor\"}) <cr>",
-                { desc = "Show line diagnostics" })
-            vim.keymap.set("n", "<leader>ld", "<cmd> Trouble diagnostics toggle pinned=false filter.buf=0<cr>",
-                { desc = "Document diagnostics" })
-            vim.keymap.set("n", "<leader>lw", "<cmd> Trouble diagnostics toggle pinned=false<cr>",
-                { desc = "Workspace diagnostics" })
-            vim.keymap.set("n", "<leader>ls", "<cmd> Trouble symbols toggle<cr>", { desc = "Document [S]ymbols" })
-            vim.keymap.set("n", "<leader>qf", "<cmd> Trouble qflist toggle<cr>", { desc = " open [Q]uick[f]ix" })
-        end
+        keys = {
+            {
+                "<leader>ld",
+                "<cmd>Trouble diagnostics toggle pinned=false filter.buf=0<cr>",
+                desc = "Document diagnostics"
+            },
+            {
+                "<leader>lw",
+                "<cmd>Trouble diagnostics toggle pinned=false<cr>",
+                desc = "Workspace diagnostics"
+            },
+            {
+                "<leader>ls",
+                "<cmd>Trouble symbols toggle<cr>",
+                desc = "Document [S]ymbols"
+            },
+            {
+                "<leader>qf",
+                "<cmd>Trouble qflist toggle<cr>",
+                desc = "Open [Q]uick[f]ix"
+            }
+        },
     },
     {
         "windwp/nvim-autopairs",
@@ -705,15 +715,58 @@ require('lazy').setup({
         lazy = false,
         opts = require("configs.snacks"),
         keys = {
-            { "<leader>.",  function() Snacks.scratch() end,               desc = "Toggle Scratch Buffer" },
-            { "<leader>S",  function() Snacks.scratch.select() end,        desc = "Select Scratch Buffer" },
-            { "<leader>n",  function() Snacks.notifier.show_history() end, desc = "Notification History" },
-            { "<leader>Bd", function() Snacks.bufdelete() end,             desc = "Delete Buffer" },
-            { "<leader>gh", function() Snacks.lazygit.log_file() end,      desc = "Lazygit Current File History" },
-            { "<leader>gg", function() Snacks.lazygit() end,               desc = "Lazygit" },
-            { "<leader>gl", function() Snacks.lazygit.log() end,           desc = "Lazygit Log (cwd)" },
-            { "<leader>un", function() Snacks.notifier.hide() end,         desc = "Dismiss All Notifications" },
+            -- { "<leader>.",  function() Snacks.scratch() end,          desc = "Toggle Scratch Buffer" },
+            -- { "<leader>S",  function() Snacks.scratch.select() end,   desc = "Select Scratch Buffer" },
+            -- { "<leader>n",  function() Snacks.notifier.show_history() end, desc = "Notification History" },
+            { "<leader>Bd", function() Snacks.bufdelete() end,        desc = "Delete Buffer" },
+            { "<leader>gh", function() Snacks.lazygit.log_file() end, desc = "Lazygit Current File History" },
+            { "<leader>gg", function() Snacks.lazygit() end,          desc = "Lazygit" },
+            { "<leader>gl", function() Snacks.lazygit.log() end,      desc = "Lazygit Log (cwd)" },
+            { "<leader>un", function() Snacks.notifier.hide() end,    desc = "Dismiss All Notifications" },
         },
+    },
+    {
+        "mg979/vim-visual-multi",
+        branch = "master",
+        config = function()
+            vim.cmd [[
+                VMTheme codedark
+            ]]
+        end,
+    },
+    {
+        "nvim-neorg/neorg",
+        lazy = false,  -- Disable lazy loading as some `lazy.nvim` distributions set `lazy = true` by default
+        version = "*", -- Pin Neorg to the latest stable release
+        -- config = {
+        --     vim.keymap.set("n", "<leader>n", ":Neorg<CR>", { desc = "Open Neorg" })
+        -- }
+        -- config = true,
+        config = function()
+            require("neorg").setup {
+                load = {
+                    ["core.defaults"] = {},
+                    ["core.concealer"] = {},
+                    ["core.syntax"] = {},
+                    ["core.summary"] = {},
+                    ["core.dirman"] = {
+                        config = {
+                            workspaces = {
+                                notes = "~/notes",
+                            },
+                            default_workspace = "notes",
+                        },
+                    },
+                },
+            }
+
+            vim.wo.foldlevel = 99
+            vim.wo.conceallevel = 2
+
+            vim.keymap.set("n", "<leader>njt", ":Neorg journal today<CR>", { desc = "Neorg Journal Today" })
+            vim.keymap.set("n", "<leader>njy", ":Neorg journal yesterday<CR>", { desc = "Neorg Journal Yesterday" })
+            vim.keymap.set("n", "<leader><CR>", "<Plug>(neorg.esupports.hop.hop-link)", { desc = "Follow link" })
+        end,
     },
     -- {
     --     "ggandor/flit.nvim",
@@ -788,19 +841,10 @@ require('lazy').setup({
     --           ]]
     --     end,
     -- },
-    -- {
-    --     "kevinhwang91/nvim-bqf",
-    --     lazy = false,
-    -- },
-    -- {
-    --     "mg979/vim-visual-multi",
-    --     branch = "master",
-    --     config = function()
-    --         vim.cmd [[
-    --             VMTheme codedark
-    --         ]]
-    --     end,
-    -- },
+    {
+        "kevinhwang91/nvim-bqf",
+        lazy = false,
+    },
     -- {
     --     "ggandor/leap-spooky.nvim",
     --     lazy = false,

@@ -1,3 +1,44 @@
+local expandMacro = function()
+    vim.lsp.buf_request_all(0, "rust-analyzer/expandMacro",
+        vim.lsp.util.make_position_params(),
+        function(result)
+            -- Create a new tab
+            vim.cmd("vsplit")
+            vim.inspect(result)
+
+            -- Create an empty scratch buffer (non-listed, non-file i.e scratch)
+            -- :help nvim_create_buf
+            local buf = vim.api.nvim_create_buf(false, true)
+
+            -- and set it to the current window
+            -- :help nvim_win_set_buf
+            vim.api.nvim_win_set_buf(0, buf)
+
+            if result then
+                -- set the filetype to rust so that rust's syntax highlighting works
+                -- :help nvim_set_option_value
+                vim.api.nvim_set_option_value("filetype", "rust", { buf = 0 })
+
+                -- Insert the result into the new buffer
+                for client_id, res in pairs(result) do
+                    if res and res.result and res.result.expansion then
+                        -- :help nvim_buf_set_lines
+                        vim.api.nvim_buf_set_lines(buf, -1, -1, false,
+                            vim.split(res.result.expansion, "\n"))
+                    else
+                        vim.api.nvim_buf_set_lines(buf, -1, -1, false, {
+                            "No expansion available."
+                        })
+                    end
+                end
+            else
+                vim.api.nvim_buf_set_lines(buf, -1, -1, false, {
+                    "Error: No result returned."
+                })
+            end
+        end)
+end
+
 local M = {}
 
 -- Enable the following language servers
@@ -12,11 +53,7 @@ M.servers = {
     -- clangd = {},
     -- gopls = {},
     -- pyright = {},
-    -- rust_analyzer = {
-    --     on_attach = function(_, bufnr)
-    --         vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-    --     end
-    -- },
+    rust_analyzer = {},
     -- tsserver = {},
     -- html = { filetypes = { 'html', 'twig', 'hbs'} },
     -- eslint = {
@@ -60,8 +97,7 @@ local lsp_mappings = function(_)
     nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
     nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
     nmap('<leader>sd', require('telescope.builtin').lsp_document_symbols, '[S]earch [D]ocument')
-    nmap('<leader>ss', '<cmd> FzfLua lsp_live_workspace_symbols<CR>', '[S]earch [S]ymbols')
-    nmap('<leader>st', "<cmd> FzfLua tags_live_grep<CR>", '[S]earch [T]ags')
+    nmap('<leader>ss', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[S]earch [S]ymbols')
 
     -- See `:help K` for why this keymap
     nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
@@ -75,6 +111,9 @@ local lsp_mappings = function(_)
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
     end, '[W]orkspace [L]ist Folders')
 
+    -- Rust
+    nmap("<leader>re", "<Cmd>ExpandMacro<CR>", "Expand macro")
+
     -- Create a command `:Format` local to the LSP buffer
     vim.api.nvim_buf_create_user_command(0, 'Format', function(_)
         vim.lsp.buf.format()
@@ -84,10 +123,10 @@ end
 M.on_attach = function(client, bufnr)
     lsp_mappings()
 
-    -- vim.diagnostic.config({
-    --     severity_sort = true,
-    --     virtual_text = true,
-    -- })
+    vim.diagnostic.config({
+        severity_sort = true,
+        virtual_text = true,
+    })
 end
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -123,5 +162,15 @@ mason_lspconfig.setup_handlers {
         }
     end,
 }
+
+require("lspconfig").rust_analyzer.setup({
+    capabilities = capabilities,
+    on_attach = M.on_attach,
+    commands = {
+        ExpandMacro = {
+            expandMacro
+        },
+    },
+})
 
 return M
