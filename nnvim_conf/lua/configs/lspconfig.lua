@@ -53,7 +53,7 @@ M.servers = {
     -- clangd = {},
     -- gopls = {},
     -- pyright = {},
-    rust_analyzer = {},
+    -- rust_analyzer = {},
     -- tsserver = {},
     -- html = { filetypes = { 'html', 'twig', 'hbs'} },
     -- eslint = {
@@ -166,6 +166,13 @@ mason_lspconfig.setup_handlers {
 require("lspconfig").rust_analyzer.setup({
     capabilities = capabilities,
     on_attach = M.on_attach,
+    settings = {
+        ['rust-analyzer'] = {
+            -- checkOnSave = {
+            --     command = "clippy"
+            -- },
+        }
+    },
     commands = {
         ExpandMacro = {
             expandMacro

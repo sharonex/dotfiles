@@ -742,6 +742,8 @@ require('lazy').setup({
         --     vim.keymap.set("n", "<leader>n", ":Neorg<CR>", { desc = "Open Neorg" })
         -- }
         -- config = true,
+        build = ":Neorg sync-parsers",
+        dependencies = { "nvim-neorg/neorg-telescope" },
         config = function()
             require("neorg").setup {
                 load = {
@@ -749,6 +751,7 @@ require('lazy').setup({
                     ["core.concealer"] = {},
                     ["core.syntax"] = {},
                     ["core.summary"] = {},
+                    ["core.integrations.telescope"] = {},
                     ["core.dirman"] = {
                         config = {
                             workspaces = {
@@ -766,7 +769,20 @@ require('lazy').setup({
             vim.keymap.set("n", "<leader>njt", ":Neorg journal today<CR>", { desc = "Neorg Journal Today" })
             vim.keymap.set("n", "<leader>njy", ":Neorg journal yesterday<CR>", { desc = "Neorg Journal Yesterday" })
             vim.keymap.set("n", "<leader><CR>", "<Plug>(neorg.esupports.hop.hop-link)", { desc = "Follow link" })
+            vim.keymap.set("n", "<leader>nf", "<Plug>(neorg.telescope.find_norg_files)", { desc = "Neorg find notes" })
+            vim.keymap.set("n", "<leader>nil", "<Plug>(neorg.telescope.insert_link)", { desc = "Neorg insert link" })
         end,
+    },
+    {
+        "kevinhwang91/nvim-bqf",
+        lazy = false,
+    },
+    {
+        "johmsalas/text-case.nvim",
+        lazy = false,
+        config = function()
+            require('textcase').setup {}
+        end
     },
     -- {
     --     "ggandor/flit.nvim",
@@ -826,13 +842,6 @@ require('lazy').setup({
     --     end
     -- },
     -- {
-    --     "johmsalas/text-case.nvim",
-    --     lazy = false,
-    --     config = function()
-    --         require('textcase').setup {}
-    --     end
-    -- },
-    -- {
     --     'unblevable/quick-scope',
     --     config = function()
     --         vim.cmd [[
@@ -841,10 +850,6 @@ require('lazy').setup({
     --           ]]
     --     end,
     -- },
-    {
-        "kevinhwang91/nvim-bqf",
-        lazy = false,
-    },
     -- {
     --     "ggandor/leap-spooky.nvim",
     --     lazy = false,
@@ -915,54 +920,66 @@ require('lazy').setup({
     --     end
     --
     -- },
-    -- {
-    --     'stevearc/conform.nvim',
-    --     opts = {},
-    --     config = function()
-    --         return {
-    --             "stevearc/conform.nvim",
-    --             event = { "BufReadPre", "BufNewFile" },
-    --             config = function()
-    --                 local conf = require("conform")
-    --
-    --                 conf.setup({
-    --                     log_level = vim.log.levels.DEBUG,
-    --                     formatters_by_ft = {
-    --                         lua = { "stylua" },
-    --                         rust = { "rustfmt" },
-    --                         typescript = { { "prettierd", "prettier", stop_after_first = true } },
-    --                         typescriptreact = { { "prettierd", "prettier", stop_after_first = true } },
-    --                         javascript = { { "prettierd", "prettier", stop_after_first = true } },
-    --                         javascriptreact = { { "prettierd", "prettier", stop_after_first = true } },
-    --
-    --                         ["*"] = { "codespell", "trim_whitespace" },
-    --                         -- Use the "_" filetype to run formatters on filetypes that don't
-    --                         -- have other formatters configured.
-    --                         ["_"] = { "trim_whitespace" },
-    --                     },
-    --                 })
-    --
-    --                 vim.api.nvim_create_autocmd('FileType', {
-    --                     pattern = vim.tbl_keys(require('conform').formatters_by_ft),
-    --                     group = vim.api.nvim_create_augroup('conform_formatexpr', { clear = true }),
-    --                     callback = function() vim.opt_local.formatexpr = 'v:lua.require("conform").formatexpr()' end,
-    --                 })
-    --                 vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
-    --                 vim.g.auto_conform_on_save = true
-    --                 vim.api.nvim_create_autocmd('BufWritePre', {
-    --                     pattern = '*',
-    --                     callback = function(args)
-    --                         if vim.g.auto_conform_on_save then require('conform').format({ bufnr = args.buf, timeout_ms = nil }) end
-    --                     end,
-    --                 })
-    --                 vim.api.nvim_create_user_command('ConformToggleOnSave', function()
-    --                     vim.g.auto_conform_on_save = not vim.g.auto_conform_on_save
-    --                     vim.notify('Auto-Conform on save: ' .. (vim.g.auto_conform_on_save and 'Enabled' or 'Disabled'))
-    --                 end, {})
-    --             end,
-    --         }
-    --     end,
-    -- },
+    {
+        'stevearc/conform.nvim',
+        opts = {},
+        config = function()
+            require("conform").setup({
+                -- event = { "BufReadPre", "BufNewFile" },
+                log_level = vim.log.levels.DEBUG,
+                -- format_after_save = {},
+                -- vim.api.nvim_create_autocmd("BufWritePre", {
+                --     pattern = "*",
+                --     callback = function(args)
+                --         require("conform").format({ bufnr = args.buf })
+                --         -- Wait for the format to complete and reload the buffer
+                --     end,
+                -- }),
+                -- formatters = {
+                --     -- Override the default rustfmt config
+                --     rustfmt = {
+                --         command = "cargo",
+                --         args = {
+                --             "+nightly-2024-07-01",
+                --             "fmt",
+                --             "--",
+                --         },
+                --     },
+                -- },
+                formatters_by_ft = {
+                    lua = { "stylua" },
+                    rust = { "rustfmt" },
+                    typescript = { { "prettierd", "prettier", stop_after_first = true } },
+                    typescriptreact = { { "prettierd", "prettier", stop_after_first = true } },
+                    javascript = { { "prettierd", "prettier", stop_after_first = true } },
+                    javascriptreact = { { "prettierd", "prettier", stop_after_first = true } },
+
+                    -- ["*"] = { "codespell", "trim_whitespace" },
+                    -- Use the "_" filetype to run formatters on filetypes that don't
+                    -- have other formatters configured.
+                    -- ["_"] = { "trim_whitespace" },
+                },
+            })
+
+            -- vim.api.nvim_create_autocmd('FileType', {
+            --     pattern = vim.tbl_keys(require('conform').formatters_by_ft),
+            --     group = vim.api.nvim_create_augroup('conform_formatexpr', { clear = true }),
+            --     callback = function() vim.opt_local.formatexpr = 'v:lua.require("conform").formatexpr()' end,
+            -- })
+            -- vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+            -- vim.g.auto_conform_on_save = true
+            -- vim.api.nvim_create_autocmd('BufWritePre', {
+            --     pattern = '*',
+            --     callback = function(args)
+            --         if vim.g.auto_conform_on_save then require('conform').format({ bufnr = args.buf, timeout_ms = nil }) end
+            --     end,
+            -- })
+            -- vim.api.nvim_create_user_command('ConformToggleOnSave', function()
+            --     vim.g.auto_conform_on_save = not vim.g.auto_conform_on_save
+            --     vim.notify('Auto-Conform on save: ' .. (vim.g.auto_conform_on_save and 'Enabled' or 'Disabled'))
+            -- end, {})
+        end,
+    },
     -- {
     --     -- Autocompletion
     --     'hrsh7th/nvim-cmp',

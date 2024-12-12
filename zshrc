@@ -55,6 +55,8 @@ alias gpr="git pull origin main --rebase && git push origin `b` -f"
 # Pelanor aliases
 alias kc="killall cargo"
 
+alias check_ts_compiles="pushd cd typescript/apps/platform; ../../../node_modules/.bin/tsc --noEmit; popd"
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND="rg --files"
 export FZF_DEFAULT_OPTS="-m --height 50% --border"
