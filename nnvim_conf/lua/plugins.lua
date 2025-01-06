@@ -59,11 +59,11 @@ require('lazy').setup({
             -- Automatically install LSPs to stdpath for neovim
             'williamboman/mason.nvim',
             'williamboman/mason-lspconfig.nvim',
-            'saghen/blink.cmp',
+            -- 'saghen/blink.cmp',
 
             -- Useful status updates for LSP
             -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-            { 'j-hui/fidget.nvim', opts = {} },
+            -- { 'j-hui/fidget.nvim', opts = {} },
 
             -- Additional lua configuration, makes nvim stuff amazing!
             'folke/neodev.nvim',
@@ -72,57 +72,57 @@ require('lazy').setup({
             require("configs.lspconfig")
         end,
     },
-    {
-        'saghen/blink.cmp',
-        lazy = false, -- lazy loading handled internally
-        -- optional: provides snippets for the snippet source
-        -- dependencies = 'rafamadriz/friendly-snippets',
-
-        -- use a release tag to download pre-built binaries
-        version = 'v0.*',
-        -- OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
-        -- build = 'cargo build --release',
-        -- If you use nix, you can build from source using latest nightly rust with:
-        -- build = 'nix run .#build-plugin',
-
-        ---@module 'blink.cmp'
-        ---@type blink.cmp.Config
-        opts = {
-            -- 'default' for mappings similar to built-in completion
-            -- 'super-tab' for mappings similar to vscode (tab to accept, arrow keys to navigate)
-            -- 'enter' for mappings similar to 'super-tab' but with 'enter' to accept
-            -- see the "default configuration" section below for full documentation on how to define
-            -- your own keymap.
-            keymap = { preset = 'enter' },
-
-            appearance = {
-                -- Sets the fallback highlight groups to nvim-cmp's highlight groups
-                -- Useful for when your theme doesn't support blink.cmp
-                -- will be removed in a future release
-                use_nvim_cmp_as_default = true,
-                -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-                -- Adjusts spacing to ensure icons are aligned
-                nerd_font_variant = 'mono'
-            },
-
-            -- default list of enabled providers defined so that you can extend it
-            -- elsewhere in your config, without redefining it, via `opts_extend`
-            sources = {
-                completion = {
-                    enabled_providers = { 'lsp', 'path', 'snippets', 'buffer' },
-                },
-            },
-
-            -- experimental auto-brackets support
-            -- completion = { accept = { auto_brackets = { enabled = true } } }
-
-            -- experimental signature help support
-            -- signature = { enabled = true }
-        },
-        -- allows extending the enabled_providers array elsewhere in your config
-        -- without having to redefine it
-        opts_extend = { "sources.completion.enabled_providers" }
-    },
+    -- {
+    --     'saghen/blink.cmp',
+    --     lazy = false, -- lazy loading handled internally
+    --     -- optional: provides snippets for the snippet source
+    --     -- dependencies = 'rafamadriz/friendly-snippets',
+    --
+    --     -- use a release tag to download pre-built binaries
+    --     version = 'v0.*',
+    --     -- OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
+    --     -- build = 'cargo build --release',
+    --     -- If you use nix, you can build from source using latest nightly rust with:
+    --     -- build = 'nix run .#build-plugin',
+    --
+    --     ---@module 'blink.cmp'
+    --     ---@type blink.cmp.Config
+    --     opts = {
+    --         -- 'default' for mappings similar to built-in completion
+    --         -- 'super-tab' for mappings similar to vscode (tab to accept, arrow keys to navigate)
+    --         -- 'enter' for mappings similar to 'super-tab' but with 'enter' to accept
+    --         -- see the "default configuration" section below for full documentation on how to define
+    --         -- your own keymap.
+    --         keymap = { preset = 'enter' },
+    --
+    --         appearance = {
+    --             -- Sets the fallback highlight groups to nvim-cmp's highlight groups
+    --             -- Useful for when your theme doesn't support blink.cmp
+    --             -- will be removed in a future release
+    --             use_nvim_cmp_as_default = true,
+    --             -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+    --             -- Adjusts spacing to ensure icons are aligned
+    --             nerd_font_variant = 'mono'
+    --         },
+    --
+    --         -- default list of enabled providers defined so that you can extend it
+    --         -- elsewhere in your config, without redefining it, via `opts_extend`
+    --         sources = {
+    --             default = { 'lsp', 'path', 'snippets', 'buffer' },
+    --             -- Disable cmdline completions
+    --             cmdline = {},
+    --         },
+    --
+    --         -- experimental auto-brackets support
+    --         -- completion = { accept = { auto_brackets = { enabled = true } } }
+    --
+    --         -- experimental signature help support
+    --         -- signature = { enabled = true }
+    --     },
+    --     -- allows extending the enabled_providers array elsewhere in your config
+    --     -- without having to redefine it
+    --     opts_extend = { "sources.completion.enabled_providers" }
+    -- },
 
     -- Useful plugin to show you pending keybinds.
     { 'folke/which-key.nvim', opts = {} },
@@ -169,14 +169,14 @@ require('lazy').setup({
             end,
         },
     },
-    {
-        -- Add indentation guides even on blank lines
-        'lukas-reineke/indent-blankline.nvim',
-        -- Enable `lukas-reineke/indent-blankline.nvim`
-        -- See `:help ibl`
-        main = 'ibl',
-        opts = {},
-    },
+    -- {
+    --     -- Add indentation guides even on blank lines
+    --     'lukas-reineke/indent-blankline.nvim',
+    --     -- Enable `lukas-reineke/indent-blankline.nvim`
+    --     -- See `:help ibl`
+    --     main = 'ibl',
+    --     opts = {},
+    -- },
     -- Fuzzy Finder (files, lsp, etc)
     {
         'nvim-telescope/telescope.nvim',
@@ -237,6 +237,7 @@ require('lazy').setup({
             )
             vim.keymap.set("n", "<leader>?", require("telescope.builtin").oldfiles,
                 { desc = "[?] Find recently opened files" })
+            vim.keymap.set("n", "<leader>gb", require("telescope.builtin").git_branches, { desc = "[G]it [B]ranch" })
             vim.keymap.set("n", "<leader>f", require("telescope.builtin").git_files, { desc = "[F]ind (Git) Files" })
             vim.keymap.set("n", "<leader>sf", require("telescope.builtin").find_files, { desc = "[S]earch [F]iles" })
             vim.keymap.set("n", "<leader>sh", require("telescope.builtin").help_tags, { desc = "[S]earch [H]elp" })
@@ -304,13 +305,7 @@ require('lazy').setup({
                 highlight = { enable = true },
                 indent = { enable = true },
                 incremental_selection = {
-                    enable = true,
-                    keymaps = {
-                        init_selection = '<s-space>',
-                        scope_incremental = '<CR>',
-                        node_incremental = '<TAB>',
-                        node_decremental = '<S-TAB>',
-                    },
+                    enable = false,
                 },
                 textobjects = {
                     select = {
@@ -443,6 +438,10 @@ require('lazy').setup({
         config = function()
             vim.keymap.set("n", "<leader>gB", "<cmd> Git blame<CR>", { desc = "Run [G]it [B]lame on file" })
             vim.keymap.set("n", "<leader>gf", ":Git<CR>/taged<CR>:noh<CR>j", { desc = "[G]it [F]ugitive" })
+            vim.keymap.set("n", "<leader>gl", ":Git log<CR>", { desc = "[G]it [L]og" })
+            vim.keymap.set("n", "<leader>ga", ":Git commit --amend<CR>", { desc = "[G]it [A]mend" })
+            vim.keymap.set("n", "<leader>gc", ":Git commit -m '", { desc = "[G]it [C]ommit" })
+            vim.keymap.set("n", "<leader>grm", ":Git pull origin main --rebase<CR>", { desc = "[G]it [R]ebase [M]ain" })
         end
     },
     {
@@ -477,6 +476,10 @@ require('lazy').setup({
             vim.keymap.set('n', '<C-j>', require('smart-splits').move_cursor_down)
             vim.keymap.set('n', '<C-k>', require('smart-splits').move_cursor_up)
             vim.keymap.set('n', '<C-l>', require('smart-splits').move_cursor_right)
+            vim.keymap.set('t', '<C-h>', require('smart-splits').move_cursor_left)
+            vim.keymap.set('t', '<C-j>', require('smart-splits').move_cursor_down)
+            vim.keymap.set('t', '<C-k>', require('smart-splits').move_cursor_up)
+            vim.keymap.set('t', '<C-l>', require('smart-splits').move_cursor_right)
             -- swapping buffers between windows
             vim.keymap.set('n', '<leader><leader>h', require('smart-splits').swap_buf_left)
             vim.keymap.set('n', '<leader><leader>j', require('smart-splits').swap_buf_down)
@@ -718,11 +721,11 @@ require('lazy').setup({
             -- { "<leader>.",  function() Snacks.scratch() end,          desc = "Toggle Scratch Buffer" },
             -- { "<leader>S",  function() Snacks.scratch.select() end,   desc = "Select Scratch Buffer" },
             -- { "<leader>n",  function() Snacks.notifier.show_history() end, desc = "Notification History" },
-            { "<leader>Bd", function() Snacks.bufdelete() end,        desc = "Delete Buffer" },
-            { "<leader>gh", function() Snacks.lazygit.log_file() end, desc = "Lazygit Current File History" },
-            { "<leader>gg", function() Snacks.lazygit() end,          desc = "Lazygit" },
-            { "<leader>gl", function() Snacks.lazygit.log() end,      desc = "Lazygit Log (cwd)" },
-            { "<leader>un", function() Snacks.notifier.hide() end,    desc = "Dismiss All Notifications" },
+            -- { "<leader>gh", function() Snacks.lazygit.log_file() end, desc = "Lazygit Current File History" },
+            { "<leader>gg", function() Snacks.lazygit() end,         desc = "Lazygit" },
+            { "<leader>gl", function() Snacks.lazygit.log() end,     desc = "Lazygit Log (cwd)" },
+            { "<leader>un", function() Snacks.notifier.hide() end,   desc = "Dismiss All Notifications" },
+            { "<C-,>",      function() Snacks.terminal.toggle() end, desc = "Toggle Terminal" },
         },
     },
     {
@@ -980,22 +983,22 @@ require('lazy').setup({
             -- end, {})
         end,
     },
-    -- {
-    --     -- Autocompletion
-    --     'hrsh7th/nvim-cmp',
-    --     dependencies = {
-    --         -- Snippet Engine & its associated nvim-cmp source
-    --         'L3MON4D3/LuaSnip',
-    --         'saadparwaiz1/cmp_luasnip',
-    --
-    --         -- Adds LSP completion capabilities
-    --         'hrsh7th/cmp-nvim-lsp',
-    --
-    --         -- Adds a number of user-friendly snippets
-    --         'rafamadriz/friendly-snippets',
-    --         'onsails/lspkind.nvim',
-    --         'mlaursen/vim-react-snippets',
-    --     },
-    --     config = require('configs.cmp_config'),
-    -- },
+    {
+        -- Autocompletion
+        'hrsh7th/nvim-cmp',
+        dependencies = {
+            -- Snippet Engine & its associated nvim-cmp source
+            'L3MON4D3/LuaSnip',
+            'saadparwaiz1/cmp_luasnip',
+
+            -- Adds LSP completion capabilities
+            'hrsh7th/cmp-nvim-lsp',
+
+            -- Adds a number of user-friendly snippets
+            'rafamadriz/friendly-snippets',
+            'onsails/lspkind.nvim',
+            'mlaursen/vim-react-snippets',
+        },
+        config = require('configs.cmp_config'),
+    },
 })

@@ -3,8 +3,8 @@
 # ID: 138fd403232d2ddd5efb44317e38bf03
 
 # start templated
-INSTALL_PYTHON=/Library/Developer/CommandLineTools/usr/bin/python3
-ARGS=(hook-impl --config=.pre-commit-config.yaml --hook-type=pre-commit)
+# INSTALL_PYTHON=/Library/Developer/CommandLineTools/usr/bin/python3
+# ARGS=(hook-impl --config=.pre-commit-config.yaml --hook-type=pre-commit)
 # end templated
 
 # HERE="$(cd "$(dirname "$0")" && pwd)"
@@ -24,7 +24,6 @@ ARGS=(hook-impl --config=.pre-commit-config.yaml --hook-type=pre-commit)
 set -e
 files=$(git diff --cached --name-only --diff-filter=ACM "*.rs")
 
-touch /tmp/lolz
 if [ -n "$files" ]; then
     # Format only staged Rust files
     echo "Running rustfmt on staged files..."

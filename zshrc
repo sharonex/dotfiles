@@ -55,7 +55,7 @@ alias gpr="git pull origin main --rebase && git push origin `b` -f"
 # Pelanor aliases
 alias kc="killall cargo"
 
-alias check_ts_compiles="pushd cd typescript/apps/platform; ../../../node_modules/.bin/tsc --noEmit; popd"
+alias check_ts_compiles="pushd typescript/apps/platform; ../../../node_modules/.bin/tsc --noEmit; popd"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND="rg --files"
@@ -271,3 +271,8 @@ esac
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+. "$HOME/.atuin/bin/env"
+
+# Bind ctrl-r but not up arrow
+eval "$(atuin init zsh --disable-up-arrow)"

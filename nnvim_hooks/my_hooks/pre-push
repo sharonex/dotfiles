@@ -2,16 +2,37 @@
 
 set -e  # This will make the script exit on any error
 
-command -v git-lfs >/dev/null 2>&1 || { echo >&2 "\nThis repository is configured for Git LFS but 'git-lfs' was not found on your path. If you no longer wish to use Git LFS, remove this hook by deleting the 'pre-push' file in the hooks directory (set by 'core.hookspath'; usually '.git/hooks').\n"; exit 2; }
-git lfs pre-push "$@"
+if git diff --name-only HEAD^..HEAD | grep -Eq "\.(proto|tsx?$)"; then
+    echo "Typescript files changed, verifing typescript build..."
+    pushd typescript/apps/platform
+    rm -rf ../../../dist
+    if ! ../../../node_modules/.bin/tsc --noEmit; then
+        echo "Typescript build failed. Push aborted"
+        popd
+        exit 1
+    fi
+    popd
+else
+    echo "No Typescript files changed, skipping ts checks"
+fi
+
+if git diff --name-only HEAD^..HEAD | grep -Eq "\.(tsx?$)"; then
+    echo "Typescript files changed, running prettier..."
+    pnpm prettier . -w
+
+fi
 
 # Check if any Rust files changed
 if git diff --name-only HEAD^..HEAD | grep -q "\.rs$"; then
     echo "Rust files changed, running clippy..."
-    if ! cargo clippy --workspace; then
+    if ! cargo  clippy --workspace --no-deps --all-targets; then
         echo "Clippy check failed. Push aborted."
         exit 1
     fi
 else
     echo "No Rust files changed, skipping clippy"
 fi
+
+command -v git-lfs >/dev/null 2>&1 || { echo >&2 "\nThis repository is configured for Git LFS but 'git-lfs' was not found on your path. If you no longer wish to use Git LFS, remove this hook by deleting the 'pre-push' file in the hooks directory (set by 'core.hookspath'; usually '.git/hooks').\n"; exit 2; }
+git lfs pre-push "$@"
+
