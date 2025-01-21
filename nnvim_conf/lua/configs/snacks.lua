@@ -4,7 +4,7 @@ function x()
   -- Toggle the profiler highlights
   Snacks.toggle.profiler_highlights():map("<leader>ph")
 
-  vim.keymap.set("t", "<C-,>", function() Snacks.terminal.toggle() end, { desc = "Toggle Terminal" })
+  vim.keymap.set("t", "<C-x>", function() Snacks.terminal.toggle() end, { desc = "Toggle Terminal" })
   vim.keymap.set("t", "<C-k>", require('smart-splits').move_cursor_up, { desc = "Toggle Terminal" })
 
   return {

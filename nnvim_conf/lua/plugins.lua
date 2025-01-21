@@ -440,8 +440,11 @@ require('lazy').setup({
             vim.keymap.set("n", "<leader>gf", ":Git<CR>/taged<CR>:noh<CR>j", { desc = "[G]it [F]ugitive" })
             vim.keymap.set("n", "<leader>gl", ":Git log<CR>", { desc = "[G]it [L]og" })
             vim.keymap.set("n", "<leader>ga", ":Git commit --amend<CR>", { desc = "[G]it [A]mend" })
-            vim.keymap.set("n", "<leader>gc", ":Git commit -m '", { desc = "[G]it [C]ommit" })
+            vim.keymap.set("n", "<leader>gc", ':Git commit -m "', { desc = "[G]it [C]ommit" })
             vim.keymap.set("n", "<leader>grm", ":Git pull origin main --rebase<CR>", { desc = "[G]it [R]ebase [M]ain" })
+            vim.keymap.set("n", "<leader>grc", ":Git rebase --continue<CR>",
+                { desc = "[G]it [R]ebase [C]ontinue" })
+            vim.keymap.set("n", "<leader>gra", ":Git rebase --abort<CR>", { desc = "[G]it [R]ebase [A]bort" })
         end
     },
     {
@@ -952,16 +955,22 @@ require('lazy').setup({
                 formatters_by_ft = {
                     lua = { "stylua" },
                     rust = { "rustfmt" },
-                    typescript = { { "prettierd", "prettier", stop_after_first = true } },
-                    typescriptreact = { { "prettierd", "prettier", stop_after_first = true } },
-                    javascript = { { "prettierd", "prettier", stop_after_first = true } },
-                    javascriptreact = { { "prettierd", "prettier", stop_after_first = true } },
+                    typescript = { "prettierd", "prettier", stop_after_first = true },
+                    typescriptreact = { "prettierd", "prettier", stop_after_first = true },
+                    javascript = { "prettierd", "prettier", stop_after_first = true },
+                    javascriptreact = { "prettierd", "prettier", stop_after_first = true },
 
                     -- ["*"] = { "codespell", "trim_whitespace" },
                     -- Use the "_" filetype to run formatters on filetypes that don't
                     -- have other formatters configured.
                     -- ["_"] = { "trim_whitespace" },
                 },
+            })
+            vim.api.nvim_create_autocmd("BufWritePre", {
+                pattern = "*",
+                callback = function(args)
+                    require("conform").format({ bufnr = args.buf })
+                end,
             })
 
             -- vim.api.nvim_create_autocmd('FileType', {
