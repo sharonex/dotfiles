@@ -89,15 +89,7 @@ local lsp_mappings = function(_)
     end
 
     nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-    nmap("<leader>ca", require("actions-preview").code_actions, '[C]ode [A]ction')
-    vmap("<leader>ca", require("actions-preview").code_actions, '[C]ode [A]ction')
-
-    nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-    nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-    nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-    nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
-    nmap('<leader>sd', require('telescope.builtin').lsp_document_symbols, '[S]earch [D]ocument')
-    nmap('<leader>ss', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[S]earch [S]ymbols')
+    nmap("<leader>ca", vim.lsp.buf.code_action, '[C]ode [A]ction')
 
     -- See `:help K` for why this keymap
     nmap('K', vim.lsp.buf.hover, 'Hover Documentation')

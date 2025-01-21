@@ -47,7 +47,15 @@ function x()
           desc = "Double escape to normal mode",
         },
       },
+    },
+    picker = {
+      enabled = true,
+      layout = {
+        preset = "ivy",
+      }
     }
+
+
     -- statuscolumn = { enabled = true },
     -- words = { enabled = true },
     -- scratch = {

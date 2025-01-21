@@ -22,10 +22,6 @@ end
 
 return function()
   local cmp = require 'cmp'
-  local luasnip = require 'luasnip'
-  require('luasnip.loaders.from_vscode').lazy_load()
-  luasnip.config.setup {}
-
   cmp.setup {
     formatting = {
       format = require('lspkind').cmp_format(),
@@ -34,7 +30,6 @@ return function()
     },
     snippet = {
       expand = function(args)
-        luasnip.lsp_expand(args.body)
       end,
     },
     completion = {
@@ -51,8 +46,6 @@ return function()
       ['<Tab>'] = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_next_item()
-        elseif luasnip.expand_or_locally_jumpable() then
-          luasnip.expand_or_jump()
         else
           fallback()
         end
@@ -60,8 +53,6 @@ return function()
       ['<S-Tab>'] = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_prev_item()
-        elseif luasnip.locally_jumpable(-1) then
-          luasnip.jump(-1)
         else
           fallback()
         end
@@ -69,7 +60,6 @@ return function()
     },
     sources = {
       { name = 'nvim_lsp' },
-      { name = 'luasnip' },
     }
   }
 end

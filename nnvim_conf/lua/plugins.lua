@@ -72,58 +72,6 @@ require('lazy').setup({
             require("configs.lspconfig")
         end,
     },
-    -- {
-    --     'saghen/blink.cmp',
-    --     lazy = false, -- lazy loading handled internally
-    --     -- optional: provides snippets for the snippet source
-    --     -- dependencies = 'rafamadriz/friendly-snippets',
-    --
-    --     -- use a release tag to download pre-built binaries
-    --     version = 'v0.*',
-    --     -- OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
-    --     -- build = 'cargo build --release',
-    --     -- If you use nix, you can build from source using latest nightly rust with:
-    --     -- build = 'nix run .#build-plugin',
-    --
-    --     ---@module 'blink.cmp'
-    --     ---@type blink.cmp.Config
-    --     opts = {
-    --         -- 'default' for mappings similar to built-in completion
-    --         -- 'super-tab' for mappings similar to vscode (tab to accept, arrow keys to navigate)
-    --         -- 'enter' for mappings similar to 'super-tab' but with 'enter' to accept
-    --         -- see the "default configuration" section below for full documentation on how to define
-    --         -- your own keymap.
-    --         keymap = { preset = 'enter' },
-    --
-    --         appearance = {
-    --             -- Sets the fallback highlight groups to nvim-cmp's highlight groups
-    --             -- Useful for when your theme doesn't support blink.cmp
-    --             -- will be removed in a future release
-    --             use_nvim_cmp_as_default = true,
-    --             -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-    --             -- Adjusts spacing to ensure icons are aligned
-    --             nerd_font_variant = 'mono'
-    --         },
-    --
-    --         -- default list of enabled providers defined so that you can extend it
-    --         -- elsewhere in your config, without redefining it, via `opts_extend`
-    --         sources = {
-    --             default = { 'lsp', 'path', 'snippets', 'buffer' },
-    --             -- Disable cmdline completions
-    --             cmdline = {},
-    --         },
-    --
-    --         -- experimental auto-brackets support
-    --         -- completion = { accept = { auto_brackets = { enabled = true } } }
-    --
-    --         -- experimental signature help support
-    --         -- signature = { enabled = true }
-    --     },
-    --     -- allows extending the enabled_providers array elsewhere in your config
-    --     -- without having to redefine it
-    --     opts_extend = { "sources.completion.enabled_providers" }
-    -- },
-
     -- Useful plugin to show you pending keybinds.
     { 'folke/which-key.nvim', opts = {} },
     {
@@ -178,94 +126,6 @@ require('lazy').setup({
     --     opts = {},
     -- },
     -- Fuzzy Finder (files, lsp, etc)
-    {
-        'nvim-telescope/telescope.nvim',
-        branch = '0.1.x',
-        dependencies = {
-            'nvim-lua/plenary.nvim',
-            -- Fuzzy Finder Algorithm which requires local dependencies to be built.
-            -- Only load if `make` is available. Make sure you have the system
-            -- requirements installed.
-            {
-                'nvim-telescope/telescope-fzf-native.nvim',
-                -- NOTE: If you are having trouble with this installation,
-                --       refer to the README for telescope-fzf-native for more instructions.
-                build = 'make',
-                cond = function()
-                    return vim.fn.executable 'make' == 1
-                end,
-            },
-        },
-        config = function()
-            -- Enable telescope fzf native, if installed
-            pcall(require('telescope').load_extension, 'fzf')
-            require('telescope').setup {
-                defaults = {
-                    path_display = { "full" }
-                },
-            }
-
-            local egrepify_with_text = function()
-                -- if in visual mode
-                if vim.fn.mode() == "v" then
-                    -- yank the highlighted text into register z
-                    vim.cmd('normal! "zy')
-
-                    -- get the content of register z
-                    local search_term = vim.fn.getreg("z")
-                    require("telescope").extensions.egrepify.egrepify({ default_text = search_term })
-                else
-                    -- yank current word under cursor
-                    local current_word =
-                        require("telescope").extensions.egrepify.egrepify({ default_text = vim.fn.expand("<cword>") })
-                end
-            end
-
-            vim.keymap.set(
-                "n",
-                "<leader>/",
-                function()
-                    -- You can pass additional configuration to telescope to change theme, layout, etc.
-                    require("telescope.builtin").current_buffer_fuzzy_find(
-                        require("telescope.themes").get_dropdown {
-                            winblend = 10,
-                            previewer = false
-                        }
-                    )
-                end,
-                { desc = "[/] Fuzzily search in current buffer" }
-            )
-            vim.keymap.set("n", "<leader>?", require("telescope.builtin").oldfiles,
-                { desc = "[?] Find recently opened files" })
-            vim.keymap.set("n", "<leader>gb", require("telescope.builtin").git_branches, { desc = "[G]it [B]ranch" })
-            vim.keymap.set("n", "<leader>f", require("telescope.builtin").git_files, { desc = "[F]ind (Git) Files" })
-            vim.keymap.set("n", "<leader>sf", require("telescope.builtin").find_files, { desc = "[S]earch [F]iles" })
-            vim.keymap.set("n", "<leader>sh", require("telescope.builtin").help_tags, { desc = "[S]earch [H]elp" })
-            -- vim.keymap.set("n", "<leader>sr", require("telescope").extensions.project.project, { desc = "[S]earch [R]epo" })
-            vim.keymap.set("n", "<leader>sl", require("telescope.builtin").resume, { desc = "[S]earch [L]ast again" })
-            vim.keymap.set("n", "<leader>sp", "<cmd> Telescope egrepify<CR>", { desc = "Find in files" })
-            vim.keymap.set({ "n", "v" }, "<leader>sP", egrepify_with_text, { desc = "Find current word in files" })
-            vim.keymap.set("v", "<leader>sp", egrepify_with_text, { desc = "Find selection in files" })
-            vim.keymap.set({ "n", "v" }, "<leader>sT", require("telescope.builtin").live_grep,
-                { desc = "Find current word in files" })
-            vim.keymap.set("v", "<leader>sp", egrepify_with_text, { desc = "Find selection in files" })
-            -- vim.keymap.set("n", "<leader>ss", "<cmd> Telescope current_buffer_fuzzy_find <CR>", { desc = "Find in current file" })
-            vim.keymap.set("n", "<leader>sc", "<cmd> Telescope commands <CR>", { desc = "Find vim commands" })
-            vim.keymap.set("n", "<leader>sk", "<cmd> Telescope keymaps <CR>", { desc = "Look up key mappings" })
-            vim.keymap.set("n", "<leader>b", function()
-                require("telescope.builtin").buffers(
-                    require('telescope.themes').get_dropdown({
-                        sort_mru = true,
-                        ignore_current_buffer = true,
-                        sort_lastused = true,
-                        only_cwd = true, -- Only show buffers in the current working directory
-                        show_all_buffers = false,
-                        winblend = 10,
-                    })
-                )
-            end, { desc = "Open buffers" })
-        end
-    },
     {
         'nvim-tree/nvim-tree.lua',
         lazy = false,
@@ -458,14 +318,6 @@ require('lazy').setup({
         end,
     },
     {
-        "mbbill/undotree",
-        lazy = false,
-        config = function()
-            vim.keymap.set("n", "<leader>u", "<cmd>UndotreeToggle<CR><cmd>UndotreeFocus<CR>",
-                { desc = "Toggle UndoTree" })
-        end
-    },
-    {
         'mrjones2014/smart-splits.nvim',
         config = function()
             require('smart-splits').setup()
@@ -489,21 +341,6 @@ require('lazy').setup({
             vim.keymap.set('n', '<leader><leader>k', require('smart-splits').swap_buf_up)
             vim.keymap.set('n', '<leader><leader>l', require('smart-splits').swap_buf_right)
         end,
-    },
-    {
-        "gbprod/yanky.nvim",
-        dependencies = {
-            { "kkharji/sqlite.lua" }
-        },
-        opts = {
-            ring = { storage = "sqlite" },
-        },
-        config = function()
-            vim.keymap.set({ "n", "x" }, "<leader>y",
-                function() require("telescope").extensions.yank_history.yank_history({}) end,
-                { desc = "Open Yank History" })
-        end,
-        lazy = false,
     },
     {
         'ThePrimeagen/harpoon',
@@ -607,7 +444,7 @@ require('lazy').setup({
         "windwp/nvim-autopairs",
         opts = {
             fast_wrap = {},
-            disable_filetype = { "TelescopePrompt", "vim" },
+            disable_filetype = { "vim" },
         },
         config = function(_, opts)
             require("nvim-autopairs").setup(opts)
@@ -642,45 +479,6 @@ require('lazy').setup({
     {
         "tpope/vim-rsi",
         lazy = false,
-    },
-    {
-        "fdschmidt93/telescope-egrepify.nvim",
-        lazy = false,
-        config = function()
-            local egrep_actions = require "telescope._extensions.egrepify.actions"
-            require("telescope").setup {
-                extensions = {
-                    egrepify = {
-                        attach_mappings = false,
-                        -- default mappings
-                        mappings = {
-                            i = {
-                                -- toggle prefixes, prefixes is default
-                                ["<C-z>"] = egrep_actions.toggle_prefixes,
-                                -- toggle AND, AND is default, AND matches tokens and any chars in between
-                                ["<C-&>"] = egrep_actions.toggle_and,
-                                -- toggle permutations, permutations of tokens is opt-in
-                                ["<C-r>"] = egrep_actions.toggle_permutations,
-                                ["<C-a>"] = false,
-                            },
-                        },
-                    },
-                },
-            }
-
-            require "telescope".load_extension("egrepify")
-        end
-    },
-    {
-        'aznhe21/actions-preview.nvim',
-        lazy = false,
-    },
-    {
-        'windwp/nvim-ts-autotag',
-        ft = { "html", "javascript", "javascriptreact", "typescript", "typescriptreact", "svelte", "vue" },
-        config = function()
-            require('nvim-ts-autotag').setup()
-        end
     },
     {
         "stevearc/oil.nvim",
@@ -721,14 +519,37 @@ require('lazy').setup({
         lazy = false,
         opts = require("configs.snacks"),
         keys = {
-            -- { "<leader>.",  function() Snacks.scratch() end,          desc = "Toggle Scratch Buffer" },
-            -- { "<leader>S",  function() Snacks.scratch.select() end,   desc = "Select Scratch Buffer" },
-            -- { "<leader>n",  function() Snacks.notifier.show_history() end, desc = "Notification History" },
-            -- { "<leader>gh", function() Snacks.lazygit.log_file() end, desc = "Lazygit Current File History" },
-            { "<leader>gg", function() Snacks.lazygit() end,         desc = "Lazygit" },
-            { "<leader>gl", function() Snacks.lazygit.log() end,     desc = "Lazygit Log (cwd)" },
-            { "<leader>un", function() Snacks.notifier.hide() end,   desc = "Dismiss All Notifications" },
-            { "<C-,>",      function() Snacks.terminal.toggle() end, desc = "Toggle Terminal" },
+            { "<leader>gg", function() Snacks.lazygit() end,                                        desc = "Lazygit" },
+            { "<leader>gl", function() Snacks.lazygit.log() end,                                    desc = "Lazygit Log (cwd)" },
+            { "<C-,>",      function() Snacks.terminal.toggle() end,                                desc = "Toggle Terminal" },
+            { "<leader>,",  function() Snacks.picker.buffers() end,                                 desc = "Buffers" },
+            { "<leader>:",  function() Snacks.picker.command_history() end,                         desc = "Command History" },
+            { "<leader>u",  function() Snacks.picker.undo() end,                                    desc = "Undo" },
+            { "<leader>op", function() Snacks.picker.projects() end,                                desc = "Open Projects" },
+            -- find
+            { "<leader>sb", function() Snacks.picker.buffers() end,                                 desc = "Buffers" },
+            { "<leader>sc", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
+            { "<leader>f",  function() Snacks.picker.git_files() end,                               desc = "Find Git Files" },
+            { "<leader>sr", function() Snacks.picker.recent() end,                                  desc = "Recent" },
+            -- Grep
+            { "<leader>/",  function() Snacks.picker.lines() end,                                   desc = "Buffer Lines" },
+            { "<leader>sp", function() Snacks.picker.grep() end,                                    desc = "Grep" },
+            { "<leader>sP", function() Snacks.picker.grep_word() end,                               desc = "Visual selection or word", mode = { "n", "x" } },
+            -- search
+            { "<leader>sc", function() Snacks.picker.command_history() end,                         desc = "Command History" },
+            { "<leader>sC", function() Snacks.picker.commands() end,                                desc = "Commands" },
+            { "<leader>sd", function() Snacks.picker.diagnostics() end,                             desc = "Diagnostics" },
+            { "<leader>sh", function() Snacks.picker.help() end,                                    desc = "Help Pages" },
+            { "<leader>sk", function() Snacks.picker.keymaps() end,                                 desc = "Keymaps" },
+            { "<leader>sl", function() Snacks.picker.resume() end,                                  desc = "Resume" },
+            { "<leader>sq", function() Snacks.picker.qflist() end,                                  desc = "Quickfix List" },
+            -- LSP
+            { "gd",         function() Snacks.picker.lsp_definitions() end,                         desc = "Goto Definition" },
+            { "gr",         function() Snacks.picker.lsp_references() end,                          nowait = true,                     desc = "References" },
+            { "gI",         function() Snacks.picker.lsp_implementations() end,                     desc = "Goto Implementation" },
+            { "gD",         function() Snacks.picker.lsp_type_definitions() end,                    desc = "Goto T[y]pe Definition" },
+            { "<leader>sd", function() Snacks.picker.lsp_symbols() end,                             desc = "LSP Symbols" },
+            { "<leader>ss", function() Snacks.picker.lsp_workspace_symbols() end,                   desc = "LSP Workspace Symbols" },
         },
     },
     {
@@ -749,7 +570,6 @@ require('lazy').setup({
         -- }
         -- config = true,
         build = ":Neorg sync-parsers",
-        dependencies = { "nvim-neorg/neorg-telescope" },
         config = function()
             require("neorg").setup {
                 load = {
@@ -757,7 +577,6 @@ require('lazy').setup({
                     ["core.concealer"] = {},
                     ["core.syntax"] = {},
                     ["core.summary"] = {},
-                    ["core.integrations.telescope"] = {},
                     ["core.dirman"] = {
                         config = {
                             workspaces = {
@@ -775,8 +594,6 @@ require('lazy').setup({
             vim.keymap.set("n", "<leader>njt", ":Neorg journal today<CR>", { desc = "Neorg Journal Today" })
             vim.keymap.set("n", "<leader>njy", ":Neorg journal yesterday<CR>", { desc = "Neorg Journal Yesterday" })
             vim.keymap.set("n", "<leader><CR>", "<Plug>(neorg.esupports.hop.hop-link)", { desc = "Follow link" })
-            vim.keymap.set("n", "<leader>nf", "<Plug>(neorg.telescope.find_norg_files)", { desc = "Neorg find notes" })
-            vim.keymap.set("n", "<leader>nil", "<Plug>(neorg.telescope.insert_link)", { desc = "Neorg insert link" })
         end,
     },
     {
@@ -997,16 +814,11 @@ require('lazy').setup({
         'hrsh7th/nvim-cmp',
         dependencies = {
             -- Snippet Engine & its associated nvim-cmp source
-            'L3MON4D3/LuaSnip',
-            'saadparwaiz1/cmp_luasnip',
-
             -- Adds LSP completion capabilities
             'hrsh7th/cmp-nvim-lsp',
 
             -- Adds a number of user-friendly snippets
-            'rafamadriz/friendly-snippets',
             'onsails/lspkind.nvim',
-            'mlaursen/vim-react-snippets',
         },
         config = require('configs.cmp_config'),
     },
