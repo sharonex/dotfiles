@@ -73,7 +73,7 @@ require('lazy').setup({
         end,
     },
     -- Useful plugin to show you pending keybinds.
-    { 'folke/which-key.nvim', opts = {} },
+    -- { 'folke/which-key.nvim', opts = {} },
     {
         -- Adds git related signs to the gutter, as well as utilities for managing changes
         'lewis6991/gitsigns.nvim',
@@ -117,18 +117,11 @@ require('lazy').setup({
             end,
         },
     },
-    -- {
-    --     -- Add indentation guides even on blank lines
-    --     'lukas-reineke/indent-blankline.nvim',
-    --     -- Enable `lukas-reineke/indent-blankline.nvim`
-    --     -- See `:help ibl`
-    --     main = 'ibl',
-    --     opts = {},
-    -- },
     -- Fuzzy Finder (files, lsp, etc)
     {
         'nvim-tree/nvim-tree.lua',
-        lazy = false,
+        -- lazy = false,
+        event = "VeryLazy",
         config = function()
             require("nvim-tree").setup({
                 view = {
@@ -373,6 +366,7 @@ require('lazy').setup({
     {
         dir = "/Users/sharonavni/personal/git-mediate.nvim",
         dependencies = { "skywind3000/asyncrun.vim" },
+        event = "VeryLazy",
         config = function()
             require("git-mediate").setup()
             vim.keymap.set("n", "<leader>g[", ":GitMediate<CR>", { desc = "Run git mediate conflict resolver" })
@@ -482,7 +476,7 @@ require('lazy').setup({
     },
     {
         "stevearc/oil.nvim",
-        lazy = false,
+        event = "VeryLazy",
         config = function()
             require("oil").setup()
             vim.keymap.set("n", "|", "<CMD>Oil<CR>", { desc = "Open parent directory" })
@@ -526,8 +520,8 @@ require('lazy').setup({
             { "<leader>:",  function() Snacks.picker.command_history() end,                         desc = "Command History" },
             { "<leader>u",  function() Snacks.picker.undo() end,                                    desc = "Undo" },
             { "<leader>op", function() Snacks.picker.projects() end,                                desc = "Open Projects" },
+            { "<leader>b",  function() Snacks.picker.buffers() end,                                 desc = "Buffers" },
             -- find
-            { "<leader>sb", function() Snacks.picker.buffers() end,                                 desc = "Buffers" },
             { "<leader>sc", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
             { "<leader>f",  function() Snacks.picker.git_files() end,                               desc = "Find Git Files" },
             { "<leader>sr", function() Snacks.picker.recent() end,                                  desc = "Recent" },
@@ -536,6 +530,7 @@ require('lazy').setup({
             { "<leader>sp", function() Snacks.picker.grep() end,                                    desc = "Grep" },
             { "<leader>sP", function() Snacks.picker.grep_word() end,                               desc = "Visual selection or word", mode = { "n", "x" } },
             -- search
+            { "<leader>sg", function() Snacks.picker.git_diff() end,                                desc = "Command History" },
             { "<leader>sc", function() Snacks.picker.command_history() end,                         desc = "Command History" },
             { "<leader>sC", function() Snacks.picker.commands() end,                                desc = "Commands" },
             { "<leader>sd", function() Snacks.picker.diagnostics() end,                             desc = "Diagnostics" },
@@ -547,13 +542,14 @@ require('lazy').setup({
             { "gd",         function() Snacks.picker.lsp_definitions() end,                         desc = "Goto Definition" },
             { "gr",         function() Snacks.picker.lsp_references() end,                          nowait = true,                     desc = "References" },
             { "gI",         function() Snacks.picker.lsp_implementations() end,                     desc = "Goto Implementation" },
-            { "gD",         function() Snacks.picker.lsp_type_definitions() end,                    desc = "Goto T[y]pe Definition" },
+            { "<leader>D",  function() Snacks.picker.lsp_type_definitions() end,                    desc = "Goto T[y]pe Definition" },
             { "<leader>sd", function() Snacks.picker.lsp_symbols() end,                             desc = "LSP Symbols" },
             { "<leader>ss", function() Snacks.picker.lsp_workspace_symbols() end,                   desc = "LSP Workspace Symbols" },
         },
     },
     {
         "mg979/vim-visual-multi",
+        event = "VeryLazy",
         branch = "master",
         config = function()
             vim.cmd [[
@@ -602,7 +598,8 @@ require('lazy').setup({
     },
     {
         "johmsalas/text-case.nvim",
-        lazy = false,
+        event = "VeryLazy",
+        -- lazy = false,
         config = function()
             require('textcase').setup {}
         end

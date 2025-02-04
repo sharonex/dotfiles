@@ -28,10 +28,6 @@ return function()
       -- format = format,
       mode = "symbol_text",
     },
-    snippet = {
-      expand = function(args)
-      end,
-    },
     completion = {
       completeopt = 'menu,menuone,noinsert'
     },
