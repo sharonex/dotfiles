@@ -118,20 +118,20 @@ require('lazy').setup({
         },
     },
     -- Fuzzy Finder (files, lsp, etc)
-    {
-        'nvim-tree/nvim-tree.lua',
-        -- lazy = false,
-        event = "VeryLazy",
-        config = function()
-            require("nvim-tree").setup({
-                view = {
-                    width = 50,
-                },
-            })
-
-            vim.keymap.set("n", "<C-q>", ":NvimTreeFindFileToggle<CR>", { desc = "Toggle nvim tree" })
-        end
-    },
+    -- {
+    --     'nvim-tree/nvim-tree.lua',
+    --     -- lazy = false,
+    --     event = "VeryLazy",
+    --     config = function()
+    --         require("nvim-tree").setup({
+    --             view = {
+    --                 width = 50,
+    --             },
+    --         })
+    --
+    --         vim.keymap.set("n", "<C-q>", ":NvimTreeFindFileToggle<CR>", { desc = "Toggle nvim tree" })
+    --     end
+    -- },
     {
         "chrisgrieser/nvim-lsp-endhints",
         event = "LspAttach",
@@ -456,6 +456,88 @@ require('lazy').setup({
         lazy = false
     },
     {
+        "olimorris/codecompanion.nvim",
+        event = "VeryLazy",
+        dependencies = {
+            { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
+            { "nvim-lua/plenary.nvim" },
+            -- Test with blink.cmp
+            -- {
+            --     "saghen/blink.cmp",
+            --     lazy = false,
+            --     version = "*",
+            --     opts = {
+            --         keymap = {
+            --             preset = "enter",
+            --             ["<S-Tab>"] = { "select_prev", "fallback" },
+            --             ["<Tab>"] = { "select_next", "fallback" },
+            --         },
+            --         sources = {
+            --             default = { "lsp", "path", "buffer", "codecompanion" },
+            --             cmdline = {}, -- Disable sources for command-line mode
+            --         },
+            --     },
+            -- },
+            -- Test with nvim-cmp
+            -- { "hrsh7th/nvim-cmp" },
+        },
+        config = function()
+            require("codecompanion").setup({
+                --Refer to: https://github.com/olimorris/codecompanion.nvim/blob/main/lua/codecompanion/config.lua
+                strategies = {
+                    --NOTE: Change the adapter as required
+                    chat = {
+                        adapter = "copilot",
+                        keymaps = {
+                            send = {
+                                modes = { n = "<M-l>", i = "<M-l>" },
+                            },
+                            close = {
+                                modes = { n = "<M-~>", i = "<M-~>" },
+                            },
+                            -- Add further custom keymaps here
+                        },
+                    },
+                    inline = { adapter = "copilot" },
+                },
+                opts = {
+                    log_level = "DEBUG",
+                },
+            })
+            vim.keymap.set("n", "<leader>aa", "<cmd>CodeCompanionChat<CR>", { desc = "AI Code Companion" })
+            vim.keymap.set("v", "<leader>aa", ":CodeCompanion ",
+                { desc = "Run code companion on highlighted code" })
+        end
+    },
+    -- {
+    --     "yetone/avante.nvim",
+    --     {
+    --         "yetone/avante.nvim",
+    --         event = "VeryLazy",
+    --         lazy = false,
+    --         version = false, -- Set this to "*" to always pull the latest release version, or set it to false to update to the latest code changes.
+    --         opts = {
+    --             -- add any opts here
+    --             -- for example
+    --             provider = "copilot",
+    --             -- claude = {
+    --             --     endpoint = "https://api.anthropic.com",
+    --             --     model = "claude-3-5-sonnet-20241022",
+    --             --     temperature = 0,
+    --             --     max_tokens = 4096,
+    --             -- },
+    --         },
+    --         -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
+    --         build = "make BUILD_FROM_SOURCE=true",
+    --         dependencies = {
+    --             "stevearc/dressing.nvim",
+    --             "nvim-lua/plenary.nvim",
+    --             "MunifTanjim/nui.nvim",
+    --             "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
+    --         }
+    --     }
+    -- },
+    {
         "gbprod/substitute.nvim",
         config = function()
             require("substitute").setup({
@@ -513,8 +595,10 @@ require('lazy').setup({
         lazy = false,
         opts = require("configs.snacks"),
         keys = {
-            { "<leader>gg", function() Snacks.lazygit() end,                                        desc = "Lazygit" },
-            { "<leader>gl", function() Snacks.lazygit.log() end,                                    desc = "Lazygit Log (cwd)" },
+            -- vim.keymap.set("n", "<C-q>", ":NvimTreeFindFileToggle<CR>", { desc = "Toggle nvim tree" })
+            { "<C-q>",      function() Snacks.explorer.open() end,                                  desc = "Lazygit" },
+            -- { "<leader>gg", function() Snacks.lazygit() end,                                        desc = "Lazygit" },
+            -- { "<leader>gl", function() Snacks.lazygit.log() end,                                    desc = "Lazygit Log (cwd)" },
             { "<C-,>",      function() Snacks.terminal.toggle() end,                                desc = "Toggle Terminal" },
             { "<leader>,",  function() Snacks.picker.buffers() end,                                 desc = "Buffers" },
             { "<leader>:",  function() Snacks.picker.command_history() end,                         desc = "Command History" },
@@ -538,6 +622,7 @@ require('lazy').setup({
             { "<leader>sk", function() Snacks.picker.keymaps() end,                                 desc = "Keymaps" },
             { "<leader>sl", function() Snacks.picker.resume() end,                                  desc = "Resume" },
             { "<leader>sq", function() Snacks.picker.qflist() end,                                  desc = "Quickfix List" },
+            { "<leader>sb", function() Snacks.picker.git_branches() end,                            desc = "Search Branches" },
             -- LSP
             { "gd",         function() Snacks.picker.lsp_definitions() end,                         desc = "Goto Definition" },
             { "gr",         function() Snacks.picker.lsp_references() end,                          nowait = true,                     desc = "References" },
@@ -545,6 +630,8 @@ require('lazy').setup({
             { "<leader>D",  function() Snacks.picker.lsp_type_definitions() end,                    desc = "Goto T[y]pe Definition" },
             { "<leader>sd", function() Snacks.picker.lsp_symbols() end,                             desc = "LSP Symbols" },
             { "<leader>ss", function() Snacks.picker.lsp_workspace_symbols() end,                   desc = "LSP Workspace Symbols" },
+            -- Git
+            { "<leader>go", function() Snacks.gitbrowse.open() end,                                 desc = "Git open in browser" },
         },
     },
     {

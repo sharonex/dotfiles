@@ -14,7 +14,8 @@ function x()
     bigfile = { enabled = true },
     -- notifier = { enabled = true },
     quickfile = { enabled = true },
-    lazygit = { enabled = true },
+    lazygit = { enabled = false },
+    explorer = { enabled = true },
     terminal = {
       enabled = true,
       keys = {
@@ -48,12 +49,13 @@ function x()
         },
       },
     },
+    gitbrowse = { enabled = true },
     picker = {
       enabled = true,
       layout = {
         preset = "ivy",
-      }
-    }
+      },
+    },
 
 
     -- statuscolumn = { enabled = true },
