@@ -612,7 +612,7 @@ require('lazy').setup({
             -- Grep
             { "<leader>/",  function() Snacks.picker.lines() end,                                   desc = "Buffer Lines" },
             { "<leader>sp", function() Snacks.picker.grep() end,                                    desc = "Grep" },
-            { "<leader>sP", function() Snacks.picker.grep_word() end,                               desc = "Visual selection or word", mode = { "n", "x" } },
+            { "<leader>sP", function() Snacks.picker.grep_word() end,                               desc = "Visual selection or word", mode = { "n", "x", "v" } },
             -- search
             { "<leader>sg", function() Snacks.picker.git_diff() end,                                desc = "Command History" },
             { "<leader>sc", function() Snacks.picker.command_history() end,                         desc = "Command History" },

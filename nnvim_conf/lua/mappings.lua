@@ -20,6 +20,10 @@
 --     }
 -- }
 
+-- Text objects
+vim.keymap.set('o', 'iq', 'i"')
+vim.keymap.set('o', 'aq', 'a"')
+
 -- Allow clipboard copy paste in neovim
 vim.api.nvim_set_keymap('', '<D-v>', '+p<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('!', '<D-v>', '<C-R>+', { noremap = true, silent = true })
