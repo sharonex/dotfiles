@@ -260,6 +260,20 @@ function sync_customers() {
     aws s3 sync s3://pelanor-production-customer-data-archive/$selected_customer $artifacts_dir
 }
 
+function cppr() {
+    [[ -z "$1" ]] && echo "Usage: cppr <pr id>" && return 1
+
+    local commits
+    commits=($(gh pr view -c $1 --json commits -q '.commits | .[] | .oid' | tr '\n' ' ')) || return 1
+    [[ ${#commits[@]} -eq 0 ]] && return 1
+
+    echo "Cherry-picking PR $1"
+    echo "  commits: ${commits[*]}"
+
+    git show -s ${commits[0]} &>/dev/null || git fetch
+    git cherry-pick -x ${commits[@]}
+}
+
 # pnpm
 export PNPM_HOME="/Users/sharonavni/Library/pnpm"
 case ":$PATH:" in
