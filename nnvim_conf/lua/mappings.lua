@@ -21,13 +21,13 @@
 -- }
 
 -- Text objects
-vim.keymap.set('o', 'iq', 'i"')
-vim.keymap.set('o', 'aq', 'a"')
+vim.keymap.set("o", "iq", 'i"')
+vim.keymap.set("o", "aq", 'a"')
 
 -- Allow clipboard copy paste in neovim
-vim.api.nvim_set_keymap('', '<D-v>', '+p<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('!', '<D-v>', '<C-R>+', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('v', '<D-v>', '<C-R>+', { noremap = true, silent = true })
+vim.api.nvim_set_keymap("", "<D-v>", "+p<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("!", "<D-v>", "<C-R>+", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("v", "<D-v>", "<C-R>+", { noremap = true, silent = true })
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
@@ -58,10 +58,10 @@ vim.keymap.set("n", "H", "^", { desc = "Start of line" })
 vim.keymap.set("v", "L", "$h", { desc = "End of line" })
 vim.keymap.set("v", "H", "^", { desc = "Start of line" })
 -- No need to make a motion for L because all motions in upper case already go to the end of line
-vim.keymap.set('o', 'L', '$', { noremap = false, silent = true })
-vim.keymap.set('o', 'H', 'H<CR>', { noremap = false, silent = true })
-vim.keymap.set('i', '<C-p>', '<C-o>k', { noremap = false, silent = true })
-vim.keymap.set('i', '<C-n>', '<C-o>j', { noremap = false, silent = true })
+vim.keymap.set("o", "L", "$", { noremap = false, silent = true })
+vim.keymap.set("o", "H", "H<CR>", { noremap = false, silent = true })
+vim.keymap.set("i", "<C-p>", "<C-o>k", { noremap = false, silent = true })
+vim.keymap.set("i", "<C-n>", "<C-o>j", { noremap = false, silent = true })
 
 vim.keymap.set("n", "<C-w>kh", "<C-w>h<C-w>q", { desc = "Kill window to the left" })
 vim.keymap.set("n", "<C-w>kj", "<C-w>j<C-w>q", { desc = "Kill window below" })
