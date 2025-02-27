@@ -22,7 +22,7 @@ export WORDCHARS=$WORDCHARS-
 
 export DOTFILES="$HOME/.dotfiles"
 export TMUX_CONF_LOCAL="$DOTFILES/tmux.conf.local"
-export PATH="/opt/homebrew/bin:$HOME/bin:$HOME/.local/bin:$GOPATH/bin:$GOROOT/bin:$HOME/go/bin:$HOME/.cargo/bin:$PATH:$HOME/Library/Python/3.11/bin:$HOME/bin/nnvim/bin"
+export PATH="$HOME/nvim-nightly/bin/:/opt/homebrew/bin:$HOME/bin:$HOME/.local/bin:$GOPATH/bin:$GOROOT/bin:$HOME/go/bin:$HOME/.cargo/bin:$PATH:$HOME/Library/Python/3.11/bin:$HOME/bin/nnvim/bin"
 export OPENAI_API_KEY="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"
 unset RUST_BACKTRACE
 
@@ -274,6 +274,15 @@ function cppr() {
     git cherry-pick -x ${commits[@]}
 }
 
+function set_lazyvim() {
+    rm ~/.config/nvim
+    ln -s ~/.config/lazyvim ~/.config/nvim
+}
+
+function set_customvim() {
+    rm ~/.config/nvim
+    ln -s ~/.dotfiles/nnvim_conf
+}
 # pnpm
 export PNPM_HOME="/Users/sharonavni/Library/pnpm"
 case ":$PATH:" in
