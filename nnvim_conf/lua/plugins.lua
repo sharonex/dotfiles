@@ -73,7 +73,52 @@ require("lazy").setup({
 		end,
 	},
 	-- Useful plugin to show you pending keybinds.
-	-- { 'folke/which-key.nvim', opts = {} },
+	{
+		"folke/which-key.nvim",
+		opts_extend = { "spec" },
+		opts = {
+			preset = "helix",
+			defaults = {},
+			spec = {
+				{
+					mode = { "n", "v" },
+					{ "<leader><tab>", group = "tabs" },
+					{ "<leader>c", group = "code" },
+					{ "<leader>d", group = "debug" },
+					{ "<leader>dp", group = "profiler" },
+					{ "<leader>f", group = "file/find" },
+					{ "<leader>g", group = "git" },
+					{ "<leader>gh", group = "hunks" },
+					{ "<leader>q", group = "quit/session" },
+					{ "<leader>s", group = "search" },
+					{ "<leader>u", group = "ui", icon = { icon = "󰙵 ", color = "cyan" } },
+					{ "<leader>x", group = "diagnostics/quickfix", icon = { icon = "󱖫 ", color = "green" } },
+					{ "[", group = "prev" },
+					{ "]", group = "next" },
+					{ "g", group = "goto" },
+					{ "gs", group = "surround" },
+					{ "z", group = "fold" },
+					{
+						"<leader>b",
+						group = "buffer",
+						expand = function()
+							return require("which-key.extras").expand.buf()
+						end,
+					},
+					{
+						"<leader>w",
+						group = "windows",
+						proxy = "<c-w>",
+						expand = function()
+							return require("which-key.extras").expand.win()
+						end,
+					},
+					-- better descriptions
+					{ "gx", desc = "Open with system app" },
+				},
+			},
+		},
+	},
 	-- {
 	--     -- Adds git related signs to the gutter, as well as utilities for managing changes
 	--     "lewis6991/gitsigns.nvim",
@@ -631,6 +676,20 @@ require("lazy").setup({
 				end,
 				desc = "Toggle mini.diff overlay",
 			},
+			{
+				"[c",
+				function()
+					require("mini.diff").goto_hunk("prev")
+				end,
+				desc = "Previous hunk",
+			},
+			{
+				"]c",
+				function()
+					require("mini.diff").goto_hunk("next")
+				end,
+				desc = "Next hunk",
+			},
 		},
 		opts = {
 			view = {
@@ -654,9 +713,6 @@ require("lazy").setup({
 				term_colors = true, -- Change terminal color as per the selected theme style
 				ending_tildes = false, -- Show the end-of-buffer tildes. By default they are hidden
 				cmp_itemkind_reverse = false, -- reverse item kind highlights in cmp menu
-
-				-- toggle theme style ---
-				toggle_style_key = "<leader>tx",
 			})
 			vim.cmd("colorscheme onedark")
 		end,
@@ -667,22 +723,12 @@ require("lazy").setup({
 		lazy = false,
 		opts = require("configs.snacks"),
 		keys = {
-			-- vim.keymap.set("n", "<C-q>", ":NvimTreeFindFileToggle<CR>", { desc = "Toggle nvim tree" })
 			{
 				"<leader>e",
 				function()
 					Snacks.explorer.open()
 				end,
 				desc = "Lazygit",
-			},
-			-- { "<leader>gg", function() Snacks.lazygit() end,                                        desc = "Lazygit" },
-			-- { "<leader>gl", function() Snacks.lazygit.log() end,                                    desc = "Lazygit Log (cwd)" },
-			{
-				"<C-,>",
-				function()
-					Snacks.terminal.toggle()
-				end,
-				desc = "Toggle Terminal",
 			},
 			{
 				"<leader>,",
@@ -890,41 +936,6 @@ require("lazy").setup({
 			vim.cmd([[
                 VMTheme codedark
             ]])
-		end,
-	},
-	{
-		"nvim-neorg/neorg",
-		lazy = false, -- Disable lazy loading as some `lazy.nvim` distributions set `lazy = true` by default
-		version = "*", -- Pin Neorg to the latest stable release
-		-- config = {
-		--     vim.keymap.set("n", "<leader>n", ":Neorg<CR>", { desc = "Open Neorg" })
-		-- }
-		-- config = true,
-		build = ":Neorg sync-parsers",
-		config = function()
-			require("neorg").setup({
-				load = {
-					["core.defaults"] = {},
-					["core.concealer"] = {},
-					["core.syntax"] = {},
-					["core.summary"] = {},
-					["core.dirman"] = {
-						config = {
-							workspaces = {
-								notes = "~/notes",
-							},
-							default_workspace = "notes",
-						},
-					},
-				},
-			})
-
-			vim.wo.foldlevel = 99
-			vim.wo.conceallevel = 2
-
-			vim.keymap.set("n", "<leader>njt", ":Neorg journal today<CR>", { desc = "Neorg Journal Today" })
-			vim.keymap.set("n", "<leader>njy", ":Neorg journal yesterday<CR>", { desc = "Neorg Journal Yesterday" })
-			vim.keymap.set("n", "<leader><CR>", "<Plug>(neorg.esupports.hop.hop-link)", { desc = "Follow link" })
 		end,
 	},
 	{
