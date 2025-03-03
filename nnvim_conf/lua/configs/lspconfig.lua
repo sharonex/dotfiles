@@ -1,42 +1,39 @@
 local expandMacro = function()
-    vim.lsp.buf_request_all(0, "rust-analyzer/expandMacro",
-        vim.lsp.util.make_position_params(),
-        function(result)
-            -- Create a new tab
-            vim.cmd("vsplit")
-            vim.inspect(result)
+    vim.lsp.buf_request_all(0, "rust-analyzer/expandMacro", vim.lsp.util.make_position_params(), function(result)
+        -- Create a new tab
+        vim.cmd("vsplit")
+        vim.inspect(result)
 
-            -- Create an empty scratch buffer (non-listed, non-file i.e scratch)
-            -- :help nvim_create_buf
-            local buf = vim.api.nvim_create_buf(false, true)
+        -- Create an empty scratch buffer (non-listed, non-file i.e scratch)
+        -- :help nvim_create_buf
+        local buf = vim.api.nvim_create_buf(false, true)
 
-            -- and set it to the current window
-            -- :help nvim_win_set_buf
-            vim.api.nvim_win_set_buf(0, buf)
+        -- and set it to the current window
+        -- :help nvim_win_set_buf
+        vim.api.nvim_win_set_buf(0, buf)
 
-            if result then
-                -- set the filetype to rust so that rust's syntax highlighting works
-                -- :help nvim_set_option_value
-                vim.api.nvim_set_option_value("filetype", "rust", { buf = 0 })
+        if result then
+            -- set the filetype to rust so that rust's syntax highlighting works
+            -- :help nvim_set_option_value
+            vim.api.nvim_set_option_value("filetype", "rust", { buf = 0 })
 
-                -- Insert the result into the new buffer
-                for client_id, res in pairs(result) do
-                    if res and res.result and res.result.expansion then
-                        -- :help nvim_buf_set_lines
-                        vim.api.nvim_buf_set_lines(buf, -1, -1, false,
-                            vim.split(res.result.expansion, "\n"))
-                    else
-                        vim.api.nvim_buf_set_lines(buf, -1, -1, false, {
-                            "No expansion available."
-                        })
-                    end
+            -- Insert the result into the new buffer
+            for client_id, res in pairs(result) do
+                if res and res.result and res.result.expansion then
+                    -- :help nvim_buf_set_lines
+                    vim.api.nvim_buf_set_lines(buf, -1, -1, false, vim.split(res.result.expansion, "\n"))
+                else
+                    vim.api.nvim_buf_set_lines(buf, -1, -1, false, {
+                        "No expansion available.",
+                    })
                 end
-            else
-                vim.api.nvim_buf_set_lines(buf, -1, -1, false, {
-                    "Error: No result returned."
-                })
             end
-        end)
+        else
+            vim.api.nvim_buf_set_lines(buf, -1, -1, false, {
+                "Error: No result returned.",
+            })
+        end
+    end)
 end
 
 local M = {}
@@ -65,7 +62,7 @@ M.servers = {
             workspace = { checkThirdParty = false },
             telemetry = { enable = false },
             -- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-            diagnostics = { disable = { 'missing-fields' }, globals = { 'vim' } },
+            diagnostics = { disable = { "missing-fields" }, globals = { "vim" } },
             hint = { enable = true },
         },
     },
@@ -74,42 +71,42 @@ M.servers = {
 local lsp_mappings = function(_)
     local nmap = function(keys, func, desc)
         if desc then
-            desc = 'LSP: ' .. desc
+            desc = "LSP: " .. desc
         end
 
-        vim.keymap.set('n', keys, func, { desc = desc })
+        vim.keymap.set("n", keys, func, { desc = desc })
     end
 
     local vmap = function(keys, func, desc)
         if desc then
-            desc = 'LSP: ' .. desc
+            desc = "LSP: " .. desc
         end
 
-        vim.keymap.set('v', keys, func, { desc = desc })
+        vim.keymap.set("v", keys, func, { desc = desc })
     end
 
-    nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-    nmap("<leader>ca", vim.lsp.buf.code_action, '[C]ode [A]ction')
+    nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
+    nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
 
     -- See `:help K` for why this keymap
-    nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
+    nmap("K", vim.lsp.buf.hover, "Hover Documentation")
     -- nmap('<A-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
     -- Lesser used LSP functionality
-    nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-    nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
-    nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
-    nmap('<leader>wl', function()
+    nmap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
+    nmap("<leader>wa", vim.lsp.buf.add_workspace_folder, "[W]orkspace [A]dd Folder")
+    nmap("<leader>wr", vim.lsp.buf.remove_workspace_folder, "[W]orkspace [R]emove Folder")
+    nmap("<leader>wl", function()
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-    end, '[W]orkspace [L]ist Folders')
+    end, "[W]orkspace [L]ist Folders")
 
     -- Rust
     nmap("<leader>re", "<Cmd>ExpandMacro<CR>", "Expand macro")
 
     -- Create a command `:Format` local to the LSP buffer
-    vim.api.nvim_buf_create_user_command(0, 'Format', function(_)
+    vim.api.nvim_buf_create_user_command(0, "Format", function(_)
         vim.lsp.buf.format()
-    end, { desc = 'Format current buffer with LSP' })
+    end, { desc = "Format current buffer with LSP" })
 end
 
 M.on_attach = function(client, bufnr)
@@ -122,20 +119,20 @@ M.on_attach = function(client, bufnr)
 end
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 -- capabilities = require('blink.cmp').get_lsp_capabilities()
 
 capabilities.textDocument.foldingRange = {
     dynamicRegistration = false,
-    lineFoldingOnly = true
+    lineFoldingOnly = true,
 }
 
 -- Ensure the servers above are installed
-local mason_lspconfig = require 'mason-lspconfig'
+local mason_lspconfig = require("mason-lspconfig")
 
-mason_lspconfig.setup {
+mason_lspconfig.setup({
     ensure_installed = vim.tbl_keys(M.servers),
-}
+})
 
 -- nicer lsp diagnostics icons
 local signs = { Error = "", Warn = "", Hint = "󰌵", Info = "" }
@@ -144,37 +141,36 @@ for type, icon in pairs(signs) do
     vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
 
-mason_lspconfig.setup_handlers {
+mason_lspconfig.setup_handlers({
     function(server_name)
-        require('lspconfig')[server_name].setup {
+        require("lspconfig")[server_name].setup({
             capabilities = capabilities,
             on_attach = M.on_attach,
             settings = M.servers[server_name],
             filetypes = (M.servers[server_name] or {}).filetypes,
-        }
+        })
     end,
-}
+})
 
 require("lspconfig").rust_analyzer.setup({
     capabilities = capabilities,
     on_attach = M.on_attach,
     cmd = { "rustup", "run", "stable", "rust-analyzer" }, -- Use rustup's rust-analyzer
     settings = {
-        ['rust-analyzer'] = {
+        ["rust-analyzer"] = {
             -- checkOnSave = {
             --     command = "clippy"
             -- },
-        }
+        },
     },
     commands = {
         ExpandMacro = {
-            expandMacro
+            expandMacro,
         },
     },
 })
 
-
-for _, method in ipairs({ 'textDocument/diagnostic', 'workspace/diagnostic' }) do
+for _, method in ipairs({ "textDocument/diagnostic", "workspace/diagnostic" }) do
     local default_diagnostic_handler = vim.lsp.handlers[method]
     vim.lsp.handlers[method] = function(err, result, context, config)
         if err ~= nil and err.code == -32802 then
@@ -184,13 +180,12 @@ for _, method in ipairs({ 'textDocument/diagnostic', 'workspace/diagnostic' }) d
     end
 end
 
-require('lspconfig').ts_ls.setup({
+require("lspconfig").ts_ls.setup({
     on_attach = function(client)
         -- Disable formatting from tsserver
         client.server_capabilities.documentFormattingProvider = false
         client.server_capabilities.documentRangeFormattingProvider = false
     end,
 })
-
 
 return M
