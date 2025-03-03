@@ -48,7 +48,7 @@ vim.keymap.set("n", "<leader>tn", ":tabnext<CR>", { desc = "[T]ab [N]ext" })
 vim.keymap.set("n", "<leader>tn", ":tabprev<CR>", { desc = "[T]ab [P]rev" })
 
 -------------- Editing -------------------------------
-vim.keymap.set("i", "<C-c>", "<ESC>", { desc = "" })
+vim.keymap.set("i", "<C-c>", "<ESC>", { noremap = true, silent = true, desc = "Exit insert mode properly" })
 
 vim.keymap.set("n", "<C-o>", "<C-o>zz", { desc = "" })
 vim.keymap.set("n", "<C-i>", "<C-i>zz", { desc = "" })
