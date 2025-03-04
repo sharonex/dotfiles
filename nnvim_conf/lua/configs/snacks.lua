@@ -4,8 +4,10 @@ function x()
   -- Toggle the profiler highlights
   Snacks.toggle.profiler_highlights():map("<leader>ph")
 
-  vim.keymap.set("t", "<C-x>", function() Snacks.terminal.toggle() end, { desc = "Toggle Terminal" })
-  vim.keymap.set("t", "<C-k>", require('smart-splits').move_cursor_up, { desc = "Toggle Terminal" })
+  vim.keymap.set("t", "<C-x>", function()
+    Snacks.terminal.toggle()
+  end, { desc = "Toggle Terminal" })
+  vim.keymap.set("t", "<C-k>", require("smart-splits").move_cursor_up, { desc = "Toggle Terminal" })
 
   return {
     -- your configuration comes here
@@ -16,6 +18,7 @@ function x()
     quickfile = { enabled = true },
     lazygit = { enabled = false },
     explorer = { enabled = true },
+    toggle = { enabled = true },
     terminal = {
       enabled = true,
       keys = {
@@ -56,7 +59,6 @@ function x()
         preset = "ivy",
       },
     },
-
 
     -- statuscolumn = { enabled = true },
     -- words = { enabled = true },

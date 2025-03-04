@@ -1,3 +1,55 @@
+-- Function to navigate to parent module using rust-analyzer's experimental/parentModule
+local function goto_parent_module()
+    -- Get current position
+    local params = vim.lsp.util.make_position_params()
+
+    -- Request the parent module from rust-analyzer using the experimental feature
+    vim.lsp.buf_request(0, "experimental/parentModule", params, function(err, result, ctx, config)
+        if err then
+            vim.notify("Error finding parent module: " .. vim.inspect(err), vim.log.levels.ERROR)
+            return
+        end
+
+        if not result or vim.tbl_isempty(result) then
+            vim.notify("No parent module found", vim.log.levels.WARN)
+            return
+        end
+
+        local location = result
+        if vim.islist(result) then
+            location = result[1]
+        end
+
+        vim.notify("Navigated to parent module", vim.log.levels.INFO)
+        print(vim.inspect(location))
+        vim.lsp.util.jump_to_location(location)
+
+        -- -- Handle result - navigate to the parent module location
+        -- if result.uri and result.range then
+        --     local filepath = vim.uri_to_fname(result.uri)
+        --
+        --     -- Open the file
+        --     vim.cmd("edit " .. filepath)
+        --
+        --     -- Move cursor to location
+        --     vim.api.nvim_win_set_cursor(0, {
+        --         result.range.start.line + 1, -- LSP lines are 0-indexed, Vim is 1-indexed
+        --         result.range.start.character,
+        --     })
+        --
+        -- else
+        --     vim.notify("Invalid parent module location received", vim.log.levels.ERROR)
+        -- end
+    end)
+end
+
+-- Define command to go to parent module
+vim.api.nvim_create_user_command("RustGotoParentModule", function()
+    goto_parent_module()
+end, {
+    desc = "Navigate to parent Rust module using rust-analyzer",
+})
+
 local expandMacro = function()
     vim.lsp.buf_request_all(0, "rust-analyzer/expandMacro", vim.lsp.util.make_position_params(), function(result)
         -- Create a new tab
