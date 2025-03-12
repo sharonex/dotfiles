@@ -302,6 +302,7 @@ require("lazy").setup({
 				}
 			end
 			require("nvim-surround").setup({
+				move_cursor = "sticky",
 				surrounds = {
 					["R"] = build_common_surround("anyhow::Result", "<", ">"),
 					["V"] = build_common_surround("Vec", "<", ">"),
@@ -643,56 +644,57 @@ require("lazy").setup({
 	-- 	-- 	},
 	-- 	-- },
 	-- },
-	{
-		"akinsho/bufferline.nvim",
-		event = "VeryLazy",
-		keys = {
-			{ "<leader>bp", "<Cmd>BufferLineTogglePin<CR>",            desc = "Toggle Pin" },
-			{ "<leader>bP", "<Cmd>BufferLineGroupClose ungrouped<CR>", desc = "Delete Non-Pinned Buffers" },
-			{ "<leader>br", "<Cmd>BufferLineCloseRight<CR>",           desc = "Delete Buffers to the Right" },
-			{ "<leader>bl", "<Cmd>BufferLineCloseLeft<CR>",            desc = "Delete Buffers to the Left" },
-			{ "<leader>br", "<Cmd>bd<CR>",                             desc = "Delete Current buffer" },
-			{ "<S-h>",      "<cmd>BufferLineCyclePrev<cr>",            desc = "Prev Buffer" },
-			{ "<S-l>",      "<cmd>BufferLineCycleNext<cr>",            desc = "Next Buffer" },
-			{ "[b",         "<cmd>BufferLineCyclePrev<cr>",            desc = "Prev Buffer" },
-			{ "]b",         "<cmd>BufferLineCycleNext<cr>",            desc = "Next Buffer" },
-			{ "[B",         "<cmd>BufferLineMovePrev<cr>",             desc = "Move buffer prev" },
-			{ "]B",         "<cmd>BufferLineMoveNext<cr>",             desc = "Move buffer next" },
-		},
-		opts = {
-			options = {
-				diagnostics = "nvim_lsp",
-				always_show_bufferline = false,
-				diagnostics_indicator = function(_, _, diag)
-					local ret = (diag.error and "" .. diag.error .. " " or "")
-						.. (diag.warning and "" .. diag.warning or "")
-					return vim.trim(ret)
-				end,
-				offsets = {
-					{
-						filetype = "neo-tree",
-						text = "Neo-tree",
-						highlight = "Directory",
-						text_align = "left",
-					},
-					{
-						filetype = "snacks_layout_box",
-					},
-				},
-			},
-		},
-		config = function(_, opts)
-			require("bufferline").setup(opts)
-			-- Fix bufferline when restoring a session
-			vim.api.nvim_create_autocmd({ "BufAdd", "BufDelete" }, {
-				callback = function()
-					vim.schedule(function()
-						pcall(nvim_bufferline)
-					end)
-				end,
-			})
-		end,
-	},
+	-- {
+	-- 	"akinsho/bufferline.nvim",
+	-- 	event = "VeryLazy",
+	-- 	keys = {
+	-- 		{ "<leader>bp", "<Cmd>BufferLineTogglePin<CR>",            desc = "Toggle Pin" },
+	-- 		{ "<leader>bd", "<Cmd>bd<CR>",                             desc = "Close Current Buffer" },
+	-- 		{ "<leader>bP", "<Cmd>BufferLineGroupClose ungrouped<CR>", desc = "Delete Non-Pinned Buffers" },
+	-- 		{ "<leader>br", "<Cmd>BufferLineCloseRight<CR>",           desc = "Delete Buffers to the Right" },
+	-- 		{ "<leader>bl", "<Cmd>BufferLineCloseLeft<CR>",            desc = "Delete Buffers to the Left" },
+	-- 		{ "<leader>br", "<Cmd>bd<CR>",                             desc = "Delete Current buffer" },
+	-- 		{ "<S-h>",      "<cmd>BufferLineCyclePrev<cr>",            desc = "Prev Buffer" },
+	-- 		{ "<S-l>",      "<cmd>BufferLineCycleNext<cr>",            desc = "Next Buffer" },
+	-- 		{ "[b",         "<cmd>BufferLineCyclePrev<cr>",            desc = "Prev Buffer" },
+	-- 		{ "]b",         "<cmd>BufferLineCycleNext<cr>",            desc = "Next Buffer" },
+	-- 		{ "[B",         "<cmd>BufferLineMovePrev<cr>",             desc = "Move buffer prev" },
+	-- 		{ "]B",         "<cmd>BufferLineMoveNext<cr>",             desc = "Move buffer next" },
+	-- 	},
+	-- 	opts = {
+	-- 		options = {
+	-- 			diagnostics = "nvim_lsp",
+	-- 			always_show_bufferline = false,
+	-- 			diagnostics_indicator = function(_, _, diag)
+	-- 				local ret = (diag.error and "" .. diag.error .. " " or "")
+	-- 					.. (diag.warning and "" .. diag.warning or "")
+	-- 				return vim.trim(ret)
+	-- 			end,
+	-- 			offsets = {
+	-- 				{
+	-- 					filetype = "neo-tree",
+	-- 					text = "Neo-tree",
+	-- 					highlight = "Directory",
+	-- 					text_align = "left",
+	-- 				},
+	-- 				{
+	-- 					filetype = "snacks_layout_box",
+	-- 				},
+	-- 			},
+	-- 		},
+	-- 	},
+	-- 	config = function(_, opts)
+	-- 		require("bufferline").setup(opts)
+	-- 		-- Fix bufferline when restoring a session
+	-- 		vim.api.nvim_create_autocmd({ "BufAdd", "BufDelete" }, {
+	-- 			callback = function()
+	-- 				vim.schedule(function()
+	-- 					pcall(nvim_bufferline)
+	-- 				end)
+	-- 			end,
+	-- 		})
+	-- 	end,
+	-- },
 	{
 		"navarasu/onedark.nvim",
 		lazy = false,
@@ -717,7 +719,7 @@ require("lazy").setup({
 			{
 				"<leader>e",
 				function()
-					Snacks.explorer.open()
+					Snacks.explorer()
 				end,
 				desc = "Lazygit",
 			},
