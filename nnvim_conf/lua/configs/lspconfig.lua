@@ -210,9 +210,9 @@ require("lspconfig").rust_analyzer.setup({
     cmd = { "rustup", "run", "stable", "rust-analyzer" }, -- Use rustup's rust-analyzer
     settings = {
         ["rust-analyzer"] = {
-            -- checkOnSave = {
-            --     command = "clippy"
-            -- },
+            checkOnSave = {
+                command = "check",
+            },
         },
     },
     commands = {

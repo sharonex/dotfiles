@@ -382,6 +382,7 @@ require("lazy").setup({
 				log_level = "error",
 				auto_session_suppress_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
 			})
+			vim.keymap.set("n", "<leader>ds", "<cmd> SessionDelete<CR>", { desc = "[G]it [R]ebase [A]bort" })
 		end,
 	},
 	{
@@ -411,48 +412,139 @@ require("lazy").setup({
 	},
 	{
 		"ThePrimeagen/harpoon",
-		branch = "master",
+		branch = "harpoon2",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 		},
-		config = function()
-			-- Harpoon 2
-			-- local harpoon = require("harpoon")
-			-- vim.keymap.set("n", "<leader>ha", function() harpoon:list():append() end)
-			-- vim.keymap.set("n", "<leader>hm", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
-			--
-			-- vim.keymap.set("n", "<leader>1", function() harpoon:list():select(1) end)
-			-- vim.keymap.set("n", "<leader>2", function() harpoon:list():select(2) end)
-			-- vim.keymap.set("n", "<leader>3", function() harpoon:list():select(3) end)
-			-- vim.keymap.set("n", "<leader>4", function() harpoon:list():select(4) end)
+		lazy = false,
+		opts = {
+			menu = {
+				width = vim.api.nvim_win_get_width(0) - 4,
+			},
+			settings = {
+				save_on_toggle = true,
+				sync_on_ui_close = true,
+			},
+		},
+		config = function(_) -- Add the opts parameter here
+			local harpoon = require("harpoon")
 
-			vim.keymap.set("n", "<leader>ha", function()
-				require("harpoon.mark").add_file()
-			end)
-			vim.keymap.set("n", "<leader>hm", function()
-				require("harpoon.ui").toggle_quick_menu()
-			end)
+			function Harpoon_files()
+				-- define visual settings for harpoon tabline
+				local yellow = "#DCDCAA"
+				local yellow_orange = "#D7BA7D"
+				local background_color = "#282829"
+				local grey = "#797C91"
+				local light_blue = "#9CDCFE"
 
-			vim.keymap.set("n", "<leader>1", function()
-				require("harpoon.ui").nav_file(1)
-			end)
-			vim.keymap.set("n", "<leader>2", function()
-				require("harpoon.ui").nav_file(2)
-			end)
-			vim.keymap.set("n", "<leader>3", function()
-				require("harpoon.ui").nav_file(3)
-			end)
-			vim.keymap.set("n", "<leader>4", function()
-				require("harpoon.ui").nav_file(4)
-			end)
-			vim.keymap.set("n", "<leader>5", function()
-				require("harpoon.ui").nav_file(5)
-			end)
-			vim.keymap.set("n", "<leader>6", function()
-				require("harpoon.ui").nav_file(6)
-			end)
+				vim.api.nvim_set_hl(0, "HarpoonInactive", { fg = grey, bg = background_color })
+				vim.api.nvim_set_hl(0, "HarpoonActive", { fg = light_blue, bg = background_color })
+				vim.api.nvim_set_hl(0, "HarpoonNumberActive", { fg = yellow, bg = background_color })
+				vim.api.nvim_set_hl(0, "HarpoonNumberInactive", { fg = yellow_orange, bg = background_color })
+				vim.api.nvim_set_hl(0, "TabLineFill", { fg = "white", bg = background_color })
+
+				local contents = {}
+				local marks_length = harpoon:list():length()
+				local current_file_path = vim.fn.fnamemodify(vim.fn.expand("%:p"), ":.")
+				for index = 1, marks_length do
+					local harpoon_file_path = harpoon:list():get(index).value
+					local file_name = harpoon_file_path == "" and "(empty)"
+						or vim.fn.fnamemodify(harpoon_file_path, ":t")
+
+					if current_file_path == harpoon_file_path then
+						contents[index] =
+							string.format("%%#HarpoonNumberActive# %s. %%#HarpoonActive#%s ", index, file_name)
+					else
+						contents[index] =
+							string.format("%%#HarpoonNumberInactive# %s. %%#HarpoonInactive#%s ", index, file_name)
+					end
+				end
+
+				return table.concat(contents)
+			end
+
+			vim.opt.showtabline = 2
+			vim.api.nvim_create_autocmd({ "BufEnter", "BufAdd", "User" }, {
+				callback = function(ev)
+					vim.o.tabline = Harpoon_files()
+				end,
+			})
+		end,
+		keys = function()
+			local keys = {
+				{
+					"<leader>h",
+					function()
+						require("harpoon"):list():add()
+					end,
+					desc = "Harpoon File",
+				},
+				{
+					"<leader>H",
+					function()
+						local harpoon = require("harpoon")
+						harpoon.ui:toggle_quick_menu(harpoon:list())
+					end,
+					desc = "Harpoon Quick Menu",
+				},
+			}
+
+			for i = 1, 6 do
+				table.insert(keys, {
+					"<leader>" .. i,
+					function()
+						require("harpoon"):list():select(i)
+					end,
+					desc = "Harpoon to File " .. i,
+				})
+			end
+			return keys
 		end,
 	},
+	-- {
+	-- 	"ThePrimeagen/harpoon",
+	-- 	branch = "master",
+	-- 	dependencies = {
+	-- 		"nvim-lua/plenary.nvim",
+	-- 	},
+	-- 	config = function()
+	-- 		-- Harpoon 2
+	-- 		-- local harpoon = require("harpoon")
+	-- 		-- vim.keymap.set("n", "<leader>ha", function() harpoon:list():append() end)
+	-- 		-- vim.keymap.set("n", "<leader>hm", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+	-- 		--
+	-- 		-- vim.keymap.set("n", "<leader>1", function() harpoon:list():select(1) end)
+	-- 		-- vim.keymap.set("n", "<leader>2", function() harpoon:list():select(2) end)
+	-- 		-- vim.keymap.set("n", "<leader>3", function() harpoon:list():select(3) end)
+	-- 		-- vim.keymap.set("n", "<leader>4", function() harpoon:list():select(4) end)
+	--
+	-- 		vim.keymap.set("n", "<leader>ha", function()
+	-- 			require("harpoon.mark").add_file()
+	-- 		end)
+	-- 		vim.keymap.set("n", "<leader>hm", function()
+	-- 			require("harpoon.ui").toggle_quick_menu()
+	-- 		end)
+	--
+	-- 		vim.keymap.set("n", "<leader>1", function()
+	-- 			require("harpoon.ui").nav_file(1)
+	-- 		end)
+	-- 		vim.keymap.set("n", "<leader>2", function()
+	-- 			require("harpoon.ui").nav_file(2)
+	-- 		end)
+	-- 		vim.keymap.set("n", "<leader>3", function()
+	-- 			require("harpoon.ui").nav_file(3)
+	-- 		end)
+	-- 		vim.keymap.set("n", "<leader>4", function()
+	-- 			require("harpoon.ui").nav_file(4)
+	-- 		end)
+	-- 		vim.keymap.set("n", "<leader>5", function()
+	-- 			require("harpoon.ui").nav_file(5)
+	-- 		end)
+	-- 		vim.keymap.set("n", "<leader>6", function()
+	-- 			require("harpoon.ui").nav_file(6)
+	-- 		end)
+	-- 	end,
+	-- },
 	{
 		dir = "/Users/sharonavni/personal/git-mediate.nvim",
 		dependencies = { "skywind3000/asyncrun.vim" },
@@ -585,6 +677,12 @@ require("lazy").setup({
 			require("oil").setup()
 			vim.keymap.set("n", "|", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 		end,
+	},
+	{
+		"j-hui/fidget.nvim",
+		opts = {
+			-- options
+		},
 	},
 	-- {
 	--
