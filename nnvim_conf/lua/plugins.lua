@@ -1077,125 +1077,201 @@ require("lazy").setup({
 
 	{
 		"nvim-lualine/lualine.nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
-		config = function()
-			local lualine = require("lualine")
-
-			-- Function to shorten path from the middle if needed
-			local function shorten_path(path, max_len)
-				if not path or #path <= max_len then
-					return path
-				end
-
-				local name_with_ext = vim.fn.fnamemodify(path, ":t")
-				local dir = vim.fn.fnamemodify(path, ":h")
-
-				local half_len = math.floor((max_len - 3) / 2)
-				if #dir <= max_len - #name_with_ext - 1 then
-					return dir .. "/" .. name_with_ext
-				else
-					return string.sub(dir, 1, half_len) .. "..." .. string.sub(dir, -half_len) .. "/" .. name_with_ext
-				end
+		event = "VeryLazy",
+		init = function()
+			vim.g.lualine_laststatus = vim.o.laststatus
+			if vim.fn.argc(-1) > 0 then
+				-- set an empty statusline till lualine loads
+				vim.o.statusline = " "
+			else
+				-- hide the statusline on the starter page
+				vim.o.laststatus = 0
 			end
+		end,
+		opts = function()
+			-- -- PERF: we don't need this lualine require madness 🤷
+			-- local lualine_require = require("lualine_require")
+			-- lualine_require.require = require
 
-			-- Custom filename component that prioritizes filename
-			local custom_filename = {
-				"filename",
-				path = 1, -- Display full path
-				shorting_target = 40, -- Minimum width to display full path
-				symbols = {
-					modified = "[+]",
-					readonly = "[RO]",
-					unnamed = "[No Name]",
-					newfile = "[New]",
+			local icons = {
+				misc = {
+					dots = "󰇘",
 				},
-				fmt = function(str)
-					-- Get available width for the component
-					local available_width = vim.o.columns - 80 -- Reserve space for other components
-
-					-- Always show at least some part of the path, even in small windows
-					if available_width < 20 then
-						available_width = 20
-					end
-
-					return shorten_path(str, available_width)
-				end,
-				color = { gui = "bold" }, -- Make filename bold to emphasize it
-				padding = { left = 1, right = 1 },
-				priority = 10, -- Highest priority
+				ft = {
+					octo = "",
+				},
+				dap = {
+					Stopped = { "󰁕 ", "DiagnosticWarn", "DapStoppedLine" },
+					Breakpoint = " ",
+					BreakpointCondition = " ",
+					BreakpointRejected = { " ", "DiagnosticError" },
+					LogPoint = ".>",
+				},
+				diagnostics = {
+					Error = " ",
+					Warn = " ",
+					Hint = " ",
+					Info = " ",
+				},
+				git = {
+					added = " ",
+					modified = " ",
+					removed = " ",
+				},
+				kinds = {
+					Array = " ",
+					Boolean = "󰨙 ",
+					Class = " ",
+					Codeium = "󰘦 ",
+					Color = " ",
+					Control = " ",
+					Collapsed = " ",
+					Constant = "󰏿 ",
+					Constructor = " ",
+					Copilot = " ",
+					Enum = " ",
+					EnumMember = " ",
+					Event = " ",
+					Field = " ",
+					File = " ",
+					Folder = " ",
+					Function = "󰊕 ",
+					Interface = " ",
+					Key = " ",
+					Keyword = " ",
+					Method = "󰊕 ",
+					Module = " ",
+					Namespace = "󰦮 ",
+					Null = " ",
+					Number = "󰎠 ",
+					Object = " ",
+					Operator = " ",
+					Package = " ",
+					Property = " ",
+					Reference = " ",
+					Snippet = "󱄽 ",
+					String = " ",
+					Struct = "󰆼 ",
+					Supermaven = " ",
+					TabNine = "󰏚 ",
+					Text = " ",
+					TypeParameter = " ",
+					Unit = " ",
+					Value = " ",
+					Variable = "󰀫 ",
+				},
 			}
+			vim.o.laststatus = vim.g.lualine_laststatus
 
-			-- Branch component with lower priority
-			local branch = {
-				"branch",
-				icon = "",
-				color = { fg = "#8FBCBB" },
-				padding = { left = 1, right = 1 },
-				cond = function()
-					-- Only show branch if there's enough space
-					return vim.o.columns > 100
-				end,
-				priority = 5,
-			}
-
-			-- Diagnostics component with medium priority
-			local diagnostics = {
-				"diagnostics",
-				sources = { "nvim_diagnostic" },
-				symbols = { error = " ", warn = " ", info = " ", hint = " " },
-				colored = true,
-				update_in_insert = false,
-				always_visible = false,
-				padding = { left = 1, right = 1 },
-				cond = function()
-					-- Show diagnostics if there's enough space or if there are actual diagnostics
-					local has_diagnostics = #vim.diagnostic.get(0) > 0
-					return vim.o.columns > 80 or has_diagnostics
-				end,
-				priority = 8,
-			}
-
-			-- Configure lualine
-			lualine.setup({
+			local opts = {
 				options = {
-					icons_enabled = true,
 					theme = "auto",
-					component_separators = { left = "", right = "" },
-					section_separators = { left = "", right = "" },
-					disabled_filetypes = {
-						statusline = {},
-						winbar = {},
-					},
-					ignore_focus = {},
-					always_divide_middle = true,
-					globalstatus = false,
-					refresh = {
-						statusline = 1000,
-						tabline = 1000,
-						winbar = 1000,
-					},
+					globalstatus = vim.o.laststatus == 3,
+					disabled_filetypes = { statusline = { "dashboard", "alpha", "ministarter", "snacks_dashboard" } },
 				},
 				sections = {
 					lualine_a = { "mode" },
-					lualine_b = { custom_filename }, -- Prioritize filename by putting it early
-					lualine_c = { branch, diagnostics },
-					lualine_x = { "encoding", "fileformat", "filetype" },
-					lualine_y = { "progress" },
-					lualine_z = { "location" },
+					lualine_b = { "branch" },
+
+					lualine_c = {
+						-- LazyVim.lualine.root_dir(),
+						{
+							"diagnostics",
+							symbols = {
+								error = icons.diagnostics.Error,
+								warn = icons.diagnostics.Warn,
+								info = icons.diagnostics.Info,
+								hint = icons.diagnostics.Hint,
+							},
+						},
+						{
+							"filetype",
+							icon_only = true,
+							separator = "",
+							padding = { left = 1, right = 0 },
+						},
+						-- { LazyVim.lualine.pretty_path() },
+					},
+					lualine_x = {
+						-- Snacks.profiler.status(),
+						-- stylua: ignore
+						{
+							function() return require("noice").api.status.command.get() end,
+							cond = function()
+								return package.loaded["noice"] and
+									require("noice").api.status.command.has()
+							end,
+							color = function() return { fg = Snacks.util.color("Statement") } end,
+						},
+						-- stylua: ignore
+						{
+							function() return require("noice").api.status.mode.get() end,
+							cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
+							color = function() return { fg = Snacks.util.color("Constant") } end,
+						},
+						-- stylua: ignore
+						{
+							function() return "  " .. require("dap").status() end,
+							cond = function() return package.loaded["dap"] and require("dap").status() ~= "" end,
+							color = function() return { fg = Snacks.util.color("Debug") } end,
+						},
+						-- stylua: ignore
+						{
+							require("lazy.status").updates,
+							cond = require("lazy.status").has_updates,
+							color = function() return { fg = Snacks.util.color("Special") } end,
+						},
+						{
+							"diff",
+							symbols = {
+								added = icons.git.added,
+								modified = icons.git.modified,
+								removed = icons.git.removed,
+							},
+							source = function()
+								local gitsigns = vim.b.gitsigns_status_dict
+								if gitsigns then
+									return {
+										added = gitsigns.added,
+										modified = gitsigns.changed,
+										removed = gitsigns.removed,
+									}
+								end
+							end,
+						},
+					},
+					lualine_y = {
+						{ "progress", separator = " ",                  padding = { left = 1, right = 0 } },
+						{ "location", padding = { left = 0, right = 1 } },
+					},
+					lualine_z = {
+						function()
+							return " " .. os.date("%R")
+						end,
+					},
 				},
-				inactive_sections = {
-					lualine_a = {},
-					lualine_b = { custom_filename }, -- Keep filename in inactive windows too
-					lualine_c = {},
-					lualine_x = { "location" },
-					lualine_y = {},
-					lualine_z = {},
-				},
-				tabline = {},
-				winbar = {},
-				inactive_winbar = {},
-				extensions = {},
+				extensions = { "neo-tree", "lazy", "fzf" },
+			}
+
+			-- do not add trouble symbols if aerial is enabled
+			-- And allow it to be overriden for some buffer types (see autocmds)
+			local trouble = require("trouble")
+			local symbols = trouble.statusline({
+				mode = "symbols",
+				groups = {},
+				title = false,
+				filter = { range = true },
+				format = "{kind_icon}{symbol.name:Normal}",
+				hl_group = "lualine_c_normal",
 			})
+			table.insert(opts.sections.lualine_c, {
+				symbols and symbols.get,
+				cond = function()
+					return vim.b.trouble_lualine ~= false and symbols.has()
+				end,
+			})
+
+			return opts
 		end,
 	},
 	-- {
