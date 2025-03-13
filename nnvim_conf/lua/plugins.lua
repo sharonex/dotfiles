@@ -1053,17 +1053,151 @@ require("lazy").setup({
 	--     end
 	-- },
 	-- {
-	--     -- Set lualine as statusline
-	--     'nvim-lualine/lualine.nvim',
-	--     -- See `:help lualine.txt`
-	--     config = function()
-	--         require('lualine').setup({
-	--             sections = {
-	--                 lualine_c = { { 'filename', path = 1 } }
-	--             },
-	--         })
-	--     end,
+	-- 	"nvim-lualine/lualine.nvim",
+	-- 	opts = function(_, opts)
+	-- 		local x = opts.sections.lualine_x
+	-- 		for _, comp in ipairs(x) do
+	-- 			if comp[1] == "diff" then
+	-- 				comp.source = function()
+	-- 					local summary = vim.b.minidiff_summary
+	-- 					return summary
+	-- 						and {
+	-- 							added = summary.add,
+	-- 							modified = summary.change,
+	-- 							removed = summary.delete,
+	-- 						}
+	-- 				end
+	-- 				break
+	-- 			end
+	-- 		end
+	-- 	end,
 	-- },
+	-- Lualine configuration that prioritizes file path
+	-- Includes git branch and diagnostics with smart space management
+
+	{
+		"nvim-lualine/lualine.nvim",
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+		config = function()
+			local lualine = require("lualine")
+
+			-- Function to shorten path from the middle if needed
+			local function shorten_path(path, max_len)
+				if not path or #path <= max_len then
+					return path
+				end
+
+				local name_with_ext = vim.fn.fnamemodify(path, ":t")
+				local dir = vim.fn.fnamemodify(path, ":h")
+
+				local half_len = math.floor((max_len - 3) / 2)
+				if #dir <= max_len - #name_with_ext - 1 then
+					return dir .. "/" .. name_with_ext
+				else
+					return string.sub(dir, 1, half_len) .. "..." .. string.sub(dir, -half_len) .. "/" .. name_with_ext
+				end
+			end
+
+			-- Custom filename component that prioritizes filename
+			local custom_filename = {
+				"filename",
+				path = 1, -- Display full path
+				shorting_target = 40, -- Minimum width to display full path
+				symbols = {
+					modified = "[+]",
+					readonly = "[RO]",
+					unnamed = "[No Name]",
+					newfile = "[New]",
+				},
+				fmt = function(str)
+					-- Get available width for the component
+					local available_width = vim.o.columns - 80 -- Reserve space for other components
+
+					-- Always show at least some part of the path, even in small windows
+					if available_width < 20 then
+						available_width = 20
+					end
+
+					return shorten_path(str, available_width)
+				end,
+				color = { gui = "bold" }, -- Make filename bold to emphasize it
+				padding = { left = 1, right = 1 },
+				priority = 10, -- Highest priority
+			}
+
+			-- Branch component with lower priority
+			local branch = {
+				"branch",
+				icon = "",
+				color = { fg = "#8FBCBB" },
+				padding = { left = 1, right = 1 },
+				cond = function()
+					-- Only show branch if there's enough space
+					return vim.o.columns > 100
+				end,
+				priority = 5,
+			}
+
+			-- Diagnostics component with medium priority
+			local diagnostics = {
+				"diagnostics",
+				sources = { "nvim_diagnostic" },
+				symbols = { error = " ", warn = " ", info = " ", hint = " " },
+				colored = true,
+				update_in_insert = false,
+				always_visible = false,
+				padding = { left = 1, right = 1 },
+				cond = function()
+					-- Show diagnostics if there's enough space or if there are actual diagnostics
+					local has_diagnostics = #vim.diagnostic.get(0) > 0
+					return vim.o.columns > 80 or has_diagnostics
+				end,
+				priority = 8,
+			}
+
+			-- Configure lualine
+			lualine.setup({
+				options = {
+					icons_enabled = true,
+					theme = "auto",
+					component_separators = { left = "", right = "" },
+					section_separators = { left = "", right = "" },
+					disabled_filetypes = {
+						statusline = {},
+						winbar = {},
+					},
+					ignore_focus = {},
+					always_divide_middle = true,
+					globalstatus = false,
+					refresh = {
+						statusline = 1000,
+						tabline = 1000,
+						winbar = 1000,
+					},
+				},
+				sections = {
+					lualine_a = { "mode" },
+					lualine_b = { custom_filename }, -- Prioritize filename by putting it early
+					lualine_c = { branch, diagnostics },
+					lualine_x = { "encoding", "fileformat", "filetype" },
+					lualine_y = { "progress" },
+					lualine_z = { "location" },
+				},
+				inactive_sections = {
+					lualine_a = {},
+					lualine_b = { custom_filename }, -- Keep filename in inactive windows too
+					lualine_c = {},
+					lualine_x = { "location" },
+					lualine_y = {},
+					lualine_z = {},
+				},
+				tabline = {},
+				winbar = {},
+				inactive_winbar = {},
+				extensions = {},
+			})
+		end,
+	},
 	-- {
 	--     'rcarriga/nvim-dap-ui',
 	--     lazy = false,

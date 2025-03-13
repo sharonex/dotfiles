@@ -281,7 +281,7 @@ function set_lazyvim() {
 
 function set_customvim() {
     rm ~/.config/nvim
-    ln -s ~/.dotfiles/nnvim_conf
+    ln -s ~/.dotfiles/nnvim_conf ~/.config/nvim
 }
 # pnpm
 export PNPM_HOME="/Users/sharonavni/Library/pnpm"
