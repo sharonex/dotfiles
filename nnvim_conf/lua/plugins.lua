@@ -26,53 +26,6 @@ require("lazy").setup({
 	-- Detect tabstop and shiftwidth automatically
 	"tpope/vim-sleuth",
 
-	-- {
-	-- 	"williamboman/mason.nvim",
-	-- 	dependencies = { "williamboman/mason-lspconfig.nvim" },
-	-- 	opts = {
-	-- 		ensure_installed = {
-	-- 			"typescript-language-server",
-	-- 			"tailwindcss-language-server",
-	-- 			"eslint-lsp",
-	-- 			"prettierd",
-	-- 		},
-	-- 	},
-	-- 	config = function()
-	-- 		require("mason").setup()
-	-- 		require("mason-lspconfig").setup()
-	-- 		-- Never format with tsserver
-	-- 		vim.lsp.buf.format({
-	-- 			filter = function(client)
-	-- 				print(client.name)
-	-- 				return client.name ~= "tsserver" or client.name ~= "ts_ls"
-	-- 			end,
-	-- 		})
-	-- 	end,
-	-- },
-
-	-- -- NOTE: This is where your plugins related to LSP can be installed.
-	-- --  The configuration is done below. Search for lspconfig to find it below.
-	-- {
-	-- 	-- LSP Configuration & Plugins
-	-- 	"neovim/nvim-lspconfig",
-	-- 	dependencies = {
-	-- 		-- Automatically install LSPs to stdpath for neovim
-	-- 		"williamboman/mason.nvim",
-	-- 		"williamboman/mason-lspconfig.nvim",
-	-- 		-- 'saghen/blink.cmp',
-	--
-	-- 		-- Useful status updates for LSP
-	-- 		-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-	-- 		-- { 'j-hui/fidget.nvim', opts = {} },
-	--
-	-- 		-- Additional lua configuration, makes nvim stuff amazing!
-	-- 		"folke/neodev.nvim",
-	-- 	},
-	-- 	config = function()
-	-- 		require("configs.lspconfig")
-	-- 	end,
-	-- },
-	-- Useful plugin to show you pending keybinds.
 	{
 		"folke/which-key.nvim",
 		opts_extend = { "spec" },
@@ -165,21 +118,6 @@ require("lazy").setup({
 			end,
 		},
 	},
-	-- Fuzzy Finder (files, lsp, etc)
-	-- {
-	--     'nvim-tree/nvim-tree.lua',
-	--     -- lazy = false,
-	--     event = "VeryLazy",
-	--     config = function()
-	--         require("nvim-tree").setup({
-	--             view = {
-	--                 width = 50,
-	--             },
-	--         })
-	--
-	--         vim.keymap.set("n", "<C-q>", ":NvimTreeFindFileToggle<CR>", { desc = "Toggle nvim tree" })
-	--     end
-	-- },
 	{
 		"chrisgrieser/nvim-lsp-endhints",
 		event = "LspAttach",
@@ -309,11 +247,6 @@ require("lazy").setup({
 					["O"] = build_common_surround("Option", "<", ">"),
 					["S"] = build_common_surround("Some", "(", ")"),
 					["D"] = build_common_surround("dbg!", "(", ")"),
-					-- ["S"] = {
-					--     add = function()
-					--         return { { "Some(" }, { ")" } }
-					--     end,
-					-- },
 					["K"] = {
 						add = function()
 							return { { "Ok(" }, { ")" } }
@@ -362,18 +295,6 @@ require("lazy").setup({
 			vim.keymap.set("n", "<leader>gra", ":Git rebase --abort<CR>", { desc = "[G]it [R]ebase [A]bort" })
 		end,
 	},
-	-- {
-	--     "folke/persistence.nvim",
-	--     event = "BufReadPre",
-	--     opts = {},
-	--     -- stylua: ignore
-	--     keys = {
-	--         { "<leader>qs", function() require("persistence").load() end,                desc = "Restore Session" },
-	--         { "<leader>qS", function() require("persistence").select() end,              desc = "Select Session" },
-	--         { "<leader>ql", function() require("persistence").load({ last = true }) end, desc = "Restore Last Session" },
-	--         { "<leader>qd", function() require("persistence").stop() end,                desc = "Don't Save Current Session" },
-	--     },
-	-- },
 	{
 		"rmagatti/auto-session",
 		lazy = false,
@@ -501,60 +422,6 @@ require("lazy").setup({
 			return keys
 		end,
 	},
-	-- {
-	-- 	"ThePrimeagen/harpoon",
-	-- 	branch = "master",
-	-- 	dependencies = {
-	-- 		"nvim-lua/plenary.nvim",
-	-- 	},
-	-- 	config = function()
-	-- 		-- Harpoon 2
-	-- 		-- local harpoon = require("harpoon")
-	-- 		-- vim.keymap.set("n", "<leader>ha", function() harpoon:list():append() end)
-	-- 		-- vim.keymap.set("n", "<leader>hm", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
-	-- 		--
-	-- 		-- vim.keymap.set("n", "<leader>1", function() harpoon:list():select(1) end)
-	-- 		-- vim.keymap.set("n", "<leader>2", function() harpoon:list():select(2) end)
-	-- 		-- vim.keymap.set("n", "<leader>3", function() harpoon:list():select(3) end)
-	-- 		-- vim.keymap.set("n", "<leader>4", function() harpoon:list():select(4) end)
-	--
-	-- 		vim.keymap.set("n", "<leader>ha", function()
-	-- 			require("harpoon.mark").add_file()
-	-- 		end)
-	-- 		vim.keymap.set("n", "<leader>hm", function()
-	-- 			require("harpoon.ui").toggle_quick_menu()
-	-- 		end)
-	--
-	-- 		vim.keymap.set("n", "<leader>1", function()
-	-- 			require("harpoon.ui").nav_file(1)
-	-- 		end)
-	-- 		vim.keymap.set("n", "<leader>2", function()
-	-- 			require("harpoon.ui").nav_file(2)
-	-- 		end)
-	-- 		vim.keymap.set("n", "<leader>3", function()
-	-- 			require("harpoon.ui").nav_file(3)
-	-- 		end)
-	-- 		vim.keymap.set("n", "<leader>4", function()
-	-- 			require("harpoon.ui").nav_file(4)
-	-- 		end)
-	-- 		vim.keymap.set("n", "<leader>5", function()
-	-- 			require("harpoon.ui").nav_file(5)
-	-- 		end)
-	-- 		vim.keymap.set("n", "<leader>6", function()
-	-- 			require("harpoon.ui").nav_file(6)
-	-- 		end)
-	-- 	end,
-	-- },
-	-- {
-	-- 	dir = "/Users/sharonavni/personal/git-mediate.nvim",
-	-- 	dependencies = { "skywind3000/asyncrun.vim" },
-	-- 	event = "VeryLazy",
-	-- 	config = function()
-	-- 		require("git-mediate").setup()
-	-- 		vim.keymap.set("n", "<leader>g[", ":GitMediate<CR>", { desc = "Run git mediate conflict resolver" })
-	-- 	end,
-	-- 	lazy = false,
-	-- },
 	{
 		"zbirenbaum/copilot.lua",
 		cmd = "Copilot",
@@ -611,16 +478,6 @@ require("lazy").setup({
 			},
 		},
 	},
-	-- {
-	-- 	"ggandor/leap.nvim",
-	-- 	lazy = false,
-	-- 	config = function()
-	-- 		require("leap").add_default_mappings()
-	-- 		-- require('leap').add_repeat_mappings(';', ',', {
-	-- 		--     relative_directions = true,
-	-- 		-- })
-	-- 	end,
-	-- },
 	{
 		"folke/trouble.nvim",
 		lazy = false,
@@ -1041,114 +898,6 @@ require("lazy").setup({
 			return opts
 		end,
 	},
-	-- {
-	--     'rcarriga/nvim-dap-ui',
-	--     lazy = false,
-	--     dependencies = { 'mfussenegger/nvim-dap', 'nvim-neotest/nvim-nio' },
-	--     config = function()
-	--         require('dapui').setup()
-	--         local dap, dapui = require("dap"), require("dapui")
-	--         dap.listeners.before.attach.dapui_config = function()
-	--             dapui.open()
-	--         end
-	--         dap.listeners.before.launch.dapui_config = function()
-	--             dapui.open()
-	--         end
-	--         dap.listeners.before.event_terminated.dapui_config = function()
-	--             dapui.close()
-	--         end
-	--         dap.listeners.before.event_exited.dapui_config = function()
-	--             dapui.close()
-	--         end
-	--
-	--         vim.keymap.set("n", "<leader>dt", "<cmd>DapToggleBreakpoint<CR>", { desc = "[D]ebug [T]oggle Breakpoint" })
-	--         vim.keymap.set("n", "<leader>do", "<cmd>DapStepOver<CR>", { desc = "[D]ebug [O]ver" })
-	--         vim.keymap.set("n", "<leader>di", "<cmd>DapStepInto<CR>", { desc = "[D]ebug [I]nto" })
-	--         vim.keymap.set("n", "<leader>dc", "<cmd>DapContinue<CR>", { desc = "[D]ebug [C]ontinue" })
-	--         vim.keymap.set("n", "<leader>dx", "<cmd>DapTerminate<CR>", { desc = "[D]ebug [X]it" })
-	--         vim.keymap.set("n", "<leader>dx", "<cmd>DapTerminate<CR>", { desc = "[D]ebug [X]it" })
-	--     end
-	-- },
-	-- {
-	--     'unblevable/quick-scope',
-	--     config = function()
-	--         vim.cmd [[
-	--           highlight QuickScopePrimary guifg='#af0f5f' gui=underline ctermfg=155 cterm=underline
-	--           highlight QuickScopeSecondary guifg='#5000ff' gui=underline ctermfg=81 cterm=underline
-	--           ]]
-	--     end,
-	-- },
-	-- {
-	--     "ggandor/leap-spooky.nvim",
-	--     lazy = false,
-	--     config = function()
-	--         require('leap-spooky').setup {
-	--         }
-	--     end
-	-- },
-	-- Rustacenvim config from appelgriebsch/Nv
-	-- {
-	--     "mrcjkb/rustaceanvim",
-	--     ft = { "rust" },
-	--     config = function()
-	--         local codelldb = require('mason-registry').get_package('codelldb')
-	--         local extension_path = codelldb:get_install_path() .. '/extension/'
-	--         local codelldb_path = extension_path .. 'adapter/codelldb'
-	--         local liblldb_path = extension_path .. 'lldb/lib/liblldb.dylib'
-	--
-	--         local cfg = require('rustaceanvim.config')
-	--         vim.g.rustaceanvim = {
-	--             server = {
-	--                 on_attach = function(_, _)
-	--                     vim.lsp.inlay_hint.enable()
-	--                 end,
-	--                 default_settings = {
-	--                     -- rust-analyzer language server configuration
-	--                     ['rust-analyzer'] = {
-	--                         checkOnSave = {
-	--                             enable = true,
-	--                             command = "check",
-	--                             -- Disable running tests automatically
-	--                             allTargets = false,
-	--
-	--                             -- extraArgs = { "--no-deps" },
-	--                         },
-	--                         check = {
-	--                             workspace = false
-	--                         },
-	--                         -- Disable automatic running of tests
-	--                         cargo = {
-	--                             autoreload = false,
-	--                             runBuildScripts = false,
-	--                         },
-	--                     },
-	--                 },
-	--             },
-	--             dap = {
-	--                 adapter = cfg.get_codelldb_adapter(codelldb_path, liblldb_path),
-	--             },
-	--         }
-	--         vim.keymap.set("n", "<leader>re", "<cmd>RustLsp expandMacro<CR>", { desc = "[R]ust expand macro" })
-	--         vim.keymap.set("n", "<leader>rc", "<cmd>RustLsp openCargo<CR>", { desc = "[R]ust open cargo" })
-	--         vim.keymap.set("n", "<leader>rp", "<cmd>RustLsp parentModule<CR>", { desc = "[R]ust open parent module" })
-	--         vim.keymap.set("n", "<leader>rr", "<cmd>RustLsp reloadWorkspace<CR>", { desc = "[R]ust [R]estart" })
-	--         vim.keymap.set("n", "<leader>rd", "<cmd>RustLsp renderDiagnostic <CR>", { desc = "[R]ust [D]iagnostics" })
-	--     end
-	-- },
-	-- {
-	--     'ibhagwan/fzf-lua',
-	--     lazy = false,
-	--     config = function()
-	--         -- require 'fzf-lua'.setup {
-	--         --     winopts = {
-	--         --         split = "belowright new",
-	--         --         height = 0.4
-	--         --     }
-	--         -- }
-	--     end
-	--
-	-- },
-
 	{
 		"stevearc/conform.nvim",
 		opts = {},
@@ -1156,25 +905,6 @@ require("lazy").setup({
 			require("conform").setup({
 				-- event = { "BufReadPre", "BufNewFile" },
 				log_level = vim.log.levels.DEBUG,
-				-- format_after_save = {},
-				-- vim.api.nvim_create_autocmd("BufWritePre", {
-				--     pattern = "*",
-				--     callback = function(args)
-				--         require("conform").format({ bufnr = args.buf })
-				--         -- Wait for the format to complete and reload the buffer
-				--     end,
-				-- }),
-				-- formatters = {
-				--     -- Override the default rustfmt config
-				--     rustfmt = {
-				--         command = "cargo",
-				--         args = {
-				--             "+nightly-2024-07-01",
-				--             "fmt",
-				--             "--",
-				--         },
-				--     },
-				-- },
 				formatters_by_ft = {
 					lua = { "stylua" },
 					rust = { "rustfmt" },
@@ -1195,24 +925,6 @@ require("lazy").setup({
 					require("conform").format({ bufnr = args.buf })
 				end,
 			})
-
-			-- vim.api.nvim_create_autocmd('FileType', {
-			--     pattern = vim.tbl_keys(require('conform').formatters_by_ft),
-			--     group = vim.api.nvim_create_augroup('conform_formatexpr', { clear = true }),
-			--     callback = function() vim.opt_local.formatexpr = 'v:lua.require("conform").formatexpr()' end,
-			-- })
-			-- vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
-			-- vim.g.auto_conform_on_save = true
-			-- vim.api.nvim_create_autocmd('BufWritePre', {
-			--     pattern = '*',
-			--     callback = function(args)
-			--         if vim.g.auto_conform_on_save then require('conform').format({ bufnr = args.buf, timeout_ms = nil }) end
-			--     end,
-			-- })
-			-- vim.api.nvim_create_user_command('ConformToggleOnSave', function()
-			--     vim.g.auto_conform_on_save = not vim.g.auto_conform_on_save
-			--     vim.notify('Auto-Conform on save: ' .. (vim.g.auto_conform_on_save and 'Enabled' or 'Disabled'))
-			-- end, {})
 		end,
 	},
 	-- {

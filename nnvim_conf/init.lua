@@ -81,7 +81,6 @@ vim.cmd([[autocmd BufWritePre * lua vim.lsp.buf.format()]])
 vim.g.rust_recommended_style = false
 
 require("mappings")
-require("configs/abbrev")
 
 vim.opt.fillchars:append({ diff = "╱" })
 vim.o.foldmethod = "manual"
