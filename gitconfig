@@ -14,10 +14,10 @@
     cp = cherry-pick
     co = checkout
     b = branch
-    s = status
     st = status
-    wdiff = diff --word-diff
+    recent = "!f() { git branch --sort=committerdate \"$@\" | grep -v throwaway/;  }; f"
     amend = commit -a --amend --no-edit
+    wdiff = diff --word-diff
     inject = "!f() { set -e; HASH=`git show $1 --pretty=format:\"%H\" -q`; shift; git commit -m \"fixup! $HASH\" $*; [ -n \"$(git diff-files)\" ] && git stash && DIRTY=1; git rebase $HASH^^ -i --autosquash; [ -n \"$DIRTY\" ] && git stash pop;}; f"
     latest = for-each-ref --sort=-committerdate refs/heads --format='%(committerdate:relative) %(refname:short)'
     sh = show --word-diff-regex='[A-Za-z_0-9@]+|[^[:space:]]'
@@ -27,7 +27,6 @@
     unset-hooks = config --global core.hooksPath /dev/null
     custom-hooks = config --global core.hooksPath
     set-hooks = config --global --unset core.hooksPath
-    recent = "!f() { git branch --sort=committerdate \"$@\" | grep -v throwaway/;  }; f"
 
 [core]
     hooksPath = /Users/sharonavni/.dotfiles/nnvim_hooks/my_hooks/

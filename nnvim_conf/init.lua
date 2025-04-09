@@ -91,3 +91,7 @@ vim.o.foldlevelstart = 99
 vim.o.foldenable = true
 
 vim.o.diffopt = "internal,filler,closeoff,linematch:60"
+
+vim.opt.runtimepath:append(',~/.config/nvim/lua')
+
+require("configs.lspconfig")

@@ -26,52 +26,52 @@ require("lazy").setup({
 	-- Detect tabstop and shiftwidth automatically
 	"tpope/vim-sleuth",
 
-	{
-		"williamboman/mason.nvim",
-		dependencies = { "williamboman/mason-lspconfig.nvim" },
-		opts = {
-			ensure_installed = {
-				"typescript-language-server",
-				"tailwindcss-language-server",
-				"eslint-lsp",
-				"prettierd",
-			},
-		},
-		config = function()
-			require("mason").setup()
-			require("mason-lspconfig").setup()
-			-- Never format with tsserver
-			vim.lsp.buf.format({
-				filter = function(client)
-					print(client.name)
-					return client.name ~= "tsserver" or client.name ~= "ts_ls"
-				end,
-			})
-		end,
-	},
+	-- {
+	-- 	"williamboman/mason.nvim",
+	-- 	dependencies = { "williamboman/mason-lspconfig.nvim" },
+	-- 	opts = {
+	-- 		ensure_installed = {
+	-- 			"typescript-language-server",
+	-- 			"tailwindcss-language-server",
+	-- 			"eslint-lsp",
+	-- 			"prettierd",
+	-- 		},
+	-- 	},
+	-- 	config = function()
+	-- 		require("mason").setup()
+	-- 		require("mason-lspconfig").setup()
+	-- 		-- Never format with tsserver
+	-- 		vim.lsp.buf.format({
+	-- 			filter = function(client)
+	-- 				print(client.name)
+	-- 				return client.name ~= "tsserver" or client.name ~= "ts_ls"
+	-- 			end,
+	-- 		})
+	-- 	end,
+	-- },
 
-	-- NOTE: This is where your plugins related to LSP can be installed.
-	--  The configuration is done below. Search for lspconfig to find it below.
-	{
-		-- LSP Configuration & Plugins
-		"neovim/nvim-lspconfig",
-		dependencies = {
-			-- Automatically install LSPs to stdpath for neovim
-			"williamboman/mason.nvim",
-			"williamboman/mason-lspconfig.nvim",
-			-- 'saghen/blink.cmp',
-
-			-- Useful status updates for LSP
-			-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-			-- { 'j-hui/fidget.nvim', opts = {} },
-
-			-- Additional lua configuration, makes nvim stuff amazing!
-			"folke/neodev.nvim",
-		},
-		config = function()
-			require("configs.lspconfig")
-		end,
-	},
+	-- -- NOTE: This is where your plugins related to LSP can be installed.
+	-- --  The configuration is done below. Search for lspconfig to find it below.
+	-- {
+	-- 	-- LSP Configuration & Plugins
+	-- 	"neovim/nvim-lspconfig",
+	-- 	dependencies = {
+	-- 		-- Automatically install LSPs to stdpath for neovim
+	-- 		"williamboman/mason.nvim",
+	-- 		"williamboman/mason-lspconfig.nvim",
+	-- 		-- 'saghen/blink.cmp',
+	--
+	-- 		-- Useful status updates for LSP
+	-- 		-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
+	-- 		-- { 'j-hui/fidget.nvim', opts = {} },
+	--
+	-- 		-- Additional lua configuration, makes nvim stuff amazing!
+	-- 		"folke/neodev.nvim",
+	-- 	},
+	-- 	config = function()
+	-- 		require("configs.lspconfig")
+	-- 	end,
+	-- },
 	-- Useful plugin to show you pending keybinds.
 	{
 		"folke/which-key.nvim",
@@ -545,16 +545,16 @@ require("lazy").setup({
 	-- 		end)
 	-- 	end,
 	-- },
-	{
-		dir = "/Users/sharonavni/personal/git-mediate.nvim",
-		dependencies = { "skywind3000/asyncrun.vim" },
-		event = "VeryLazy",
-		config = function()
-			require("git-mediate").setup()
-			vim.keymap.set("n", "<leader>g[", ":GitMediate<CR>", { desc = "Run git mediate conflict resolver" })
-		end,
-		lazy = false,
-	},
+	-- {
+	-- 	dir = "/Users/sharonavni/personal/git-mediate.nvim",
+	-- 	dependencies = { "skywind3000/asyncrun.vim" },
+	-- 	event = "VeryLazy",
+	-- 	config = function()
+	-- 		require("git-mediate").setup()
+	-- 		vim.keymap.set("n", "<leader>g[", ":GitMediate<CR>", { desc = "Run git mediate conflict resolver" })
+	-- 	end,
+	-- 	lazy = false,
+	-- },
 	{
 		"zbirenbaum/copilot.lua",
 		cmd = "Copilot",
@@ -684,115 +684,6 @@ require("lazy").setup({
 			-- options
 		},
 	},
-	-- {
-	--
-	-- 	"echasnovski/mini.diff",
-	-- 	event = "VeryLazy",
-	-- 	keys = {
-	-- 		{
-	-- 			"<leader>gp",
-	-- 			function()
-	-- 				require("mini.diff").toggle_overlay(0)
-	-- 			end,
-	-- 			desc = "Toggle mini.diff overlay",
-	-- 		},
-	-- 		{
-	-- 			"[c",
-	-- 			function()
-	-- 				require("mini.diff").goto_hunk("prev")
-	-- 			end,
-	-- 			desc = "Previous hunk",
-	-- 		},
-	-- 		{
-	-- 			"]c",
-	-- 			function()
-	-- 				require("mini.diff").goto_hunk("next")
-	-- 			end,
-	-- 			desc = "Next hunk",
-	-- 		},
-	-- 	},
-	-- 	opts = function()
-	-- 		Snacks.toggle({
-	-- 			name = "Mini Diff Signs",
-	-- 			get = function()
-	-- 				return vim.g.minidiff_disable ~= true
-	-- 			end,
-	-- 			set = function(state)
-	-- 				vim.g.minidiff_disable = not state
-	-- 				if state then
-	-- 					require("mini.diff").enable(0)
-	-- 				else
-	-- 					require("mini.diff").disable(0)
-	-- 				end
-	-- 				-- HACK: redraw to update the signs
-	-- 				vim.defer_fn(function()
-	-- 					vim.cmd([[redraw!]])
-	-- 				end, 200)
-	-- 			end,
-	-- 		}):map("<leader>gu")
-	-- 	end,
-	-- 	-- opts = {
-	-- 	-- 	view = {
-	-- 	-- 		style = "sign",
-	-- 	-- 		signs = {
-	-- 	-- 			add = "▎",
-	-- 	-- 			change = "▎",
-	-- 	-- 			delete = "",
-	-- 	-- 		},
-	-- 	-- 	},
-	-- 	-- },
-	-- },
-	-- {
-	-- 	"akinsho/bufferline.nvim",
-	-- 	event = "VeryLazy",
-	-- 	keys = {
-	-- 		{ "<leader>bp", "<Cmd>BufferLineTogglePin<CR>",            desc = "Toggle Pin" },
-	-- 		{ "<leader>bd", "<Cmd>bd<CR>",                             desc = "Close Current Buffer" },
-	-- 		{ "<leader>bP", "<Cmd>BufferLineGroupClose ungrouped<CR>", desc = "Delete Non-Pinned Buffers" },
-	-- 		{ "<leader>br", "<Cmd>BufferLineCloseRight<CR>",           desc = "Delete Buffers to the Right" },
-	-- 		{ "<leader>bl", "<Cmd>BufferLineCloseLeft<CR>",            desc = "Delete Buffers to the Left" },
-	-- 		{ "<leader>br", "<Cmd>bd<CR>",                             desc = "Delete Current buffer" },
-	-- 		{ "<S-h>",      "<cmd>BufferLineCyclePrev<cr>",            desc = "Prev Buffer" },
-	-- 		{ "<S-l>",      "<cmd>BufferLineCycleNext<cr>",            desc = "Next Buffer" },
-	-- 		{ "[b",         "<cmd>BufferLineCyclePrev<cr>",            desc = "Prev Buffer" },
-	-- 		{ "]b",         "<cmd>BufferLineCycleNext<cr>",            desc = "Next Buffer" },
-	-- 		{ "[B",         "<cmd>BufferLineMovePrev<cr>",             desc = "Move buffer prev" },
-	-- 		{ "]B",         "<cmd>BufferLineMoveNext<cr>",             desc = "Move buffer next" },
-	-- 	},
-	-- 	opts = {
-	-- 		options = {
-	-- 			diagnostics = "nvim_lsp",
-	-- 			always_show_bufferline = false,
-	-- 			diagnostics_indicator = function(_, _, diag)
-	-- 				local ret = (diag.error and "" .. diag.error .. " " or "")
-	-- 					.. (diag.warning and "" .. diag.warning or "")
-	-- 				return vim.trim(ret)
-	-- 			end,
-	-- 			offsets = {
-	-- 				{
-	-- 					filetype = "neo-tree",
-	-- 					text = "Neo-tree",
-	-- 					highlight = "Directory",
-	-- 					text_align = "left",
-	-- 				},
-	-- 				{
-	-- 					filetype = "snacks_layout_box",
-	-- 				},
-	-- 			},
-	-- 		},
-	-- 	},
-	-- 	config = function(_, opts)
-	-- 		require("bufferline").setup(opts)
-	-- 		-- Fix bufferline when restoring a session
-	-- 		vim.api.nvim_create_autocmd({ "BufAdd", "BufDelete" }, {
-	-- 			callback = function()
-	-- 				vim.schedule(function()
-	-- 					pcall(nvim_bufferline)
-	-- 				end)
-	-- 			end,
-	-- 		})
-	-- 	end,
-	-- },
 	{
 		"navarasu/onedark.nvim",
 		lazy = false,
@@ -863,6 +754,13 @@ require("lazy").setup({
 					Snacks.picker.git_files()
 				end,
 				desc = "Find Git Files",
+			},
+			{
+				"<leader>sx",
+				function()
+					Snacks.picker.diagnostics()
+				end,
+				desc = "Recent",
 			},
 			{
 				"<leader>sr",
@@ -1034,47 +932,6 @@ require("lazy").setup({
 			require("textcase").setup({})
 		end,
 	},
-
-	-- {
-	--     "ggandor/flit.nvim",
-	--     lazy = false,
-	--     config = function()
-	--         require('flit').setup {
-	--             keys = { f = 'f', F = 'F', t = 't', T = 'T' },
-	--             -- A string like "nv", "nvo", "o", etc.
-	--             labeled_modes = "v",
-	--             -- Repeat with the trigger key itself.
-	--             clever_repeat = true,
-	--             multiline = true,
-	--             -- Like `leap`s similar argument (call-specific overrides).
-	--             -- E.g.: opts = { equivalence_classes = {} }
-	--             opts = {}
-	--         }
-	--     end
-	-- },
-	-- {
-	-- 	"nvim-lualine/lualine.nvim",
-	-- 	opts = function(_, opts)
-	-- 		local x = opts.sections.lualine_x
-	-- 		for _, comp in ipairs(x) do
-	-- 			if comp[1] == "diff" then
-	-- 				comp.source = function()
-	-- 					local summary = vim.b.minidiff_summary
-	-- 					return summary
-	-- 						and {
-	-- 							added = summary.add,
-	-- 							modified = summary.change,
-	-- 							removed = summary.delete,
-	-- 						}
-	-- 				end
-	-- 				break
-	-- 			end
-	-- 		end
-	-- 	end,
-	-- },
-	-- Lualine configuration that prioritizes file path
-	-- Includes git branch and diagnostics with smart space management
-
 	{
 		"nvim-lualine/lualine.nvim",
 		event = "VeryLazy",
@@ -1097,16 +954,6 @@ require("lazy").setup({
 				misc = {
 					dots = "󰇘",
 				},
-				ft = {
-					octo = "",
-				},
-				dap = {
-					Stopped = { "󰁕 ", "DiagnosticWarn", "DapStoppedLine" },
-					Breakpoint = " ",
-					BreakpointCondition = " ",
-					BreakpointRejected = { " ", "DiagnosticError" },
-					LogPoint = ".>",
-				},
 				diagnostics = {
 					Error = " ",
 					Warn = " ",
@@ -1117,48 +964,6 @@ require("lazy").setup({
 					added = " ",
 					modified = " ",
 					removed = " ",
-				},
-				kinds = {
-					Array = " ",
-					Boolean = "󰨙 ",
-					Class = " ",
-					Codeium = "󰘦 ",
-					Color = " ",
-					Control = " ",
-					Collapsed = " ",
-					Constant = "󰏿 ",
-					Constructor = " ",
-					Copilot = " ",
-					Enum = " ",
-					EnumMember = " ",
-					Event = " ",
-					Field = " ",
-					File = " ",
-					Folder = " ",
-					Function = "󰊕 ",
-					Interface = " ",
-					Key = " ",
-					Keyword = " ",
-					Method = "󰊕 ",
-					Module = " ",
-					Namespace = "󰦮 ",
-					Null = " ",
-					Number = "󰎠 ",
-					Object = " ",
-					Operator = " ",
-					Package = " ",
-					Property = " ",
-					Reference = " ",
-					Snippet = "󱄽 ",
-					String = " ",
-					Struct = "󰆼 ",
-					Supermaven = " ",
-					TabNine = "󰏚 ",
-					Text = " ",
-					TypeParameter = " ",
-					Unit = " ",
-					Value = " ",
-					Variable = "󰀫 ",
 				},
 			}
 			vim.o.laststatus = vim.g.lualine_laststatus
@@ -1171,10 +976,24 @@ require("lazy").setup({
 				},
 				sections = {
 					lualine_a = { "mode" },
-					lualine_b = { "branch" },
 
-					lualine_c = {
-						-- LazyVim.lualine.root_dir(),
+					lualine_b = {
+						{
+							"filetype",
+							icon_only = true,
+							separator = "",
+							padding = { left = 1, right = 0 },
+						},
+						{
+							"filename",
+							path = 1, -- 0: Just filename, 1: Relative path, 2: Absolute path
+							shorting_target = 40, -- Shorten if file path exceeds this length
+							symbols = {
+								modified = "[+]",
+								readonly = "[-]",
+								unnamed = "[No Name]",
+							},
+						},
 						{
 							"diagnostics",
 							symbols = {
@@ -1184,92 +1003,16 @@ require("lazy").setup({
 								hint = icons.diagnostics.Hint,
 							},
 						},
-						{
-							"filetype",
-							icon_only = true,
-							separator = "",
-							padding = { left = 1, right = 0 },
-						},
-						-- { LazyVim.lualine.pretty_path() },
 					},
-					lualine_x = {
-						-- Snacks.profiler.status(),
-						-- stylua: ignore
-						{
-							function() return require("noice").api.status.command.get() end,
-							cond = function()
-								return package.loaded["noice"] and
-									require("noice").api.status.command.has()
-							end,
-							color = function() return { fg = Snacks.util.color("Statement") } end,
-						},
-						-- stylua: ignore
-						{
-							function() return require("noice").api.status.mode.get() end,
-							cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
-							color = function() return { fg = Snacks.util.color("Constant") } end,
-						},
-						-- stylua: ignore
-						{
-							function() return "  " .. require("dap").status() end,
-							cond = function() return package.loaded["dap"] and require("dap").status() ~= "" end,
-							color = function() return { fg = Snacks.util.color("Debug") } end,
-						},
-						-- stylua: ignore
-						{
-							require("lazy.status").updates,
-							cond = require("lazy.status").has_updates,
-							color = function() return { fg = Snacks.util.color("Special") } end,
-						},
-						{
-							"diff",
-							symbols = {
-								added = icons.git.added,
-								modified = icons.git.modified,
-								removed = icons.git.removed,
-							},
-							source = function()
-								local gitsigns = vim.b.gitsigns_status_dict
-								if gitsigns then
-									return {
-										added = gitsigns.added,
-										modified = gitsigns.changed,
-										removed = gitsigns.removed,
-									}
-								end
-							end,
-						},
-					},
-					lualine_y = {
-						{ "progress", separator = " ",                  padding = { left = 1, right = 0 } },
-						{ "location", padding = { left = 0, right = 1 } },
-					},
+					lualine_c = { "branch" },
+					lualine_x = { Snacks.profiler.status() },
 					lualine_z = {
 						function()
 							return " " .. os.date("%R")
 						end,
 					},
 				},
-				extensions = { "neo-tree", "lazy", "fzf" },
 			}
-
-			-- do not add trouble symbols if aerial is enabled
-			-- And allow it to be overriden for some buffer types (see autocmds)
-			local trouble = require("trouble")
-			local symbols = trouble.statusline({
-				mode = "symbols",
-				groups = {},
-				title = false,
-				filter = { range = true },
-				format = "{kind_icon}{symbol.name:Normal}",
-				hl_group = "lualine_c_normal",
-			})
-			table.insert(opts.sections.lualine_c, {
-				symbols and symbols.get,
-				cond = function()
-					return vim.b.trouble_lualine ~= false and symbols.has()
-				end,
-			})
 
 			return opts
 		end,
