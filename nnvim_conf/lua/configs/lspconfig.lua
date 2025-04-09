@@ -1,203 +1,74 @@
--- Function to navigate to parent module using rust-analyzer's experimental/parentModule
--- local function goto_parent_module()
---     -- Get current position
---     local params = vim.lsp.util.make_position_params()
---
---     -- Request the parent module from rust-analyzer using the experimental feature
---     vim.lsp.buf_request(0, "experimental/parentModule", params, function(err, result, ctx, config)
---         if err then
---             vim.notify("Error finding parent module: " .. vim.inspect(err), vim.log.levels.ERROR)
---             return
---         end
---
---         if not result or vim.tbl_isempty(result) then
---             vim.notify("No parent module found", vim.log.levels.WARN)
---             return
---         end
---
---         local location = result
---         if vim.islist(result) then
---             location = result[1]
---         end
---
---         vim.notify("Navigated to parent module", vim.log.levels.INFO)
---         print(vim.inspect(location))
---         vim.lsp.util.jump_to_location(location)
---
---         -- -- Handle result - navigate to the parent module location
---         -- if result.uri and result.range then
---         --     local filepath = vim.uri_to_fname(result.uri)
---         --
---         --     -- Open the file
---         --     vim.cmd("edit " .. filepath)
---         --
---         --     -- Move cursor to location
---         --     vim.api.nvim_win_set_cursor(0, {
---         --         result.range.start.line + 1, -- LSP lines are 0-indexed, Vim is 1-indexed
---         --         result.range.start.character,
---         --     })
---         --
---         -- else
---         --     vim.notify("Invalid parent module location received", vim.log.levels.ERROR)
---         -- end
---     end)
--- end
-
--- -- Define command to go to parent module
--- vim.api.nvim_create_user_command("RustGotoParentModule", function()
---     goto_parent_module()
--- end, {
---     desc = "Navigate to parent Rust module using rust-analyzer",
--- })
-
-
 local M = {}
 
--- Enable the following language servers
---  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
---
---  Add any additional override configuration in the following tables. They will be passed to
---  the `settings` field of the server config. You must look up that documentation yourself.
---
---  If you want to override the default filetypes that your language server will attach to you can
---  define the property 'filetypes' to the map in question.
--- M.servers = {
---     -- clangd = {},
---     -- gopls = {},
---     -- pyright = {},
---     -- rust_analyzer = {},
---     -- tsserver = {},
---     -- html = { filetypes = { 'html', 'twig', 'hbs'} },
---     -- eslint = {
---     --     filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
---     -- },
---
---     lua_ls = {
---         Lua = {
---             workspace = { checkThirdParty = false },
---             telemetry = { enable = false },
---             -- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
---             diagnostics = { disable = { "missing-fields" }, globals = { "vim" } },
---             hint = { enable = true },
---         },
---     },
--- }
-
 local lsp_mappings = function(_)
-    local nmap = function(keys, func, desc)
-        if desc then
-            desc = "LSP: " .. desc
-        end
+  vim.keymap.set("i", "<C-k>", vim.lsp.buf.signature_help, { desc = "Signature Help" })
 
-        vim.keymap.set("n", keys, func, { desc = desc })
-    end
+  -- Rust
+  vim.keymap.set("n", "<leader>re", "<Cmd>ExpandMacro<CR>", { desc = "Expand macro" })
 
-    local vmap = function(keys, func, desc)
-        if desc then
-            desc = "LSP: " .. desc
-        end
-
-        vim.keymap.set("v", keys, func, { desc = desc })
-    end
-
-    nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
-    nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
-
-    -- See `:help K` for why this keymap
-    nmap("K", vim.lsp.buf.hover, "Hover Documentation")
-    -- nmap('<A-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
-
-    -- Lesser used LSP functionality
-    nmap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
-    nmap("<leader>wa", vim.lsp.buf.add_workspace_folder, "[W]orkspace [A]dd Folder")
-    nmap("<leader>wr", vim.lsp.buf.remove_workspace_folder, "[W]orkspace [R]emove Folder")
-    nmap("<leader>wl", function()
-        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-    end, "[W]orkspace [L]ist Folders")
-
-    -- Rust
-    nmap("<leader>re", "<Cmd>ExpandMacro<CR>", "Expand macro")
-
-    -- Create a command `:Format` local to the LSP buffer
-    vim.api.nvim_buf_create_user_command(0, "Format", function(_)
-        vim.lsp.buf.format()
-    end, { desc = "Format current buffer with LSP" })
+  -- Create a command `:Format` local to the LSP buffer
+  vim.api.nvim_buf_create_user_command(0, "Format",
+    vim.lsp.buf.format,
+    { desc = "Format current buffer with LSP" })
 end
 
-M.on_attach = function(client, bufnr)
-    lsp_mappings()
-
-    vim.diagnostic.config({
-        severity_sort = true,
-        virtual_text = true,
-    })
-end
--- nvim-cmp supports additional completion capabilities, so broadcast that to servers
--- local capabilities = vim.lsp.protocol.make_client_capabilities()
--- capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
--- capabilities = require('blink.cmp').get_lsp_capabilities()
-
--- capabilities.textDocument.foldingRange = {
---     dynamicRegistration = false,
---     lineFoldingOnly = true,
--- }
-
--- Ensure the servers above are installed
--- local mason_lspconfig = require("mason-lspconfig")
---
--- mason_lspconfig.setup({
---     ensure_installed = vim.tbl_keys(M.servers),
--- })
---
 -- nicer lsp diagnostics icons
 local signs = { Error = "", Warn = "", Hint = "󰌵", Info = "" }
 for type, icon in pairs(signs) do
-    local hl = "DiagnosticSign" .. type
-    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+  local hl = "DiagnosticSign" .. type
+  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
 
-  vim.lsp.config('*', {
-    capabilities = {
-      textDocument = {
-        semanticTokens = {
-          multilineTokenSupport = true,
-        }
+vim.lsp.config('*', {
+  capabilities = {
+    textDocument = {
+      semanticTokens = {
+        multilineTokenSupport = true,
       }
-    },
-    root_markers = { '.git' },
-    on_attach = M.on_attach,
-  })
+    }
+  },
+  root_markers = { '.git' },
+  on_attach = function(_, _)
+    lsp_mappings()
 
-  vim.lsp.config('rust-analyzer', {
-    filetypes = { 'rust', 'rs' },
-  })
+    vim.diagnostic.config({
+      severity_sort = true,
+      virtual_text = true,
+    })
+  end
+  ,
+})
 
-  vim.lsp.config('lua_ls', {
-    filetypes = { 'lua' },
-  })
+vim.lsp.config('rust-analyzer', {
+  filetypes = { 'rust', 'rs' },
+})
 
-vim.lsp.enable({'rust-analyzer', 'lua_ls'})
+vim.lsp.config('lua_ls', {
+  filetypes = { 'lua' },
+})
+
+vim.lsp.enable({ 'rust-analyzer', 'lua_ls' })
 
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('my.lsp', {}),
   callback = function(args)
     local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
 
-    -- -- Enable auto-completion. Note: Use CTRL-Y to select an item. |complete_CTRL-Y|
-    -- if client:supports_method('textDocument/completion') then
-    --   -- Optional: trigger autocompletion on EVERY keypress. May be slow!
-    --   local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
-    --   client.server_capabilities.completionProvider.triggerCharacters = chars
-    --
-    --   vim.lsp.completion.enable(true, client.id, args.buf, {autotrigger = true})
-    -- end
+    -- Enable auto-completion. Note: Use CTRL-Y to select an item. |complete_CTRL-Y|
+    if client:supports_method('textDocument/completion') then
+      -- Optional: trigger autocompletion on EVERY keypress. May be slow!
+      local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
+      client.server_capabilities.completionProvider.triggerCharacters = chars
+
+      vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
+    end
 
     -- Auto-format ("lint") on save.
     -- Usually not needed if server supports "textDocument/willSaveWaitUntil".
     if not client:supports_method('textDocument/willSaveWaitUntil')
         and client:supports_method('textDocument/formatting') then
       vim.api.nvim_create_autocmd('BufWritePre', {
-        group = vim.api.nvim_create_augroup('my.lsp', {clear=false}),
+        group = vim.api.nvim_create_augroup('my.lsp', { clear = false }),
         buffer = args.buf,
         callback = function()
           vim.lsp.buf.format({ bufnr = args.buf, id = client.id, timeout_ms = 1000 })
@@ -207,4 +78,31 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end,
 })
 
+require('vim.lsp.protocol').CompletionItemKind = {
+  ' Text', -- Text
+  ' Method', -- Method
+  ' Function', -- Function
+  ' Constructor', -- Constructor
+  ' Field', -- Field
+  ' Variable', -- Variable
+  ' Class', -- Class
+  'ﰮ Interface', -- Interface
+  ' Module', -- Module
+  ' Property', -- Property
+  ' Unit', -- Unit
+  ' Value', -- Value
+  '了E num', -- Enum
+  ' Keyword', -- Keyword
+  '﬌ Snippet', -- Snippet
+  ' Color', -- Color
+  ' File', -- File
+  ' Reference', -- Reference
+  ' Folder', -- Folder
+  ' EnumMember', -- EnumMember
+  ' Constant', -- Constant
+  ' Struct', -- Struct
+  ' Event', -- Event
+  'ﬦ Operator', -- Operator
+  ' TypeParameter', -- TypeParameter
+}
 return M

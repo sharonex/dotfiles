@@ -580,11 +580,35 @@ require("lazy").setup({
 		opts = {},
 		-- stylua: ignore
 		keys = {
-			{ "s",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
-			{ "S",     mode = { "n", "o" },      function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
-			{ "r",     mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
-			{ "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-			{ "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
+			{ "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+			{
+				"S",
+				mode = { "n", "o" },
+				function() require("flash").treesitter() end,
+				desc =
+				"Flash Treesitter"
+			},
+			{
+				"r",
+				mode = "o",
+				function() require("flash").remote() end,
+				desc =
+				"Remote Flash"
+			},
+			{
+				"R",
+				mode = { "o", "x" },
+				function() require("flash").treesitter_search() end,
+				desc =
+				"Treesitter Search"
+			},
+			{
+				"<c-s>",
+				mode = { "c" },
+				function() require("flash").toggle() end,
+				desc =
+				"Toggle Flash Search"
+			},
 		},
 	},
 	-- {
@@ -857,35 +881,35 @@ require("lazy").setup({
 				desc = "Search Branches",
 			},
 			-- LSP
-			{
-				"gd",
-				function()
-					Snacks.picker.lsp_definitions()
-				end,
-				desc = "Goto Definition",
-			},
-			{
-				"gr",
-				function()
-					Snacks.picker.lsp_references()
-				end,
-				nowait = true,
-				desc = "References",
-			},
-			{
-				"gI",
-				function()
-					Snacks.picker.lsp_implementations()
-				end,
-				desc = "Goto Implementation",
-			},
-			{
-				"<leader>D",
-				function()
-					Snacks.picker.lsp_type_definitions()
-				end,
-				desc = "Goto T[y]pe Definition",
-			},
+			-- {
+			-- 	"gd",
+			-- 	function()
+			-- 		Snacks.picker.lsp_definitions()
+			-- 	end,
+			-- 	desc = "Goto Definition",
+			-- },
+			-- {
+			-- 	"gr",
+			-- 	function()
+			-- 		Snacks.picker.lsp_references()
+			-- 	end,
+			-- 	nowait = true,
+			-- 	desc = "References",
+			-- },
+			-- {
+			-- 	"gI",
+			-- 	function()
+			-- 		Snacks.picker.lsp_implementations()
+			-- 	end,
+			-- 	desc = "Goto Implementation",
+			-- },
+			-- {
+			-- 	"<leader>D",
+			-- 	function()
+			-- 		Snacks.picker.lsp_type_definitions()
+			-- 	end,
+			-- 	desc = "Goto T[y]pe Definition",
+			-- },
 			{
 				"<leader>sd",
 				function()
@@ -1191,17 +1215,17 @@ require("lazy").setup({
 			-- end, {})
 		end,
 	},
-	{
-		-- Autocompletion
-		"hrsh7th/nvim-cmp",
-		dependencies = {
-			-- Snippet Engine & its associated nvim-cmp source
-			-- Adds LSP completion capabilities
-			"hrsh7th/cmp-nvim-lsp",
-
-			-- Adds a number of user-friendly snippets
-			"onsails/lspkind.nvim",
-		},
-		config = require("configs.cmp_config"),
-	},
+	-- {
+	-- 	-- Autocompletion
+	-- 	"hrsh7th/nvim-cmp",
+	-- 	dependencies = {
+	-- 		-- Snippet Engine & its associated nvim-cmp source
+	-- 		-- Adds LSP completion capabilities
+	-- 		"hrsh7th/cmp-nvim-lsp",
+	--
+	-- 		-- -- Adds a number of user-friendly snippets
+	-- 		-- "onsails/lspkind.nvim",
+	-- 	},
+	-- 	config = require("configs.cmp_config"),
+	-- },
 })
