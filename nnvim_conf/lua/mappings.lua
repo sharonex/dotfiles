@@ -95,11 +95,11 @@ local default_config = { virtual_lines = { current_line = true } }
 vim.diagnostic.config(default_config)
 
 vim.keymap.set('n', '<leader>od', function()
-  -- virtual_lines is either a table or true/false, let's just check for the
-  -- boolean value.
-  if vim.diagnostic.config().virtual_lines == true then
-    vim.diagnostic.config(default_config)
-  else
-    vim.diagnostic.config({ virtual_lines = true })
-  end
+	-- virtual_lines is either a table or true/false, let's just check for the
+	-- boolean value.
+	if vim.diagnostic.config().virtual_lines == false then
+		vim.diagnostic.config(default_config)
+	else
+		vim.diagnostic.config({ virtual_lines = false })
+	end
 end, { desc = 'Toggle showing all diagnostics or just current line' })

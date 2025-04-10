@@ -36,6 +36,11 @@ local expandMacro = function()
     end)
 end
 
+-- Create a user command that calls this function
+vim.api.nvim_create_user_command('ExpandMacro', function()
+    expandMacro()
+end, {})
+
 return {
     cmd = { "rustup", "run", "stable", "rust-analyzer" }, -- Use rustup's rust-analyzer
     -- root_markers = { '.clangd', 'compile_commands.json' },
