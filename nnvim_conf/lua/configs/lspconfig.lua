@@ -47,6 +47,10 @@ vim.lsp.config('lua_ls', {
   filetypes = { 'lua' },
 })
 
+vim.lsp.config('typescript-language-server', {
+  filetypes = { 'ts', 'typescript', 'tsx', 'js', 'javascript', 'jsx' },
+})
+
 vim.lsp.enable({ 'rust-analyzer', 'lua_ls' })
 
 vim.api.nvim_create_autocmd('LspAttach', {
