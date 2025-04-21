@@ -27,6 +27,38 @@ require("lazy").setup({
 	"tpope/vim-sleuth",
 
 	{
+		-- LSP Configuration & Plugins
+		"neovim/nvim-lspconfig",
+		dependencies = {
+			-- Automatically install LSPs to stdpath for neovim
+			-- "williamboman/mason.nvim",
+			-- "williamboman/mason-lspconfig.nvim",
+			-- 'saghen/blink.cmp',
+
+			-- Useful status updates for LSP
+			-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
+			-- { 'j-hui/fidget.nvim', opts = {} },
+
+			-- Additional lua configuration, makes nvim stuff amazing!
+			"folke/neodev.nvim",
+		},
+		config = function()
+			return {
+				on_attach =  function(_)
+				  vim.keymap.set("i", "<C-k>", vim.lsp.buf.signature_help, { desc = "Signature Help" })
+
+				  -- Rust
+				  vim.keymap.set("n", "<leader>re", "<Cmd>ExpandMacro<CR>", { desc = "Expand macro" })
+
+				  -- Create a command `:Format` local to the LSP buffer
+				  vim.api.nvim_buf_create_user_command(0, "Format",
+					vim.lsp.buf.format,
+					{ desc = "Format current buffer with LSP" })
+				end
+			}
+		end
+	},
+	{
 		"folke/which-key.nvim",
 		opts_extend = { "spec" },
 		opts = {
