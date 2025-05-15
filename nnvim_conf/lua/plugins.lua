@@ -388,7 +388,7 @@ require("lazy").setup({
 				log_level = "error",
 				auto_session_suppress_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
 			})
-			vim.keymap.set("n", "<leader>ds", "<cmd> SessionDelete<CR>", { desc = "[G]it [R]ebase [A]bort" })
+			vim.keymap.set("n", "<leader>xs", "<cmd> SessionDelete<CR>", { desc = "Delete Session" })
 		end,
 	},
 	{
@@ -508,23 +508,26 @@ require("lazy").setup({
 		end,
 	},
 	{
-		"zbirenbaum/copilot.lua",
-		cmd = "Copilot",
-		event = "InsertEnter",
-		config = function()
-			require("copilot").setup({
-				panel = {
-					enabled = true,
-					auto_refresh = true,
-				},
-				suggestion = {
-					enabled = true,
-					auto_trigger = true,
-					accept = false, -- disable built-in keymapping
-				},
-			})
-		end,
+		'github/copilot.vim'
 	},
+	-- {
+	-- 	"zbirenbaum/copilot.lua",
+	-- 	cmd = "Copilot",
+	-- 	event = "InsertEnter",
+	-- 	config = function()
+	-- 		require("copilot").setup({
+	-- 			panel = {
+	-- 				enabled = true,
+	-- 				auto_refresh = true,
+	-- 			},
+	-- 			suggestion = {
+	-- 				enabled = true,
+	-- 				auto_trigger = true,
+	-- 				accept = false, -- disable built-in keymapping
+	-- 			},
+	-- 		})
+	-- 	end,
+	-- },
 	{
 		"folke/flash.nvim",
 		event = "VeryLazy",
@@ -698,13 +701,6 @@ require("lazy").setup({
 					Snacks.picker.undo()
 				end,
 				desc = "Undo",
-			},
-			{
-				"<leader>op",
-				function()
-					Snacks.picker.projects()
-				end,
-				desc = "Open Projects",
 			},
 			-- find
 			{

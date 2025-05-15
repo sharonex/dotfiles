@@ -57,6 +57,8 @@ alias kc="killall cargo"
 
 alias check_ts_compiles="pushd typescript/apps/platform; ../../../node_modules/.bin/tsc --noEmit; popd"
 
+alias clippy="cargo clippy --workspace --no-deps --all-targets"
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND="rg --files"
 export FZF_DEFAULT_OPTS="-m --height 50% --border"
