@@ -94,7 +94,7 @@ vim.keymap.set("n", "<leader>g[", ":GitMediate<CR>", { noremap = true, silent = 
 local default_config = { virtual_lines = { current_line = true }, virtual_text = true }
 vim.diagnostic.config(default_config)
 
-vim.keymap.set('n', '<leader>od', function()
+vim.keymap.set('n', '<leader>xd', function()
 	-- virtual_lines is either a table or true/false, let's just check for the
 	-- boolean value.
 	if vim.diagnostic.config().virtual_lines == false then
