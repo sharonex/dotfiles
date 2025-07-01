@@ -40,10 +40,107 @@ alias qqq="cd ../../../"                     # Go back 3 directory levels
 alias qqqq="cd ../../../../"                  # Go back 4 directory levels
 alias qqqqq="cd ../../../../../"               # Go back 5 directory levels
 
-alias p="cd ~/work/pelanor/"
+alias p="cd ~/work/pelanor1/"
 alias p2="cd ~/work/pelanor2/"
+alias p3="cd ~/work/pelanor3/"
 
-alias pp="git push origin `git branch --show-current` -f; echo 'Checking formatting'; cargo +nightly fmt --check; echo 'Running clippy'; cargo clippy --all-targets"
+w() {
+    if [ -z "$1" ]; then
+        echo "Usage: w <num>"
+        return 1
+    fi
+
+    local session_name="pelanor$1"
+    local worktree_path="$HOME/work/pelanor$1"
+
+    # Check if the worktree directory exists
+    if [ ! -d "$worktree_path" ]; then
+        echo "Directory $worktree_path does not exist"
+        return 1
+    fi
+
+    # Check if tmux session already exists
+    if tmux has-session -t "$session_name" 2>/dev/null; then
+        # Session exists
+        if [ -n "$TMUX" ]; then
+            # We're inside tmux, switch to the session
+            tmux switch-client -t "$session_name"
+        else
+            # We're outside tmux, attach to the session
+            tmux attach-session -t "$session_name"
+        fi
+    else
+        # Session doesn't exist
+        if [ -n "$TMUX" ]; then
+            # We're inside tmux, create new session without attaching
+            tmux new-session -d -s "$session_name" -c "$worktree_path"
+            tmux switch-client -t "$session_name"
+        else
+            # We're outside tmux, create and attach
+            tmux new-session -s "$session_name" -c "$worktree_path"
+        fi
+    fi
+}
+
+alias w1="w 1"
+alias w2="w 2"
+alias w3="w 3"
+alias w4="w 4"
+alias w5="w 5"
+alias w6="w 6"
+
+wb() {
+    # Get all tmux sessions that match the pelanor pattern
+    local sessions=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | grep "^pelanor[0-9]\+$")
+
+    if [ -z "$sessions" ]; then
+        echo "No pelanor sessions found"
+        return 1
+    fi
+
+    # Build a list of "branch_name:session_name" for fzf
+    local branches_and_sessions=""
+
+    # Convert sessions string to array and iterate properly
+    while IFS= read -r session; do
+        [ -z "$session" ] && continue
+
+        # Extract the number from session name (e.g., pelanor1 -> 1)
+        local num=$(echo "$session" | sed 's/pelanor//')
+        local worktree_path="$HOME/work/pelanor$num"
+
+        # Check if worktree directory exists
+        if [ -d "$worktree_path" ]; then
+            # Get the current branch name for this worktree
+            local branch=$(git -C "$worktree_path" branch --show-current 2>/dev/null)
+            if [ -n "$branch" ]; then
+                branches_and_sessions="$branches_and_sessions$branch:$session\n"
+            fi
+        fi
+    done <<< "$sessions"
+
+    if [ -z "$branches_and_sessions" ]; then
+        echo "No valid worktrees with branches found"
+        return 1
+    fi
+
+    # Use fzf to select a branch
+    local selected=$(echo -e "$branches_and_sessions" | fzf --prompt="Select branch: " --height=40% --layout=reverse --with-nth=1 --delimiter=':')
+
+    if [ -n "$selected" ]; then
+        # Extract the session name from the selection
+        local target_session=$(echo "$selected" | cut -d':' -f2)
+
+        if [ -n "$TMUX" ]; then
+            # We're inside tmux, switch to the session
+            tmux switch-client -t "$target_session"
+        else
+            # We're outside tmux, attach to the session
+            tmux attach-session -t "$target_session"
+        fi
+    fi
+}
+
 alias s="source ~/.zshrc"
 
 alias h="cat $DOTFILES/helpers.txt| fzf | pbcopy"
@@ -61,7 +158,20 @@ alias clippy="cargo clippy --workspace --no-deps --all-targets"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND="rg --files"
-export FZF_DEFAULT_OPTS="-m --height 50% --border"
+# export FZF_DEFAULT_OPTS="-m --height 50% --border"
+export FZF_DEFAULT_OPTS="
+--border
+--layout=reverse
+--info=inline
+--height=50%
+--multi
+--preview-window=:hidden
+--preview '([[ -f {} ]] && (bat --style=numbers --color=always {} || cat {})) || ([[ -d {} ]] && (tree -C {} | less)) || echo {} 2> /dev/null | head -200'
+--color='hl:148,hl+:154,pointer:032,marker:010,bg+:237,gutter:008'
+--prompt='∼ ' --pointer='▶' --marker='✓'
+--bind '?:toggle-preview'
+--bind 'ctrl-y:execute-silent(pbcopy <<< {})+abort'
+"
 
 export HISTFILESIZE=1000000000
 export HISTSIZE=1000000000
@@ -162,6 +272,12 @@ fzf-branch-widget() {
   return $ret
 }
 
+fzf-tmux-branch-widget() {
+  LBUFFER="${LBUFFER}$(wb)"
+  local ret=$?
+  zle reset-prompt
+  return $ret
+}
 
 __fhelper() {
   local cmd="cat $DOTFILES/helpers.txt | grep -v -e ^\# -v -e ^$"
@@ -181,16 +297,18 @@ fzf-helpers-widget() {
 
 autoload -U select-word-style
 select-word-style bash
-
+#
 zle -N fzf-branch-widget
 zle -N fzf-helpers-widget
+zle -N fzf-tmux-branch-widget
 bindkey '^o' fzf-branch-widget
+bindkey '^[o' fzf-tmux-branch-widget
+
 bindkey "\e[1;3D" backward-word # ⌥←
 bindkey "\e[1;3C" forward-word # ⌥→
 bindkey \^U backward-kill-line
 
 zi ice wait'3' lucid
-#zi snippet ~/utils/pyenv.zsh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
