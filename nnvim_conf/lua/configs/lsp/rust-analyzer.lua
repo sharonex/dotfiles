@@ -52,13 +52,47 @@ for _, method in ipairs({ 'textDocument/diagnostic', 'workspace/diagnostic' }) d
     end
 end
 
+
+
+-- Track current check mode state
+local check_mode = "clippy" -- Start with clippy as default
+
+-- Function to toggle between clippy and check
+local function toggle_check_mode()
+    local new_mode = check_mode == "clippy" and "check" or "clippy"
+    check_mode = new_mode
+
+    -- Update rust-analyzer settings
+    local new_settings = {
+        ['rust-analyzer'] = {
+            checkOnSave = {
+                command = new_mode
+            },
+        }
+    }
+
+    -- Get the rust-analyzer client
+    local clients = vim.lsp.get_clients({ name = "rust_analyzer" })
+    if #clients > 0 then
+        local client = clients[1]
+        -- Update client settings
+        client.config.settings = vim.tbl_deep_extend("force", client.config.settings or {}, new_settings)
+        -- Notify the server of the configuration change
+        client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
+        print("Rust analyzer check mode switched to: " .. new_mode)
+    else
+        print("No active rust-analyzer client found")
+    end
+end
+
+-- Your original rust-analyzer setup with the toggle function added
 require("lspconfig").rust_analyzer.setup({
     -- capabilities = capabilities,
-    cmd = { "rustup", "run", "stable", "rust-analyzer" }, -- Use rustup's rust-analyzer
+    cmd = { "rustup", "run", "stable", "rust-analyzer" },
     settings = {
         ['rust-analyzer'] = {
             checkOnSave = {
-                command = "clippy"
+                command = "check" -- Default to check
             },
         }
     },
@@ -66,5 +100,17 @@ require("lspconfig").rust_analyzer.setup({
         ExpandMacro = {
             expandMacro
         },
+        -- Add the toggle command
+        ToggleCheckMode = {
+            toggle_check_mode,
+            description = "Toggle between clippy and check mode"
+        },
     },
 })
+
+-- Optional: Create a vim command for easier access
+vim.api.nvim_create_user_command('RustToggleCheck', toggle_check_mode, {
+    desc = 'Toggle rust-analyzer between clippy and check mode'
+})
+
+vim.keymap.set('n', '<leader>xc', ':RustToggleCheck<CR>', { desc = 'Toggle Rust check mode' })
