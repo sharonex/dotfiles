@@ -352,8 +352,18 @@ esac
 # pnpm end
 
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Lazy load NVM - only load when actually needed
+nvm() {
+  unset -f nvm
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+  nvm "$@"
+}
+
+# Also lazy load node/npm commands
+node() { nvm >/dev/null 2>&1; command node "$@"; }
+npm() { nvm >/dev/null 2>&1; command npm "$@"; }
 
 . "$HOME/.atuin/bin/env"
 
