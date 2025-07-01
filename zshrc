@@ -89,58 +89,6 @@ alias w4="w 4"
 alias w5="w 5"
 alias w6="w 6"
 
-wb() {
-    # Get all tmux sessions that match the pelanor pattern
-    local sessions=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | grep "^pelanor[0-9]\+$")
-
-    if [ -z "$sessions" ]; then
-        echo "No pelanor sessions found"
-        return 1
-    fi
-
-    # Build a list of "branch_name:session_name" for fzf
-    local branches_and_sessions=""
-
-    # Convert sessions string to array and iterate properly
-    while IFS= read -r session; do
-        [ -z "$session" ] && continue
-
-        # Extract the number from session name (e.g., pelanor1 -> 1)
-        local num=$(echo "$session" | sed 's/pelanor//')
-        local worktree_path="$HOME/work/pelanor$num"
-
-        # Check if worktree directory exists
-        if [ -d "$worktree_path" ]; then
-            # Get the current branch name for this worktree
-            local branch=$(git -C "$worktree_path" branch --show-current 2>/dev/null)
-            if [ -n "$branch" ]; then
-                branches_and_sessions="$branches_and_sessions$branch:$session\n"
-            fi
-        fi
-    done <<< "$sessions"
-
-    if [ -z "$branches_and_sessions" ]; then
-        echo "No valid worktrees with branches found"
-        return 1
-    fi
-
-    # Use fzf to select a branch
-    local selected=$(echo -e "$branches_and_sessions" | fzf --prompt="Select branch: " --height=40% --layout=reverse --with-nth=1 --delimiter=':')
-
-    if [ -n "$selected" ]; then
-        # Extract the session name from the selection
-        local target_session=$(echo "$selected" | cut -d':' -f2)
-
-        if [ -n "$TMUX" ]; then
-            # We're inside tmux, switch to the session
-            tmux switch-client -t "$target_session"
-        else
-            # We're outside tmux, attach to the session
-            tmux attach-session -t "$target_session"
-        fi
-    fi
-}
-
 alias s="source ~/.zshrc"
 
 alias h="cat $DOTFILES/helpers.txt| fzf | pbcopy"
@@ -272,13 +220,6 @@ fzf-branch-widget() {
   return $ret
 }
 
-fzf-tmux-branch-widget() {
-  LBUFFER="${LBUFFER}$(wb)"
-  local ret=$?
-  zle reset-prompt
-  return $ret
-}
-
 __fhelper() {
   local cmd="cat $DOTFILES/helpers.txt | grep -v -e ^\# -v -e ^$"
   setopt localoptions pipefail no_aliases 2> /dev/null
@@ -302,7 +243,6 @@ zle -N fzf-branch-widget
 zle -N fzf-helpers-widget
 zle -N fzf-tmux-branch-widget
 bindkey '^o' fzf-branch-widget
-bindkey '^[o' fzf-tmux-branch-widget
 
 bindkey "\e[1;3D" backward-word # ⌥←
 bindkey "\e[1;3C" forward-word # ⌥→
