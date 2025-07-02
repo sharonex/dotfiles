@@ -1,0 +1,278 @@
+-- Tools and Utility Plugins
+
+return {
+	-- Detect tabstop and shiftwidth automatically
+	"tpope/vim-sleuth",
+	{
+		"rmagatti/auto-session",
+		lazy = false,
+		config = function()
+			require("auto-session").setup({
+				log_level = "error",
+				auto_session_suppress_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
+			})
+			vim.keymap.set("n", "<leader>xs", "<cmd> SessionDelete<CR>", { desc = "Delete Session" })
+		end,
+	},
+	{
+		"folke/trouble.nvim",
+		cmd = {"Trouble"},
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+		opts = {
+			use_diagnostic_signs = false, -- enabling this will use the signs defined in your lsp client
+		},
+		keys = {
+			{
+				"<leader>ld",
+				"<cmd>Trouble diagnostics toggle pinned=false filter.buf=0<cr>",
+				desc = "Document diagnostics",
+			},
+			{
+				"<leader>lw",
+				"<cmd>Trouble diagnostics toggle pinned=false<cr>",
+				desc = "Workspace diagnostics",
+			},
+			{
+				"<leader>ls",
+				"<cmd>Trouble symbols toggle<cr>",
+				desc = "Document [S]ymbols",
+			},
+			{
+				"<leader>qf",
+				"<cmd>Trouble qflist toggle<cr>",
+				desc = "Open [Q]uick[f]ix",
+			},
+		},
+	},
+	{
+		"kevinhwang91/nvim-bqf",
+		ft = "qf",
+	},
+	{
+		"stevearc/conform.nvim",
+		opts = {},
+		config = function()
+			require("conform").setup({
+				log_level = vim.log.levels.DEBUG,
+				formatters_by_ft = {
+					lua = { "stylua" },
+					rust = { "rustfmt" },
+					typescript = { "prettierd", "prettier", stop_after_first = true },
+					typescriptreact = { "prettierd", "prettier", stop_after_first = true },
+					javascript = { "prettierd", "prettier", stop_after_first = true },
+					javascriptreact = { "prettierd", "prettier", stop_after_first = true },
+				},
+			})
+			vim.api.nvim_create_autocmd("BufWritePre", {
+				pattern = "*",
+				callback = function(args)
+					require("conform").format({ bufnr = args.buf })
+				end,
+			})
+		end,
+	},
+	{
+		"folke/snacks.nvim",
+		priority = 1000,
+		lazy = false,
+		opts = require("configs.snacks"),
+		keys = {
+			{
+				"<leader>e",
+				function()
+					Snacks.explorer()
+				end,
+				desc = "Lazygit",
+			},
+			{
+				"<leader>,",
+				function()
+					Snacks.picker.buffers()
+				end,
+				desc = "Buffers",
+			},
+			{
+				"<leader>:",
+				function()
+					Snacks.picker.command_history()
+				end,
+				desc = "Command History",
+			},
+			{
+				"<leader>u",
+				function()
+					Snacks.picker.undo()
+				end,
+				desc = "Undo",
+			},
+			-- find
+			{
+				"<leader>sc",
+				function()
+					Snacks.picker.files({ cwd = vim.fn.stdpath("config") })
+				end,
+				desc = "Find Config File",
+			},
+			{
+				"<leader>f",
+				function()
+					Snacks.picker.git_files()
+				end,
+				desc = "Find Git Files",
+			},
+			{
+				"<leader>sx",
+				function()
+					Snacks.picker.diagnostics()
+				end,
+				desc = "Recent",
+			},
+			{
+				"<leader>sr",
+				function()
+					Snacks.picker.recent()
+				end,
+				desc = "Recent",
+			},
+			-- Grep
+			{
+				"<leader>/",
+				function()
+					Snacks.picker.lines()
+				end,
+				desc = "Buffer Lines",
+			},
+			{
+				"<leader>sp",
+				function()
+					Snacks.picker.grep()
+				end,
+				desc = "Grep",
+			},
+			{
+				"<leader>sP",
+				function()
+					Snacks.picker.grep_word()
+				end,
+				desc = "Visual selection or word",
+				mode = { "n", "x", "v" },
+			},
+			-- search
+			{
+				"<leader>sg",
+				function()
+					Snacks.picker.git_diff()
+				end,
+				desc = "Command History",
+			},
+			{
+				"<leader>sc",
+				function()
+					Snacks.picker.command_history()
+				end,
+				desc = "Command History",
+			},
+			{
+				"<leader>sC",
+				function()
+					Snacks.picker.commands()
+				end,
+				desc = "Commands",
+			},
+			{
+				"<leader>sd",
+				function()
+					Snacks.picker.diagnostics()
+				end,
+				desc = "Diagnostics",
+			},
+			{
+				"<leader>sh",
+				function()
+					Snacks.picker.help()
+				end,
+				desc = "Help Pages",
+			},
+			{
+				"<leader>sk",
+				function()
+					Snacks.picker.keymaps()
+				end,
+				desc = "Keymaps",
+			},
+			{
+				"<leader>sl",
+				function()
+					Snacks.picker.resume()
+				end,
+				desc = "Resume",
+			},
+			{
+				"<leader>sq",
+				function()
+					Snacks.picker.qflist()
+				end,
+				desc = "Quickfix List",
+			},
+			{
+				"<leader>sb",
+				function()
+					Snacks.picker.git_branches()
+				end,
+				desc = "Search Branches",
+			},
+			-- LSP
+			{
+				"gd",
+				function()
+					Snacks.picker.lsp_definitions()
+				end,
+				desc = "Goto Definition",
+			},
+			{
+				"grr",
+				function()
+					Snacks.picker.lsp_references()
+				end,
+				nowait = true,
+				desc = "References",
+			},
+			{
+				"gri",
+				function()
+					Snacks.picker.lsp_implementations()
+				end,
+				desc = "Goto Implementation",
+			},
+			{
+				"<leader>D",
+				function()
+					Snacks.picker.lsp_type_definitions()
+				end,
+				desc = "Goto T[y]pe Definition",
+			},
+			{
+				"<leader>sd",
+				function()
+					Snacks.picker.lsp_symbols()
+				end,
+				desc = "LSP Symbols",
+			},
+			{
+				"<leader>ss",
+				function()
+					Snacks.picker.lsp_workspace_symbols()
+				end,
+				desc = "LSP Workspace Symbols",
+			},
+			-- Git
+			{
+				"<leader>go",
+				function()
+					Snacks.gitbrowse.open()
+				end,
+				desc = "Git open in browser",
+			},
+		},
+	},
+}
