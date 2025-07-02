@@ -107,7 +107,7 @@ return {
 			},
 			-- find
 			{
-				"<leader>sc",
+				"<leader>fc",
 				function()
 					Snacks.picker.files({ cwd = vim.fn.stdpath("config") })
 				end,
@@ -125,7 +125,7 @@ return {
 				function()
 					Snacks.picker.diagnostics()
 				end,
-				desc = "Recent",
+				desc = "Diagnostics",
 			},
 			{
 				"<leader>sr",
@@ -163,7 +163,7 @@ return {
 				function()
 					Snacks.picker.git_diff()
 				end,
-				desc = "Command History",
+				desc = "Git Diff",
 			},
 			{
 				"<leader>sc",
@@ -180,11 +180,11 @@ return {
 				desc = "Commands",
 			},
 			{
-				"<leader>sd",
+				"<leader>sD",
 				function()
 					Snacks.picker.diagnostics()
 				end,
-				desc = "Diagnostics",
+				desc = "All Diagnostics",
 			},
 			{
 				"<leader>sh",
@@ -252,11 +252,11 @@ return {
 				desc = "Goto T[y]pe Definition",
 			},
 			{
-				"<leader>sd",
+				"<leader>sy",
 				function()
 					Snacks.picker.lsp_symbols()
 				end,
-				desc = "LSP Symbols",
+				desc = "LSP S[y]mbols",
 			},
 			{
 				"<leader>ss",
