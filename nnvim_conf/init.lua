@@ -75,8 +75,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     pattern = "*",
 })
 
--- Enable format on save
-vim.cmd([[autocmd BufWritePre * lua vim.lsp.buf.format()]])
+-- Format on save is handled by conform.nvim in plugins.lua
 
 vim.g.rust_recommended_style = false
 

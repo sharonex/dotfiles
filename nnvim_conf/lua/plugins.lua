@@ -368,7 +368,7 @@ require("lazy").setup({
 	},
 	{
 		"tpope/vim-fugitive",
-		lazy = false,
+		event = "VeryLazy",
 		config = function()
 			vim.keymap.set("n", "<leader>gB", "<cmd> Git blame<CR>", { desc = "Run [G]it [B]lame on file" })
 			vim.keymap.set("n", "<leader>gf", ":Git<CR>/taged<CR>:noh<CR>j", { desc = "[G]it [F]ugitive" })
@@ -435,23 +435,38 @@ require("lazy").setup({
 		config = function(_) -- Add the opts parameter here
 			local harpoon = require("harpoon")
 
-			function Harpoon_files()
-				-- define visual settings for harpoon tabline
-				local yellow = "#DCDCAA"
-				local yellow_orange = "#D7BA7D"
-				local background_color = "#282829"
-				local grey = "#797C91"
-				local light_blue = "#9CDCFE"
+			-- Set up highlight groups once (not on every call)
+			local yellow = "#DCDCAA"
+			local yellow_orange = "#D7BA7D"
+			local background_color = "#282829"
+			local grey = "#797C91"
+			local light_blue = "#9CDCFE"
 
-				vim.api.nvim_set_hl(0, "HarpoonInactive", { fg = grey, bg = background_color })
-				vim.api.nvim_set_hl(0, "HarpoonActive", { fg = light_blue, bg = background_color })
-				vim.api.nvim_set_hl(0, "HarpoonNumberActive", { fg = yellow, bg = background_color })
-				vim.api.nvim_set_hl(0, "HarpoonNumberInactive", { fg = yellow_orange, bg = background_color })
-				vim.api.nvim_set_hl(0, "TabLineFill", { fg = "white", bg = background_color })
+			vim.api.nvim_set_hl(0, "HarpoonInactive", { fg = grey, bg = background_color })
+			vim.api.nvim_set_hl(0, "HarpoonActive", { fg = light_blue, bg = background_color })
+			vim.api.nvim_set_hl(0, "HarpoonNumberActive", { fg = yellow, bg = background_color })
+			vim.api.nvim_set_hl(0, "HarpoonNumberInactive", { fg = yellow_orange, bg = background_color })
+			vim.api.nvim_set_hl(0, "TabLineFill", { fg = "white", bg = background_color })
+
+			-- Cache for performance optimization
+			local cache = {
+				last_buf = nil,
+				last_length = 0,
+				last_result = "",
+			}
+
+			function Harpoon_files()
+				local current_buf = vim.api.nvim_get_current_buf()
+				local marks_length = harpoon:list():length()
+				
+				-- Use cache if buffer and harpoon list haven't changed
+				if cache.last_buf == current_buf and cache.last_length == marks_length then
+					return cache.last_result
+				end
 
 				local contents = {}
-				local marks_length = harpoon:list():length()
 				local current_file_path = vim.fn.fnamemodify(vim.fn.expand("%:p"), ":.")
+				
 				for index = 1, marks_length do
 					local harpoon_file_path = harpoon:list():get(index).value
 					local file_name = harpoon_file_path == "" and "(empty)"
@@ -466,13 +481,25 @@ require("lazy").setup({
 					end
 				end
 
-				return table.concat(contents)
+				local result = table.concat(contents)
+				
+				-- Update cache
+				cache.last_buf = current_buf
+				cache.last_length = marks_length
+				cache.last_result = result
+				
+				return result
 			end
 
 			vim.opt.showtabline = 2
-			vim.api.nvim_create_autocmd({ "BufEnter", "BufAdd", "User" }, {
+			-- Use fewer events and debounce to improve performance
+			vim.api.nvim_create_autocmd({ "BufEnter", "User" }, {
+				pattern = { "*", "HarpoonUIWindowClosed", "HarpoonUIWindowOpened" },
 				callback = function(ev)
-					vim.o.tabline = Harpoon_files()
+					-- Only update tabline if we're in a normal buffer
+					if vim.bo.buftype == "" then
+						vim.o.tabline = Harpoon_files()
+					end
 				end,
 			})
 		end,
@@ -568,7 +595,7 @@ require("lazy").setup({
 	},
 	{
 		"folke/trouble.nvim",
-		lazy = false,
+		cmd = {"Trouble"},
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		opts = {
 			-- your configuration comes here
@@ -884,7 +911,7 @@ require("lazy").setup({
 	},
 	{
 		"kevinhwang91/nvim-bqf",
-		lazy = false,
+		ft = "qf",
 	},
 	{
 		"johmsalas/text-case.nvim",
