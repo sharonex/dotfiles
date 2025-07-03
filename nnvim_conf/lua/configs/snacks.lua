@@ -1,4 +1,4 @@
-function x()
+function X()
   -- Toggle the profiler
   Snacks.toggle.profiler():map("<leader>pp")
   -- Toggle the profiler highlights
@@ -62,4 +62,4 @@ function x()
   }
 end
 
-return x
+return X
