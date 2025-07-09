@@ -79,6 +79,10 @@ return {
 		end,
 	},
 	{
-		'github/copilot.vim'
+		'github/copilot.vim',
+		config = function()
+			-- Enable Copilot globally
+			vim.g.copilot_enabled = true
+		end
 	},
 }
