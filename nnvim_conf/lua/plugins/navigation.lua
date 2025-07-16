@@ -152,4 +152,14 @@ return {
 			vim.keymap.set("n", "|", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 		end,
 	},
+	{
+		"ggandor/leap.nvim",
+		event = "VeryLazy",
+		config = function()
+			require("leap").add_default_mappings()
+			-- Fix 'S' mapping by explicitly setting it after default mappings
+			vim.keymap.set("n", "S", "<Plug>(leap-backward-to)", { desc = "Leap backward" })
+			vim.keymap.set("n", "s", "<Plug>(leap-forward-to)", { desc = "Leap forward" })
+		end,
+	},
 }

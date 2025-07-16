@@ -10,39 +10,41 @@ return {
 			spec = {
 				{
 					mode = { "n", "v" },
-					{ "<leader><tab>", group = "tabs" },
-					{ "<leader>c", group = "code" },
-					{ "<leader>d", group = "debug" },
-					{ "<leader>dp", group = "profiler" },
-					{ "<leader>f", group = "file/find" },
-					{ "<leader>g", group = "git" },
-					{ "<leader>gh", group = "hunks" },
-					{ "<leader>q", group = "quit/session" },
-					{ "<leader>s", group = "search" },
+					-- Main leader groups
+					{ "<leader>b", group = "buffer", icon = { icon = "󰈚 ", color = "blue" }, expand = function() return require("which-key.extras").expand.buf() end },
+					{ "<leader>c", group = "code", icon = { icon = "󰨞 ", color = "yellow" } },
+					{ "<leader>d", group = "debug", icon = { icon = "󰃤 ", color = "red" } },
+					{ "<leader>dp", group = "profiler", icon = { icon = "󰄉 ", color = "orange" } },
+					{ "<leader>f", group = "file/find", icon = { icon = "󰈞 ", color = "green" } },
+					{ "<leader>g", group = "git", icon = { icon = "󰊢 ", color = "orange" } },
+					{ "<leader>gh", group = "hunks", icon = { icon = "󰊢 ", color = "orange" } },
+					{ "<leader>gr", group = "rebase", icon = { icon = "󰊢 ", color = "orange" } },
+					{ "<leader>q", group = "quit/session", icon = { icon = "󰗼 ", color = "red" } },
+					{ "<leader>r", group = "rename", icon = { icon = "󰑕 ", color = "cyan" } },
+					{ "<leader>s", group = "search", icon = { icon = "󰍉 ", color = "purple" } },
+					{ "<leader>t", group = "tabs", icon = { icon = "󰓩 ", color = "blue" } },
 					{ "<leader>u", group = "ui", icon = { icon = "󰙵 ", color = "cyan" } },
+					{ "<leader>w", group = "windows", icon = { icon = "󰖲 ", color = "blue" }, proxy = "<c-w>", expand = function() return require("which-key.extras").expand.win() end },
 					{ "<leader>x", group = "diagnostics/quickfix", icon = { icon = "󱖫 ", color = "green" } },
-					{ "[", group = "prev" },
-					{ "]", group = "next" },
-					{ "g", group = "goto" },
-					{ "gs", group = "surround" },
-					{ "z", group = "fold" },
-					{
-						"<leader>b",
-						group = "buffer",
-						expand = function()
-							return require("which-key.extras").expand.buf()
-						end,
-					},
-					{
-						"<leader>w",
-						group = "windows",
-						proxy = "<c-w>",
-						expand = function()
-							return require("which-key.extras").expand.win()
-						end,
-					},
-					-- better descriptions
+					
+					-- Double leader for special actions
+					{ "<leader><leader>", group = "window swap", icon = { icon = "󰹼 ", color = "magenta" } },
+					
+					-- Tab management (legacy support)
+					{ "<leader><tab>", group = "tabs", icon = { icon = "󰓩 ", color = "blue" } },
+					
+					-- Navigation groups
+					{ "[", group = "prev", icon = { icon = "󰒮 ", color = "blue" } },
+					{ "]", group = "next", icon = { icon = "󰒭 ", color = "blue" } },
+					{ "g", group = "goto", icon = { icon = "󰍉 ", color = "purple" } },
+					{ "gs", group = "surround", icon = { icon = "󰅪 ", color = "yellow" } },
+					{ "z", group = "fold", icon = { icon = "󰘖 ", color = "cyan" } },
+					
+					-- Better descriptions for specific actions
 					{ "gx", desc = "Open with system app" },
+					{ "<leader>l", desc = "Open diagnostic float" },
+					{ "<leader>g[", desc = "Git mediate" },
+					{ "<leader>xl", desc = "Toggle diagnostic lines" },
 				},
 			},
 		},

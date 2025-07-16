@@ -11,7 +11,7 @@ return {
 				log_level = "error",
 				auto_session_suppress_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
 			})
-			vim.keymap.set("n", "<leader>xs", "<cmd> SessionDelete<CR>", { desc = "Delete Session" })
+			vim.keymap.set("n", "<leader>xd", "<cmd> SessionDelete<CR>", { desc = "Delete Session" })
 		end,
 	},
 	{

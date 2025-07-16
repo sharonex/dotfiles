@@ -29,7 +29,7 @@
     set-hooks = config --global --unset core.hooksPath
 
 [core]
-    hooksPath = /Users/sharonavni/.dotfiles/nnvim_hooks/my_hooks/
+	hooksPath = /dev/null
     #pager = delta
 
 [interactive]

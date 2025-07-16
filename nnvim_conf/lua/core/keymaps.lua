@@ -81,10 +81,10 @@ end, {})
 vim.keymap.set("n", "<leader>g[", ":GitMediate<CR>", { noremap = true, silent = true })
 
 -- Diagnostic configuration and toggle
-local default_config = { virtual_lines = { current_line = true }, virtual_text = true }
+local default_config = { virtual_lines = false, virtual_text = true }
 vim.diagnostic.config(default_config)
 
-vim.keymap.set('n', '<leader>xd', function()
+vim.keymap.set('n', '<leader>xl', function()
 	if vim.diagnostic.config().virtual_lines == false then
 		vim.diagnostic.config(default_config)
 	else
