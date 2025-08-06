@@ -153,13 +153,41 @@ return {
 		end,
 	},
 	{
-		"ggandor/leap.nvim",
-		event = "VeryLazy",
+		"folke/flash.nvim",
+		lazy = false,
 		config = function()
-			require("leap").add_default_mappings()
-			-- Fix 'S' mapping by explicitly setting it after default mappings
-			vim.keymap.set("n", "S", "<Plug>(leap-backward-to)", { desc = "Leap backward" })
-			vim.keymap.set("n", "s", "<Plug>(leap-forward-to)", { desc = "Leap forward" })
+			require("flash").setup(
+				---@module 'flash'
+				{
+					jump = {
+						autojump = true,
+					},
+					modes = {
+						search = {
+							enabled = false,
+						},
+						char = {
+							enabled = false,
+						},
+					},
+				}
+			)
 		end,
+	    keys = {
+			{ "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+			{ "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+			{ "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+	 	},
 	},
+
+	-- {
+	-- 	"ggandor/leap.nvim",
+	-- 	event = "VeryLazy",
+	-- 	config = function()
+	-- 		require("leap").add_default_mappings()
+	-- 		-- Fix 'S' mapping by explicitly setting it after default mappings
+	-- 		vim.keymap.set("n", "S", "<Plug>(leap-backward-to)", { desc = "Leap backward" })
+	-- 		vim.keymap.set("n", "s", "<Plug>(leap-forward-to)", { desc = "Leap forward" })
+	-- 	end,
+	-- },
 }

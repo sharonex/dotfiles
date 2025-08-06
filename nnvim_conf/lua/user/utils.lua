@@ -38,9 +38,6 @@ M.special_windows = {
 			view = require("trouble").close()
 		end
 	end,
-	dap = function()
-		require("dap-view").toggle()
-	end,
 	DiffviewFiles = function()
 		vim.cmd(":DiffviewClose")
 	end,

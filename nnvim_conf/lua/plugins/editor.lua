@@ -200,4 +200,16 @@ return {
 			require("textcase").setup({})
 		end,
 	},
+	{
+		"folke/lazydev.nvim",
+		ft = "lua",
+		dependencies = {
+			"Bilal2453/luvit-meta",
+		},
+		opts = {
+			library = {
+				"luvit-meta/library",
+			},
+		},
+	},
 }

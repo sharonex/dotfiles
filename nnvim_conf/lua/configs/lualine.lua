@@ -1,45 +1,4 @@
 -- LSP clients attached to buffer
-local function clients_lsp()
-	local bufnr = vim.api.nvim_get_current_buf()
-
-	local clients = vim.lsp.get_clients({ bufnr = bufnr })
-	local ok, conform = pcall(require, "conform")
-	local formatters = conform.list_formatters(bufnr)
-
-	if next(clients) == nil and next(formatters) == nil then
-		return " No servers"
-	end
-
-	local buf_client_names = {}
-	if next(clients) ~= nil then
-		for _, client in pairs(clients) do
-			table.insert(buf_client_names, client.name)
-		end
-	end
-
-	if ok then
-		for _, formatter in ipairs(formatters) do
-			if formatter["name"]:find("ruff") then
-				table.insert(buf_client_names, "ruff_format")
-			else
-				table.insert(buf_client_names, formatter["name"])
-			end
-		end
-	end
-
-	local hash = {}
-	local unique_client_names = {}
-
-	for _, v in ipairs(buf_client_names) do
-		if not hash[v] then
-			unique_client_names[#unique_client_names + 1] = v
-			hash[v] = true
-		end
-	end
-	local language_servers = table.concat(unique_client_names, " │ ")
-	return " " .. language_servers
-end
-
 local function is_not_toggleterm()
 	return vim.bo.filetype ~= "toggleterm"
 end
@@ -131,7 +90,6 @@ require("lualine").setup(
 				{ "progress", cond = is_not_toggleterm },
 				{ "location", cond = is_not_toggleterm },
 			},
-			lualine_z = { { clients_lsp, cond = is_not_toggleterm } },
 		},
 		extensions = {
 			"mason",
