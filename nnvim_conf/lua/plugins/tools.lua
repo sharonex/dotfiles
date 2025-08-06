@@ -75,15 +75,16 @@ return {
 		"folke/snacks.nvim",
 		priority = 1000,
 		lazy = false,
-		opts = require("configs.snacks"),
+		config = function()
+			local snacks_config = require("configs.snacks")
+			require("snacks").setup(snacks_config)
+			
+			-- Setup additional keymaps after snacks is initialized
+			Snacks.toggle.profiler():map("<leader>pp")
+			Snacks.toggle.profiler_highlights():map("<leader>ph")
+			
+		end,
 		keys = {
-			{
-				"<leader>e",
-				function()
-					Snacks.explorer()
-				end,
-				desc = "Lazygit",
-			},
 			{
 				"<leader>,",
 				function()

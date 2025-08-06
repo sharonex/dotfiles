@@ -207,6 +207,23 @@ return {
 	 	},
 	},
 
+	{
+		'echasnovski/mini.files',
+		version = false,
+		keys = {
+			{ "<leader>e", function() 
+				local MiniFiles = require("mini.files")
+				local current_file = vim.fn.expand("%:p")
+				MiniFiles.open(current_file)
+				-- Expand 2 parent directories by going out twice
+				MiniFiles.go_out()
+				MiniFiles.go_out()
+				-- Go back in to show the expanded structure
+				MiniFiles.go_in({ close_on_file = false })
+				MiniFiles.go_in({ close_on_file = false })
+			end, desc = "Open Current File with 2 Parent Dirs Expanded" },
+		},
+	},
 	-- {
 	-- 	"ggandor/leap.nvim",
 	-- 	event = "VeryLazy",
