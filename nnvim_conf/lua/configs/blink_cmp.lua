@@ -73,6 +73,11 @@ require("blink.cmp").setup({
 		keyword = {
 			range = "prefix",
 		},
+		trigger = {
+			show_on_trigger_character = true,
+			show_on_keyword = true,
+			show_on_blocked_trigger_characters = {},
+		},
 		list = {
 			selection = {
 				preselect = false,
