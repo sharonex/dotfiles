@@ -1,0 +1,14 @@
+-- require("markview.extras.checkboxes").setup({
+-- 	remove_markers = true,
+-- 	exit = true,
+-- 	default_marker = "-",
+-- 	default_state = " ",
+-- 	states = {
+-- 		{ " ", "x", "/", "~" },
+-- 	},
+-- })
+--
+--
+-- require("markview").setup({
+-- 	previe = false,
+-- })
