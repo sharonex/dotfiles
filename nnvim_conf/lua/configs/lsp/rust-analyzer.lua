@@ -65,7 +65,8 @@ local function toggle_check_mode()
     -- Update rust-analyzer settings
     local new_settings = {
         ['rust-analyzer'] = {
-            checkOnSave = {
+            checkOnSave = true,
+            check = {
                 command = new_mode
             },
         }
@@ -91,7 +92,8 @@ require("lspconfig").rust_analyzer.setup({
     cmd = { "rustup", "run", "stable", "rust-analyzer" },
     settings = {
         ['rust-analyzer'] = {
-            checkOnSave = {
+            checkOnSave = true,
+            check = {
                 command = "check" -- Default to check
             },
         }
