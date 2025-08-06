@@ -57,8 +57,8 @@ return {
 		config = function()
 			require("catppuccin").setup({
 				flavour = "mocha", -- latte, frappe, macchiato, mocha
-				background = { -- :h background
-					light = "latte",
+				background = {
+					light = "latte", 
 					dark = "mocha",
 				},
 				transparent_background = false,
@@ -88,19 +88,37 @@ return {
 				},
 				color_overrides = {},
 				custom_highlights = {},
+				default_integrations = true,
 				integrations = {
 					cmp = true,
 					gitsigns = true,
-					nvimtree = true,
+					nvimtree = false,
 					treesitter = true,
 					notify = false,
 					mini = {
 						enabled = true,
 						indentscope_color = "",
 					},
+					-- Enable more integrations for better consistency
+					harpoon = true,
+					lsp_trouble = true,
+					which_key = true,
+					fidget = true,
+					dropbar = {
+						enabled = true,
+						color_mode = true,
+					},
 				},
 			})
-			vim.cmd("colorscheme catppuccin")
+
+			vim.cmd.colorscheme("catppuccin")
+			
+			-- Force reload and verify colors are applied
+			vim.schedule(function()
+				if vim.g.colors_name ~= "catppuccin-mocha" then
+					vim.cmd.colorscheme("catppuccin")
+				end
+			end)
 		end,
 	},
 	{

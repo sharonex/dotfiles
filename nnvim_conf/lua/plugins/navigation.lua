@@ -45,18 +45,45 @@ return {
 		config = function(_) -- Add the opts parameter here
 			local harpoon = require("harpoon")
 
-			-- Set up highlight groups once (not on every call)
-			local yellow = "#DCDCAA"
-			local yellow_orange = "#D7BA7D"
-			local background_color = "#282829"
-			local grey = "#797C91"
-			local light_blue = "#9CDCFE"
-
-			vim.api.nvim_set_hl(0, "HarpoonInactive", { fg = grey, bg = background_color })
-			vim.api.nvim_set_hl(0, "HarpoonActive", { fg = light_blue, bg = background_color })
-			vim.api.nvim_set_hl(0, "HarpoonNumberActive", { fg = yellow, bg = background_color })
-			vim.api.nvim_set_hl(0, "HarpoonNumberInactive", { fg = yellow_orange, bg = background_color })
-			vim.api.nvim_set_hl(0, "TabLineFill", { fg = "white", bg = background_color })
+			-- Set up highlight groups using Catppuccin colors
+			local function setup_highlights()
+				-- Only set highlights if Catppuccin is loaded
+				if vim.g.colors_name and vim.g.colors_name:match("catppuccin") then
+					local palette = require("catppuccin.palettes").get_palette()
+					
+					vim.api.nvim_set_hl(0, "HarpoonInactive", { 
+						fg = palette.subtext0, 
+						bg = palette.mantle 
+					})
+					vim.api.nvim_set_hl(0, "HarpoonActive", { 
+						fg = palette.blue, 
+						bg = palette.mantle, 
+						bold = true 
+					})
+					vim.api.nvim_set_hl(0, "HarpoonNumberActive", { 
+						fg = palette.yellow, 
+						bg = palette.mantle, 
+						bold = true 
+					})
+					vim.api.nvim_set_hl(0, "HarpoonNumberInactive", { 
+						fg = palette.peach, 
+						bg = palette.mantle 
+					})
+					vim.api.nvim_set_hl(0, "TabLineFill", { 
+						fg = palette.text, 
+						bg = palette.mantle 
+					})
+				end
+			end
+			
+			-- Set highlights after colorscheme loads
+			vim.api.nvim_create_autocmd("ColorScheme", {
+				callback = setup_highlights,
+				desc = "Update Harpoon highlights when colorscheme changes"
+			})
+			
+			-- Set highlights now if colorscheme is already loaded
+			setup_highlights()
 
 			-- Cache for performance optimization
 			local cache = {
