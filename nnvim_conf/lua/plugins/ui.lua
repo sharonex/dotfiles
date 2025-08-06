@@ -66,83 +66,24 @@ return {
 	},
 	{
 		"nvim-lualine/lualine.nvim",
-		event = "VeryLazy",
-		init = function()
-			vim.g.lualine_laststatus = vim.o.laststatus
-			if vim.fn.argc(-1) > 0 then
-				-- set an empty statusline till lualine loads
-				vim.o.statusline = " "
-			else
-				-- hide the statusline on the starter page
-				vim.o.laststatus = 0
-			end
+		lazy = false,
+		config = function()
+			require("configs.lualine")
 		end,
-		opts = function()
-			local icons = {
-				misc = {
-					dots = "󰇘",
-				},
-				diagnostics = {
-					Error = " ",
-					Warn = " ",
-					Hint = " ",
-					Info = " ",
-				},
-				git = {
-					added = " ",
-					modified = " ",
-					removed = " ",
-				},
-			}
-			vim.o.laststatus = vim.g.lualine_laststatus
-
-			local opts = {
-				options = {
-					theme = "auto",
-					globalstatus = vim.o.laststatus == 3,
-					disabled_filetypes = { statusline = { "dashboard", "alpha", "ministarter", "snacks_dashboard" } },
-				},
-				sections = {
-					lualine_a = { "mode" },
-
-					lualine_b = {
-						{
-							"filetype",
-							icon_only = true,
-							separator = "",
-							padding = { left = 1, right = 0 },
-						},
-						{
-							"filename",
-							path = 1, -- 0: Just filename, 1: Relative path, 2: Absolute path
-							shorting_target = 40, -- Shorten if file path exceeds this length
-							symbols = {
-								modified = "[+]",
-								readonly = "[-]",
-								unnamed = "[No Name]",
-							},
-						},
-						{
-							"diagnostics",
-							symbols = {
-								error = icons.diagnostics.Error,
-								warn = icons.diagnostics.Warn,
-								info = icons.diagnostics.Info,
-								hint = icons.diagnostics.Hint,
-							},
-						},
-					},
-					lualine_c = { "branch" },
-					lualine_x = { Snacks.profiler.status() },
-					lualine_z = {
-						function()
-							return " " .. os.date("%R")
-						end,
-					},
-				},
-			}
-
-			return opts
+	},
+	{
+		"b0o/incline.nvim",
+		event = "UiEnter",
+		dependencies = "echasnovski/mini.icons",
+		config = function()
+			require("configs.incline")
+		end,
+	},
+	{
+		"Bekaboo/dropbar.nvim",
+		event = "UiEnter",
+		config = function()
+			require("configs.dropbar")
 		end,
 	},
 	{
