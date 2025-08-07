@@ -95,13 +95,10 @@ return {
 					add = function()
 						return { { object_name .. opener }, { closer } }
 					end,
-					find = function()
-						local config = require("nvim-surround.config")
-						return config.get_selection({ node = "generic_type" })
-					end,
-					delete = "^(" .. object_name .. opener .. ")().-(" .. closer .. ")()$",
+					find = object_name .. "%b" .. opener .. closer,
+					delete = "^(" .. object_name:gsub("([%^%$%(%)%%%.%[%]%*%+%-%?])", "%%%1") .. opener:gsub("([%^%$%(%)%%%.%[%]%*%+%-%?])", "%%%1") .. ")().-(" .. closer:gsub("([%^%$%(%)%%%.%[%]%*%+%-%?])", "%%%1") .. ")()$",
 					change = {
-						target = "^(" .. object_name .. opener .. ")().-(" .. closer .. ")()$",
+						target = "^(" .. object_name:gsub("([%^%$%(%)%%%.%[%]%*%+%-%?])", "%%%1") .. opener:gsub("([%^%$%(%)%%%.%[%]%*%+%-%?])", "%%%1") .. ")().-(" .. closer:gsub("([%^%$%(%)%%%.%[%]%*%+%-%?])", "%%%1") .. ")()$",
 					},
 				}
 			end
@@ -117,31 +114,6 @@ return {
 						add = function()
 							return { { "Ok(" }, { ")" } }
 						end,
-					},
-					-- "generic"
-					["g"] = {
-						add = function()
-							local config = require("nvim-surround.config")
-							local result = config.get_input("Enter the generic name: ")
-							if result then
-								return { { result .. "<" }, { ">" } }
-							end
-						end,
-						find = function()
-							local config = require("nvim-surround.config")
-							return config.get_selection({ node = "generic_type" })
-						end,
-						delete = "^(.-<)().-(>)()$",
-						change = {
-							target = "^(.-<)().-(>)()$",
-							replacement = function()
-								local config = require("nvim-surround.config")
-								local result = config.get_input("Enter the generic name: ")
-								if result then
-									return { { result .. "<" }, { ">" } }
-								end
-							end,
-						},
 					},
 				},
 			})
