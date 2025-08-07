@@ -62,6 +62,13 @@ return {
 					javascript = { "prettierd", "prettier", stop_after_first = true },
 					javascriptreact = { "prettierd", "prettier", stop_after_first = true },
 				},
+				formatters = {
+					rustfmt = {
+						command = "cargo",
+						args = { "+nightly-2025-02-14", "fmt", "--", "$FILENAME" },
+						stdin = false,
+					},
+				},
 			})
 			vim.api.nvim_create_autocmd("BufWritePre", {
 				pattern = "*",
