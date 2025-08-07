@@ -26,20 +26,20 @@ return {
 					{ "<leader>u", group = "ui", icon = { icon = "󰙵 ", color = "cyan" } },
 					{ "<leader>w", group = "windows", icon = { icon = "󰖲 ", color = "blue" }, proxy = "<c-w>", expand = function() return require("which-key.extras").expand.win() end },
 					{ "<leader>x", group = "diagnostics/quickfix", icon = { icon = "󱖫 ", color = "green" } },
-					
+
 					-- Double leader for special actions
 					{ "<leader><leader>", group = "window swap", icon = { icon = "󰹼 ", color = "magenta" } },
-					
+
 					-- Tab management (legacy support)
 					{ "<leader><tab>", group = "tabs", icon = { icon = "󰓩 ", color = "blue" } },
-					
+
 					-- Navigation groups
 					{ "[", group = "prev", icon = { icon = "󰒮 ", color = "blue" } },
 					{ "]", group = "next", icon = { icon = "󰒭 ", color = "blue" } },
 					{ "g", group = "goto", icon = { icon = "󰍉 ", color = "purple" } },
 					{ "gs", group = "surround", icon = { icon = "󰅪 ", color = "yellow" } },
 					{ "z", group = "fold", icon = { icon = "󰘖 ", color = "cyan" } },
-					
+
 					-- Better descriptions for specific actions
 					{ "gx", desc = "Open with system app" },
 					{ "<leader>l", desc = "Open diagnostic float" },
@@ -58,8 +58,12 @@ return {
 			require("catppuccin").setup({
 				flavour = "mocha", -- latte, frappe, macchiato, mocha
 				background = {
-					light = "latte", 
+					light = "latte",
 					dark = "mocha",
+				},
+				float = {
+					solid = true,
+					transparent = true,
 				},
 				transparent_background = false,
 				show_end_of_buffer = false,
@@ -69,7 +73,7 @@ return {
 					shade = "dark",
 					percentage = 0.15,
 				},
-				no_italic = false,
+				no_italic = true,
 				no_bold = false,
 				no_underline = false,
 				styles = {
@@ -104,6 +108,7 @@ return {
 					lsp_trouble = true,
 					which_key = true,
 					fidget = true,
+					snacks = true,
 					dropbar = {
 						enabled = true,
 						color_mode = true,
@@ -112,7 +117,7 @@ return {
 			})
 
 			vim.cmd.colorscheme("catppuccin")
-			
+
 			-- Force reload and verify colors are applied
 			vim.schedule(function()
 				if vim.g.colors_name ~= "catppuccin-mocha" then
