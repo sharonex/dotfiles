@@ -96,6 +96,15 @@ return {
 		config = function()
 			-- Enable Copilot globally
 			vim.g.copilot_enabled = true
+			
+			-- Disable default tab mapping
+			vim.g.copilot_no_tab_map = true
+			
+			-- Set Alt+L as the accept mapping
+			vim.keymap.set('i', '<A-l>', 'copilot#Accept("\\<CR>")', {
+				expr = true,
+				replace_keycodes = false
+			})
 		end
 	},
 }
