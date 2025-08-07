@@ -96,4 +96,49 @@ return {
 			vim.keymap.set("n", "<leader>gh", "<cmd>DiffviewFileHistory %<CR>", { desc = "[G]it File [H]istory" })
 		end,
 	},
+	{
+		"pwntester/octo.nvim",
+		event = "VeryLazy",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"folke/snacks.nvim",
+			"echasnovski/mini.icons",
+		},
+		enabled = function()
+			return vim.fn.executable("gh") == 1
+		end,
+		config = function()
+			require("octo").setup({
+				use_local_fs = true,
+				picker = "snacks",
+				reviews = {
+					auto_show_threads = false,
+				},
+			})
+		end,
+		keys = {
+			{
+				"<leader>Oo",
+				function()
+					require("octo").open_issue()
+				end,
+				desc = "[G]it [O]pen Issue",
+			},
+			{
+				"<leader>Om",
+				function()
+					vim.cmd("Octo search author:Sharonex is:open")
+				end,
+				desc = "[G]it [My] Pull Request",
+			},
+			{
+				"<leader>Or",
+				function()
+					vim.cmd("Octo search is:open is:pr review-requested:@me ")
+				end,
+				desc = "[G]it [R]eview Pull Requests",
+			}
+		}
+	},
+
 }
