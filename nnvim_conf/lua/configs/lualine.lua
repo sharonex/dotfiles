@@ -63,25 +63,11 @@ local function get_startup_time()
 	return "󰅕 " .. stats.startuptime .. "ms"
 end
 
--- Get Catppuccin theme and palette
-local function get_catppuccin_theme()
-	if vim.g.colors_name and vim.g.colors_name:match("catppuccin") then
-		local palette = require("catppuccin.palettes").get_palette()
-		local theme = require("catppuccin.utils.lualine")()
-		-- Make the middle section transparent for a cleaner look
-		theme.normal.c.bg = "NONE"
-		theme.normal.c.fg = palette.subtext1
-		return theme
-	end
-	return "auto"
-end
-
 require("lualine").setup(
 	---@module 'lualine'
 	{
 		options = {
 			always_divide_middle = false,
-			theme = get_catppuccin_theme(),
 			section_separators = { left = "", right = "" },
 			component_separators = { left = "", right = "" },
 		},

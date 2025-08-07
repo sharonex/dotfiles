@@ -50,80 +50,14 @@ return {
 		},
 	},
 	{
-		"catppuccin/nvim",
-		name = "catppuccin",
-		lazy = false,
-		priority = 1000,
+		"navarasu/onedark.nvim",
+		priority = 1000, -- make sure to load this before all the other start plugins
 		config = function()
-			require("catppuccin").setup({
-				flavour = "mocha", -- latte, frappe, macchiato, mocha
-				background = {
-					light = "latte",
-					dark = "mocha",
-				},
-				float = {
-					solid = true,
-					transparent = true,
-				},
-				transparent_background = false,
-				show_end_of_buffer = false,
-				term_colors = true,
-				dim_inactive = {
-					enabled = false,
-					shade = "dark",
-					percentage = 0.15,
-				},
-				no_italic = true,
-				no_bold = false,
-				no_underline = false,
-				styles = {
-					comments = { "italic" },
-					conditionals = { "italic" },
-					loops = {},
-					functions = {},
-					keywords = {},
-					strings = {},
-					variables = {},
-					numbers = {},
-					booleans = {},
-					properties = {},
-					types = {},
-					operators = {},
-				},
-				color_overrides = {},
-				custom_highlights = {},
-				default_integrations = true,
-				integrations = {
-					cmp = true,
-					gitsigns = true,
-					nvimtree = false,
-					treesitter = true,
-					notify = false,
-					mini = {
-						enabled = true,
-						indentscope_color = "",
-					},
-					-- Enable more integrations for better consistency
-					harpoon = true,
-					lsp_trouble = true,
-					which_key = true,
-					fidget = true,
-					snacks = true,
-					dropbar = {
-						enabled = true,
-						color_mode = true,
-					},
-				},
-			})
-
-			vim.cmd.colorscheme("catppuccin")
-
-			-- Force reload and verify colors are applied
-			vim.schedule(function()
-				if vim.g.colors_name ~= "catppuccin-mocha" then
-					vim.cmd.colorscheme("catppuccin")
-				end
-			end)
+		  require('onedark').setup {
+		    style = 'dark'
+		  }
+		  -- Enable theme
+		  require('onedark').load()
 		end,
 	},
 	{
