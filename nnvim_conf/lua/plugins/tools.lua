@@ -64,9 +64,9 @@ return {
 				},
 				formatters = {
 					rustfmt = {
-						command = "cargo",
-						args = { "+nightly-2025-02-14", "fmt", "--", "$FILENAME" },
-						stdin = false,
+						command = "rustfmt",
+						args = { "+nightly-2025-02-14", "--edition", "2024"},
+						stdin = true,
 					},
 				},
 			})
