@@ -52,7 +52,8 @@ require("incline").setup(
 					filename = vim.fn.fnamemodify(full_path, ":h:t") .. "/" .. vim.fn.fnamemodify(full_path, ":t")
 				end
 
-				-- Add crate name for Rust files
+				-- Get crate name for Rust files
+				local crate_name = nil
 				if vim.bo[props.buf].filetype == "rust" then
 					local full_path = vim.api.nvim_buf_get_name(props.buf)
 					local dir = vim.fn.fnamemodify(full_path, ":h")
@@ -62,9 +63,9 @@ require("incline").setup(
 					if cargo_toml ~= "" then
 						local cargo_content = vim.fn.readfile(cargo_toml)
 						for _, line in ipairs(cargo_content) do
-							local crate_name = line:match("^name%s*=%s*[\"'](.+)[\"']")
-							if crate_name then
-								filename = crate_name .. "::" .. filename
+							local name = line:match("^name%s*=%s*[\"'](.+)[\"']")
+							if name then
+								crate_name = name
 								break
 							end
 						end
@@ -132,9 +133,17 @@ require("incline").setup(
 				local buffer = {
 					{ get_diagnostic_label() },
 					{ get_git_diff() },
-					{ (ft_icon or "") .. " ", guifg = ft_color, guibg = "none" },
-					{ filename .. " ", gui = modified },
 				}
+				
+				-- Add crate name as a separate styled section for Rust files
+				if crate_name then
+					table.insert(buffer, { crate_name .. " ", guifg = "#fe8019", gui = "italic" })
+					table.insert(buffer, { "▶ ", guifg = "#665c54" })
+				end
+				
+				table.insert(buffer, { (ft_icon or "") .. " ", guifg = ft_color, guibg = "none" })
+				table.insert(buffer, { filename .. " ", gui = modified })
+				
 				return buffer
 			end
 		end,
