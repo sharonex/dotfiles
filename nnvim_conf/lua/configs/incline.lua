@@ -51,6 +51,25 @@ require("incline").setup(
 					local full_path = vim.api.nvim_buf_get_name(props.buf)
 					filename = vim.fn.fnamemodify(full_path, ":h:t") .. "/" .. vim.fn.fnamemodify(full_path, ":t")
 				end
+
+				-- Add crate name for Rust files
+				if vim.bo[props.buf].filetype == "rust" then
+					local full_path = vim.api.nvim_buf_get_name(props.buf)
+					local dir = vim.fn.fnamemodify(full_path, ":h")
+					
+					-- Look for Cargo.toml in current directory and parent directories
+					local cargo_toml = vim.fn.findfile("Cargo.toml", dir .. ";")
+					if cargo_toml ~= "" then
+						local cargo_content = vim.fn.readfile(cargo_toml)
+						for _, line in ipairs(cargo_content) do
+							local crate_name = line:match("^name%s*=%s*[\"'](.+)[\"']")
+							if crate_name then
+								filename = crate_name .. "::" .. filename
+								break
+							end
+						end
+					end
+				end
 				local ft_icon, ft_color = require("nvim-web-devicons").get_icon_color(filename)
 				local modified = vim.bo[props.buf].modified and "bold,italic" or "bold"
 
