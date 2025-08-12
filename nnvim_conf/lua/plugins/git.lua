@@ -137,8 +137,7 @@ return {
 					vim.cmd("Octo search is:open is:pr review-requested:@me ")
 				end,
 				desc = "[G]it [R]eview Pull Requests",
-			}
-		}
+			},
+		},
 	},
-
 }

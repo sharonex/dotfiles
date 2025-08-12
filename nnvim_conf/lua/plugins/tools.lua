@@ -16,7 +16,7 @@ return {
 	},
 	{
 		"folke/trouble.nvim",
-		cmd = {"Trouble"},
+		cmd = { "Trouble" },
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		opts = {
 			use_diagnostic_signs = false, -- enabling this will use the signs defined in your lsp client
@@ -65,7 +65,7 @@ return {
 				formatters = {
 					rustfmt = {
 						command = "rustfmt",
-						args = { "+nightly-2025-02-14", "--edition", "2024"},
+						args = { "+nightly-2025-02-14", "--edition", "2024" },
 						stdin = true,
 					},
 				},
@@ -85,11 +85,10 @@ return {
 		config = function()
 			local snacks_config = require("configs.snacks")
 			require("snacks").setup(snacks_config)
-			
+
 			-- Setup additional keymaps after snacks is initialized
 			Snacks.toggle.profiler():map("<leader>pp")
 			Snacks.toggle.profiler_highlights():map("<leader>ph")
-			
 		end,
 		keys = {
 			{

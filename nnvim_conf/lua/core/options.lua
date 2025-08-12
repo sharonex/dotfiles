@@ -53,10 +53,10 @@ vim.o.completeopt = "menuone,noselect"
 vim.o.termguicolors = true
 
 -- Tab and indentation settings
-vim.o.tabstop = 4      -- A TAB character looks like 4 spaces
+vim.o.tabstop = 4 -- A TAB character looks like 4 spaces
 vim.o.expandtab = true -- Pressing the TAB key will insert spaces instead of a TAB character
-vim.o.softtabstop = 4  -- Number of spaces inserted instead of a TAB character
-vim.o.shiftwidth = 4   -- Number of spaces inserted when indenting
+vim.o.softtabstop = 4 -- Number of spaces inserted instead of a TAB character
+vim.o.shiftwidth = 4 -- Number of spaces inserted when indenting
 
 -- Disable swap files
 vim.opt.swapfile = false
@@ -76,4 +76,5 @@ vim.o.foldenable = true
 vim.o.diffopt = "internal,filler,closeoff,linematch:60"
 
 -- Runtime path
-vim.opt.runtimepath:append(',~/.config/nvim/lua')
+vim.opt.runtimepath:append(",~/.config/nvim/lua")
+

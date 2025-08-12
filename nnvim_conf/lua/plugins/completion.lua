@@ -1,7 +1,7 @@
 -- Completion and LSP Plugins
 
 return {
-		{
+	{
 		"saghen/blink.cmp",
 		event = { "InsertEnter", "CmdlineEnter" },
 		dependencies = {
@@ -76,12 +76,15 @@ return {
 					vim.keymap.set("n", "<leader>re", "<Cmd>ExpandMacro<CR>", { desc = "Expand macro" })
 
 					-- Create a command `:Format` local to the LSP buffer
-					vim.api.nvim_buf_create_user_command(0, "Format",
+					vim.api.nvim_buf_create_user_command(
+						0,
+						"Format",
 						vim.lsp.buf.format,
-						{ desc = "Format current buffer with LSP" })
-				end
+						{ desc = "Format current buffer with LSP" }
+					)
+				end,
 			}
-		end
+		end,
 	},
 	{
 		"chrisgrieser/nvim-lsp-endhints",
@@ -92,19 +95,19 @@ return {
 		end,
 	},
 	{
-		'github/copilot.vim',
+		"github/copilot.vim",
 		config = function()
 			-- Enable Copilot globally
 			vim.g.copilot_enabled = true
-			
+
 			-- Disable default tab mapping
 			vim.g.copilot_no_tab_map = true
-			
+
 			-- Set Alt+L as the accept mapping
-			vim.keymap.set('i', '<A-l>', 'copilot#Accept("\\<CR>")', {
+			vim.keymap.set("i", "<A-l>", 'copilot#Accept("\\<CR>")', {
 				expr = true,
-				replace_keycodes = false
+				replace_keycodes = false,
 			})
-		end
+		end,
 	},
 }

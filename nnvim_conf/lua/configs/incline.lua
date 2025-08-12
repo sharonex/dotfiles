@@ -57,7 +57,7 @@ require("incline").setup(
 				if vim.bo[props.buf].filetype == "rust" then
 					local full_path = vim.api.nvim_buf_get_name(props.buf)
 					local dir = vim.fn.fnamemodify(full_path, ":h")
-					
+
 					-- Look for Cargo.toml in current directory and parent directories
 					local cargo_toml = vim.fn.findfile("Cargo.toml", dir .. ";")
 					if cargo_toml ~= "" then
@@ -134,16 +134,16 @@ require("incline").setup(
 					{ get_diagnostic_label() },
 					{ get_git_diff() },
 				}
-				
+
 				-- Add crate name as a separate styled section for Rust files
 				if crate_name then
 					table.insert(buffer, { crate_name .. " ", guifg = "#fe8019", gui = "italic" })
 					table.insert(buffer, { "▶ ", guifg = "#665c54" })
 				end
-				
+
 				table.insert(buffer, { (ft_icon or "") .. " ", guifg = ft_color, guibg = "none" })
 				table.insert(buffer, { filename .. " ", gui = modified })
-				
+
 				return buffer
 			end
 		end,

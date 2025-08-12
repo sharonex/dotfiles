@@ -11,7 +11,14 @@ return {
 				{
 					mode = { "n", "v" },
 					-- Main leader groups
-					{ "<leader>b", group = "buffer", icon = { icon = "󰈚 ", color = "blue" }, expand = function() return require("which-key.extras").expand.buf() end },
+					{
+						"<leader>b",
+						group = "buffer",
+						icon = { icon = "󰈚 ", color = "blue" },
+						expand = function()
+							return require("which-key.extras").expand.buf()
+						end,
+					},
 					{ "<leader>c", group = "code", icon = { icon = "󰨞 ", color = "yellow" } },
 					{ "<leader>d", group = "debug", icon = { icon = "󰃤 ", color = "red" } },
 					{ "<leader>dp", group = "profiler", icon = { icon = "󰄉 ", color = "orange" } },
@@ -24,7 +31,15 @@ return {
 					{ "<leader>s", group = "search", icon = { icon = "󰍉 ", color = "purple" } },
 					{ "<leader>t", group = "tabs", icon = { icon = "󰓩 ", color = "blue" } },
 					{ "<leader>u", group = "ui", icon = { icon = "󰙵 ", color = "cyan" } },
-					{ "<leader>w", group = "windows", icon = { icon = "󰖲 ", color = "blue" }, proxy = "<c-w>", expand = function() return require("which-key.extras").expand.win() end },
+					{
+						"<leader>w",
+						group = "windows",
+						icon = { icon = "󰖲 ", color = "blue" },
+						proxy = "<c-w>",
+						expand = function()
+							return require("which-key.extras").expand.win()
+						end,
+					},
 					{ "<leader>x", group = "diagnostics/quickfix", icon = { icon = "󱖫 ", color = "green" } },
 
 					-- Double leader for special actions
@@ -53,11 +68,11 @@ return {
 		"sharonex/onedark.nvim",
 		priority = 1000, -- make sure to load this before all the other start plugins
 		config = function()
-		  require('onedark').setup {
-		    style = 'dark',
-		  }
-		  -- Enable theme
-		  require('onedark').load()
+			require("onedark").setup({
+				style = "dark",
+			})
+			-- Enable theme
+			require("onedark").load()
 		end,
 	},
 	{

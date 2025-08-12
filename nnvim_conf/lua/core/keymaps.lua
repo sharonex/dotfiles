@@ -84,10 +84,10 @@ vim.keymap.set("n", "<leader>g[", ":GitMediate<CR>", { noremap = true, silent = 
 local default_config = { virtual_lines = false, virtual_text = true }
 vim.diagnostic.config(default_config)
 
-vim.keymap.set('n', '<leader>xl', function()
+vim.keymap.set("n", "<leader>xl", function()
 	if vim.diagnostic.config().virtual_lines == false then
 		vim.diagnostic.config(default_config)
 	else
 		vim.diagnostic.config({ virtual_lines = false })
 	end
-end, { desc = 'Toggle showing all diagnostics or just current line' })
+end, { desc = "Toggle showing all diagnostics or just current line" })

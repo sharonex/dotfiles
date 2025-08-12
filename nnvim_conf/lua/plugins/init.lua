@@ -16,9 +16,10 @@ vim.opt.rtp:prepend(lazypath)
 -- Configure lazy.nvim with modular plugin files
 require("lazy").setup({
 	{ import = "plugins.ui" },
-	{ import = "plugins.editor" },  
+	{ import = "plugins.editor" },
 	{ import = "plugins.navigation" },
 	{ import = "plugins.git" },
 	{ import = "plugins.completion" },
 	{ import = "plugins.tools" },
 })
+
