@@ -145,14 +145,6 @@ return {
 		end,
 	},
 	{
-		"stevearc/oil.nvim",
-		event = "VeryLazy",
-		config = function()
-			require("oil").setup()
-			vim.keymap.set("n", "|", "<CMD>Oil<CR>", { desc = "Open parent directory" })
-		end,
-	},
-	{
 		"folke/flash.nvim",
 		lazy = false,
 		config = function()
@@ -173,46 +165,73 @@ return {
 				}
 			)
 		end,
-	    keys = {
-			{ "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
-			{ "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
-			{ "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
-	 	},
+		keys = {
+			{
+				"s",
+				mode = { "n", "x", "o" },
+				function()
+					require("flash").jump()
+				end,
+				desc = "Flash",
+			},
+			{
+				"S",
+				mode = { "n", "x", "o" },
+				function()
+					require("flash").treesitter()
+				end,
+				desc = "Flash Treesitter",
+			},
+			{
+				"r",
+				mode = "o",
+				function()
+					require("flash").remote()
+				end,
+				desc = "Remote Flash",
+			},
+		},
 	},
 
 	{
-		'echasnovski/mini.files',
+		"echasnovski/mini.files",
 		version = false,
 		keys = {
-			{ "<leader>e", function() 
-				local MiniFiles = require("mini.files")
-				local current_file = vim.fn.expand("%:p")
-				MiniFiles.open(current_file)
-				-- Expand 2 parent directories by going out twice
-				MiniFiles.go_out()
-				MiniFiles.go_out()
-				-- Go back in to show the expanded structure
-				MiniFiles.go_in({ close_on_file = false })
-				MiniFiles.go_in({ close_on_file = false })
-			end, desc = "Open Current File with 2 Parent Dirs Expanded" },
+			{
+				"<leader>e",
+				function()
+					local MiniFiles = require("mini.files")
+					local current_file = vim.fn.expand("%:p")
+					MiniFiles.open(current_file)
+					-- Expand 2 parent directories by going out twice
+					MiniFiles.go_out()
+					MiniFiles.go_out()
+					-- Go back in to show the expanded structure
+					MiniFiles.go_in({ close_on_file = false })
+					MiniFiles.go_in({ close_on_file = false })
+				end,
+				desc = "Open Current File with 2 Parent Dirs Expanded",
+			},
 		},
 		config = function()
 			local yank_path = function()
-			  local path = (require("mini.files").get_fs_entry() or {}).path
-			  if path == nil then return vim.notify('Cursor is not on valid entry') end
+				local path = (require("mini.files").get_fs_entry() or {}).path
+				if path == nil then
+					return vim.notify("Cursor is not on valid entry")
+				end
 
-			  local relative_path = vim.fn.fnamemodify(path, ':.')
-			  vim.fn.setreg(vim.v.register, relative_path)
+				local relative_path = vim.fn.fnamemodify(path, ":.")
+				vim.fn.setreg(vim.v.register, relative_path)
 			end
 
-		  vim.api.nvim_create_autocmd('User', {
-			pattern = 'MiniFilesBufferCreate',
-			callback = function(args)
-			  local b = args.data.buf_id
-			  vim.keymap.set('n', 'gy', yank_path, { buffer = b, desc = 'Yank path' })
-			end,
-		  })
-		end
+			vim.api.nvim_create_autocmd("User", {
+				pattern = "MiniFilesBufferCreate",
+				callback = function(args)
+					local b = args.data.buf_id
+					vim.keymap.set("n", "gy", yank_path, { buffer = b, desc = "Yank path" })
+				end,
+			})
+		end,
 	},
 	-- {
 	-- 	"ggandor/leap.nvim",
