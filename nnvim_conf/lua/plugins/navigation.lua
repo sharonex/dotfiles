@@ -196,6 +196,23 @@ return {
 				MiniFiles.go_in({ close_on_file = false })
 			end, desc = "Open Current File with 2 Parent Dirs Expanded" },
 		},
+		config = function()
+			local yank_path = function()
+			  local path = (require("mini.files").get_fs_entry() or {}).path
+			  if path == nil then return vim.notify('Cursor is not on valid entry') end
+
+			  local relative_path = vim.fn.fnamemodify(path, ':.')
+			  vim.fn.setreg(vim.v.register, relative_path)
+			end
+
+		  vim.api.nvim_create_autocmd('User', {
+			pattern = 'MiniFilesBufferCreate',
+			callback = function(args)
+			  local b = args.data.buf_id
+			  vim.keymap.set('n', 'gy', yank_path, { buffer = b, desc = 'Yank path' })
+			end,
+		  })
+		end
 	},
 	-- {
 	-- 	"ggandor/leap.nvim",
