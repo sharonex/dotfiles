@@ -78,3 +78,5 @@ vim.o.diffopt = "internal,filler,closeoff,linematch:60"
 -- Runtime path
 vim.opt.runtimepath:append(",~/.config/nvim/lua")
 
+vim.opt.diffopt:append("iwhite")
+
