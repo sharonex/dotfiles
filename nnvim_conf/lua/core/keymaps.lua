@@ -24,6 +24,9 @@ vim.keymap.set("n", "<C-w>s", "<C-w>s<C-w>j")
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic message" })
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next diagnostic message" })
 vim.keymap.set("n", "<leader>l", vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
+vim.keymap.set("n", "<leader>dl", function()
+	vim.diagnostic.open_float({ scope = "line" })
+end, { desc = "Show all diagnostics on current line" })
 
 -- Tab management
 vim.keymap.set("n", "<leader>tc", ":tabclose<CR>", { desc = "[T]ab [C]lose" })
