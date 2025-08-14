@@ -16,7 +16,8 @@ vim.cmd([[
 ]])
 
 -- Search and highlight options
-vim.o.hlsearch = false
+vim.o.hlsearch = true -- Enable search highlighting
+vim.o.incsearch = true -- Show search matches as you type
 
 -- Line numbers
 vim.wo.number = true
