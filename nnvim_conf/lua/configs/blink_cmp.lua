@@ -2,7 +2,8 @@ local default_sources = { "lsp", "path", "calc", "snippets", "buffer", "lazydev"
 
 require("blink.cmp").setup({
 	keymap = {
-		preset = "enter",
+		preset = "default",
+		["<CR>"] = { "accept", "fallback" },
 		["<Tab>"] = {
 			function(cmp)
 				if cmp.is_menu_visible() then
@@ -63,8 +64,8 @@ require("blink.cmp").setup({
 			},
 			list = {
 				selection = {
-					preselect = false,
-					auto_insert = true,
+					preselect = true,
+					auto_insert = false,
 				},
 			},
 		},
@@ -80,8 +81,8 @@ require("blink.cmp").setup({
 		},
 		list = {
 			selection = {
-				preselect = false,
-				auto_insert = true,
+				preselect = true,
+				auto_insert = false,
 			},
 		},
 		accept = {
