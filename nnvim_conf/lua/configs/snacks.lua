@@ -55,5 +55,13 @@ return {
 				},
 			},
 		},
+		sources = {
+			git_files = {
+				preview = false,
+			},
+			files = {
+				preview = false,
+			},
+		},
 	},
 }
