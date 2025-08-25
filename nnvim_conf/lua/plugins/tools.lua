@@ -276,11 +276,11 @@ return {
 				desc = "Goto T[y]pe Definition",
 			},
 			{
-				"<leader>sy",
+				"<leader>sd",
 				function()
 					Snacks.picker.lsp_symbols()
 				end,
-				desc = "LSP S[y]mbols",
+				desc = "LSP [D]ocument Symbols",
 			},
 			{
 				"<leader>ss",

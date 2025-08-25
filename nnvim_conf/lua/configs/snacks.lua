@@ -57,10 +57,10 @@ return {
 		},
 		sources = {
 			git_files = {
-				preview = false,
+				preview = nil,
 			},
 			files = {
-				preview = false,
+				preview = nil,
 			},
 		},
 	},
