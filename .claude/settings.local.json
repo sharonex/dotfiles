@@ -6,7 +6,8 @@
       "Bash(grep:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(nvim:*)"
+      "Bash(nvim:*)",
+      "Bash(cargo fmt:*)"
     ],
     "deny": []
   }

@@ -229,6 +229,13 @@ return {
 				callback = function(args)
 					local b = args.data.buf_id
 					vim.keymap.set("n", "gy", yank_path, { buffer = b, desc = "Yank path" })
+					vim.keymap.set("n", "<C-v>", function()
+						local path = (require("mini.files").get_fs_entry() or {}).path
+						if path == nil then
+							return vim.notify("Cursor is not on valid entry")
+						end
+						vim.cmd("vsplit " .. vim.fn.fnameescape(path))
+					end, { buffer = b, desc = "Open in vertical split" })
 				end,
 			})
 		end,
