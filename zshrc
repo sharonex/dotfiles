@@ -22,8 +22,14 @@ export WORDCHARS=$WORDCHARS-
 
 export DOTFILES="$HOME/.dotfiles"
 export TMUX_CONF_LOCAL="$DOTFILES/tmux.conf.local"
-export PATH="/opt/homebrew/bin:$HOME/bin:$HOME/.local/bin:$GOPATH/bin:$GOROOT/bin:$HOME/go/bin:$HOME/.cargo/bin:$PATH:$HOME/Library/Python/3.11/bin:$HOME/bin/nnvim/bin"
-export OPENAI_API_KEY="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"
+
+# Android Development Environment Variables
+export ANDROID_HOME="$HOME/Library/Android/sdk"
+export ANDROID_SDK_ROOT="$ANDROID_HOME"
+export JAVA_HOME="/opt/homebrew/opt/openjdk@11"
+export PATH="$JAVA_HOME/bin:$PATH"
+
+export PATH="/opt/homebrew/bin:$HOME/bin:$HOME/.local/bin:$GOPATH/bin:$GOROOT/bin:$HOME/go/bin:$HOME/.cargo/bin:$PATH:$HOME/Library/Python/3.11/bin:$HOME/bin/nnvim/bin:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools"
 unset RUST_BACKTRACE
 
 # Alias
@@ -103,6 +109,15 @@ alias kc="killall cargo"
 alias check_ts_compiles="pushd typescript/apps/platform; ../../../node_modules/.bin/tsc --noEmit; popd"
 
 alias clippy="cargo clippy --workspace --no-deps --all-targets"
+
+# Android Development aliases
+alias adb="adb"
+alias android-studio="open -a 'Android Studio'"
+alias emulator="emulator"
+alias avd="avdmanager"
+alias sdk="sdkmanager"
+alias gradle="gradle"
+alias gradlew="./gradlew"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND="rg --files"
@@ -369,3 +384,5 @@ npm() { nvm >/dev/null 2>&1; command npm "$@"; }
 
 # Bind ctrl-r but not up arrow
 eval "$(atuin init zsh --disable-up-arrow)"
+export PATH="/opt/homebrew/opt/openjdk@21/bin:$PATH"
+export JAVA_HOME="/opt/homebrew/opt/openjdk@21"

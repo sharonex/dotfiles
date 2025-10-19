@@ -21,6 +21,8 @@ return {
 					"tsx",
 					"javascript",
 					"typescript",
+					"kotlin",
+					"java",
 					"vimdoc",
 					"vim",
 					"bash",

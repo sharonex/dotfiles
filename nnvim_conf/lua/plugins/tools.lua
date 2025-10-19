@@ -78,6 +78,8 @@ return {
 					typescriptreact = { "prettierd", "prettier", stop_after_first = true },
 					javascript = { "prettierd", "prettier", stop_after_first = true },
 					javascriptreact = { "prettierd", "prettier", stop_after_first = true },
+					kotlin = { "ktlint" },
+					java = { "google-java-format" },
 				},
 				formatters = {
 					rustfmt = {
