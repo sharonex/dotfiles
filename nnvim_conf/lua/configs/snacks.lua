@@ -62,6 +62,9 @@ return {
 			files = {
 				preview = nil,
 			},
+			grep = {
+				cmd = "rg",
+			},
 		},
 	},
 }
