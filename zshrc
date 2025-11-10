@@ -384,5 +384,4 @@ npm() { nvm >/dev/null 2>&1; command npm "$@"; }
 
 # Bind ctrl-r but not up arrow
 eval "$(atuin init zsh --disable-up-arrow)"
-export PATH="/opt/homebrew/opt/openjdk@21/bin:$PATH"
-export JAVA_HOME="/opt/homebrew/opt/openjdk@21"
+export PATH="$HOME/.nvm/versions/node/v20.10.0/bin:$PATH"
