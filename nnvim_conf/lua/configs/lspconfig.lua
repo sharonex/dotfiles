@@ -13,5 +13,6 @@ vim.diagnostic.config({
 
 require("configs.lsp.lua_ls")
 require("configs.lsp.kotlin-language-server")
+require("configs.lsp.basedpyright")
 -- require("configs.lsp.rust-analyzer")
 -- require("configs.lsp.typescript-language-server")
