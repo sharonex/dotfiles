@@ -100,13 +100,37 @@ return {
 			-- Enable Copilot globally
 			vim.g.copilot_enabled = true
 
-			-- Disable default tab mapping
+			-- Disable default tab mapping (handled by blink.cmp)
 			vim.g.copilot_no_tab_map = true
 
-			-- Set Alt+L as the accept mapping
-			vim.keymap.set("i", "<A-l>", 'copilot#Accept("\\<CR>")', {
+			-- Disable other default mappings
+			vim.g.copilot_assume_mapped = true
+
+			-- Set filetypes where Copilot should be disabled
+			vim.g.copilot_filetypes = {
+				["*"] = true,
+				gitcommit = false,
+				gitrebase = false,
+				TelescopePrompt = false,
+			}
+
+			-- Additional keybindings for Copilot control
+			vim.keymap.set("i", "<A-l>", 'copilot#Accept("")', {
 				expr = true,
 				replace_keycodes = false,
+				desc = "Accept Copilot suggestion",
+			})
+
+			vim.keymap.set("i", "<A-]>", "<Plug>(copilot-next)", {
+				desc = "Next Copilot suggestion",
+			})
+
+			vim.keymap.set("i", "<A-[>", "<Plug>(copilot-previous)", {
+				desc = "Previous Copilot suggestion",
+			})
+
+			vim.keymap.set("i", "<A-\\>", "<Cmd>Copilot panel<CR>", {
+				desc = "Open Copilot panel",
 			})
 		end,
 	},
@@ -122,17 +146,7 @@ return {
 			},
 		},
 		keys = {
-			{
-				"<tab>",
-				function()
-					-- if there is a next edit, jump to it, otherwise apply it if any
-					if not require("sidekick").nes_jump_or_apply() then
-						return "<Tab>" -- fallback to normal tab
-					end
-				end,
-				expr = true,
-				desc = "Goto/Apply Next Edit Suggestion",
-			},
+			-- Tab is now handled by blink.cmp config for better integration
 			{
 				"<c-.>",
 				function()

@@ -6,18 +6,35 @@ require("blink.cmp").setup({
 		["<CR>"] = { "accept", "fallback" },
 		["<Tab>"] = {
 			function(cmp)
+				-- First check if there's a Copilot suggestion
+				if vim.fn["copilot#GetDisplayedSuggestion"]().text ~= "" then
+					return vim.fn["copilot#Accept"]("")
+				end
+
+				-- Then handle blink.cmp menu
 				if cmp.is_menu_visible() then
-					return require("blink.cmp").select_next()
+					return cmp.select_next()
 				elseif cmp.snippet_active() then
 					return cmp.snippet_forward()
 				end
+
+				-- Check for Sidekick next edit suggestion
+				local sidekick_ok, sidekick = pcall(require, "sidekick")
+				if sidekick_ok and sidekick.nes_jump_or_apply then
+					if sidekick.nes_jump_or_apply() then
+						return
+					end
+				end
+
+				-- Fallback to regular tab
+				return vim.api.nvim_replace_termcodes("<Tab>", true, true, true)
 			end,
 			"fallback",
 		},
 		["<S-Tab>"] = {
 			function(cmp)
 				if cmp.is_menu_visible() then
-					return require("blink.cmp").select_prev()
+					return cmp.select_prev()
 				elseif cmp.snippet_active() then
 					return cmp.snippet_backward()
 				end
