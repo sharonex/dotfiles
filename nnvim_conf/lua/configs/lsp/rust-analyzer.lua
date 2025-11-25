@@ -77,9 +77,10 @@ local function toggle_check_mode()
 end
 
 -- Your original rust-analyzer setup with the toggle function added
-require("lspconfig").rust_analyzer.setup({
+vim.lsp.config("rust-analyzer", {
 	-- capabilities = capabilities,
 	cmd = { "rustup", "run", "stable", "rust-analyzer" },
+	filetypes = { "rust" },
 	settings = {
 		["rust-analyzer"] = {
 			checkOnSave = true,
@@ -99,6 +100,8 @@ require("lspconfig").rust_analyzer.setup({
 		},
 	},
 })
+
+vim.lsp.enable({ "rust-analyzer" })
 
 -- Optional: Create a vim command for easier access
 vim.api.nvim_create_user_command("RustToggleCheck", toggle_check_mode, {

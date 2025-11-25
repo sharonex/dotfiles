@@ -26,7 +26,7 @@ export TMUX_CONF_LOCAL="$DOTFILES/tmux.conf.local"
 # Android Development Environment Variables
 export ANDROID_HOME="$HOME/Library/Android/sdk"
 export ANDROID_SDK_ROOT="$ANDROID_HOME"
-export JAVA_HOME="/opt/homebrew/opt/openjdk@11"
+export JAVA_HOME="/opt/homebrew/opt/openjdk@21"
 export PATH="$JAVA_HOME/bin:$PATH"
 
 export PATH="/opt/homebrew/bin:$HOME/bin:$HOME/.local/bin:$GOPATH/bin:$GOROOT/bin:$HOME/go/bin:$HOME/.cargo/bin:$PATH:$HOME/Library/Python/3.11/bin:$HOME/bin/nnvim/bin:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools"
@@ -384,4 +384,7 @@ npm() { nvm >/dev/null 2>&1; command npm "$@"; }
 
 # Bind ctrl-r but not up arrow
 eval "$(atuin init zsh --disable-up-arrow)"
-export PATH="$HOME/.nvm/versions/node/v20.10.0/bin:$PATH"
+export PATH="$HOME/.nvm/versions/node/v22.21.1/bin:$HOME/.nvm/versions/node/v20.10.0/bin:$PATH"
+
+# Added by Antigravity
+export PATH="/Users/sharonavni/.antigravity/antigravity/bin:$PATH"
