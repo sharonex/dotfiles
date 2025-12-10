@@ -62,10 +62,6 @@ return {
 		},
 	},
 	{
-		"kevinhwang91/nvim-bqf",
-		ft = "qf",
-	},
-	{
 		"stevearc/conform.nvim",
 		opts = {},
 		config = function()
