@@ -74,14 +74,14 @@ vim.keymap.set("v", "<", "<gv", { desc = "" })
 vim.keymap.set("v", ">", ">gv", { desc = "" })
 vim.keymap.set("v", "=gv", "=gv", { desc = "" })
 
--- Git mediate command
-vim.api.nvim_create_user_command("GitMediate", function()
-	vim.cmd('cexpr system("git mediate -d")')
-	vim.cmd("copen")
-	vim.cmd("wincmd L")
-end, {})
+-- -- Git mediate command
+-- vim.api.nvim_create_user_command("GitMediate", function()
+-- 	vim.cmd('cexpr system("git mediate -d")')
+-- 	vim.cmd("copen")
+-- 	vim.cmd("wincmd L")
+-- end, {})
 
-vim.keymap.set("n", "<leader>g[", ":GitMediate<CR>", { noremap = true, silent = true })
+-- vim.keymap.set("n", "<leader>g[", ":GitMediate<CR>", { noremap = true, silent = true })
 
 -- Diagnostic configuration and toggle
 local default_config = { virtual_lines = false, virtual_text = true }

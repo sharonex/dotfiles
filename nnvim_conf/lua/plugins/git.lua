@@ -140,4 +140,25 @@ return {
 			},
 		},
 	},
+	{
+		"esmuellert/vscode-diff.nvim",
+		dependencies = { "MunifTanjim/nui.nvim" },
+		cmd = "CodeDiff",
+		config = function()
+			require("vscode-diff").setup({
+				highlights = {
+					line_insert = "DiffAdd",
+					line_delete = "DiffDelete",
+					char_brightness = 1.4,
+				},
+			})
+		end,
+	},
+	{
+		dir = "~/personal/git-mediate.nvim/",
+		dependencies = { "esmuellert/vscode-diff.nvim" },
+		config = function()
+			require("git-mediate").setup()
+		end,
+	},
 }
