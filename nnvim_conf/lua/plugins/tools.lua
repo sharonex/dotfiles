@@ -75,7 +75,7 @@ return {
 					typescriptreact = { "prettierd", "prettier", stop_after_first = true },
 					javascript = { "prettierd", "prettier", stop_after_first = true },
 					javascriptreact = { "prettierd", "prettier", stop_after_first = true },
-					kotlin = { "ktlint" },
+					-- kotlin = { "ktlint" },
 					java = { "google-java-format" },
 				},
 				formatters = {
@@ -179,6 +179,13 @@ return {
 				end,
 				desc = "Visual selection or word",
 				mode = { "n", "x", "v" },
+			},
+			{
+				"<leader>gC",
+				function()
+					Snacks.picker.git_log()
+				end,
+				desc = "Git Log",
 			},
 			-- search
 			{

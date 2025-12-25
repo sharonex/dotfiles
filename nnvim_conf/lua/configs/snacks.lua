@@ -47,6 +47,15 @@ return {
 		layout = {
 			preset = "ivy",
 		},
+		actions = {
+			diffview = function(picker)
+				local item = picker:current()
+				picker:close()
+				if item and item.commit then
+					vim.cmd("DiffviewOpen " .. item.commit .. "^!")
+				end
+			end,
+		},
 		win = {
 			input = {
 				keys = {
@@ -64,6 +73,9 @@ return {
 			},
 			grep = {
 				cmd = "rg",
+			},
+			git_log = {
+				confirm = "diffview",
 			},
 		},
 	},
