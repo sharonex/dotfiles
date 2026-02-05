@@ -1,7 +1,7 @@
 vim.lsp.config("basedpyright", {
 	on_attach = on_attach,
 	capabilities = capabilities,
-	cmd = { "uv", "run", "basedpyright-langserver", "--stdio" },
+	cmd = { "basedpyright-langserver", "--stdio" },
 
 	settings = {
 		basedpyright = {
