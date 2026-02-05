@@ -159,6 +159,8 @@ return {
 		dependencies = { "esmuellert/vscode-diff.nvim" },
 		config = function()
 			require("git-mediate").setup()
+			vim.keymap.set("n", "<leader>gmt", "<cmd> GitMediateToggle<CR>", { desc = "Git Mediate Toggle" })
+			vim.keymap.set("n", "<leader>gms", "<cmd> GitMediateSelect<CR>", { desc = "Git Mediate Select" })
 		end,
 	},
 }
